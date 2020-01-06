@@ -228,7 +228,32 @@ public class Login extends JFrame {
 		panel_der.add(lblLogin);
 		lblLogin.setForeground(new Color(66, 169, 174));
 		lblLogin.setFont(new Font("Sitka Small", Font.PLAIN, 31));
-	
+		
+		JLabel lblregistrar = new JLabel("Registrarse ahora...");
+		lblregistrar.setForeground(Color.CYAN);
+		lblregistrar.setBounds(131, 336, 113, 14);
+		panel_der.add(lblregistrar);
+		lblregistrar.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				lblregistrar.setForeground(Color.WHITE);
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				lblregistrar.setForeground(Color.CYAN);
+			}
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				dispose();
+				Registrarse nuevoRegistro = new Registrarse();
+				nuevoRegistro.setVisible(true);
+			}
+		});
+		
+		
+		
+		
+		
 		RSPanelGradiente panel_izq = new RSPanelGradiente();
 		panel_izq.setBounds(0, 0, 450, 448);
 		panel_izq.setColorSecundario(new Color(33, 44, 61));

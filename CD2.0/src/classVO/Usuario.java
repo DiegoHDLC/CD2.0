@@ -7,14 +7,16 @@ public class Usuario {
 	private String nombre;
 	private String apellidos;
 	private String ciudad;
+	private String esMedico;
 
-	public Usuario(String usuario, String clave, String nombre, String apellidos, String ciudad) {
+	public Usuario(String usuario, String clave, String nombre, String apellidos, String ciudad, String esMedico) {
 
 		this.usuario = usuario;
 		this.clave = clave;
 		this.nombre = nombre;
 		this.apellidos = apellidos;
 		this.ciudad = ciudad;
+		this.esMedico = esMedico;
 	}
 
 	public Usuario() {
@@ -59,6 +61,14 @@ public class Usuario {
 
 	public void setCiudad(String ciudad) {
 		this.ciudad = ciudad;
+	}
+	
+	public String getesMedico() {
+		return esMedico;
+	}
+	
+	public void setesMedico(String esMedico) {
+		this.esMedico = esMedico;
 	}
 
 }

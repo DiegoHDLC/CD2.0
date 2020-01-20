@@ -13,9 +13,13 @@ import classDAO.PacientesDAO;
 import classVO.PacientesVO;
 import rspanelgradiente.RSPanelGradiente;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.swing.JTabbedPane;
 import javax.swing.ImageIcon;
@@ -24,6 +28,10 @@ import rojerusan.RSMaterialButtonRectangleBeanInfo;
 import rojerusan.RSMaterialButtonCircle;
 import javax.swing.JTextField;
 import javax.swing.border.BevelBorder;
+import rojeru_san.componentes.RSDateChooser;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class FrmPaciente extends JFrame {
 
@@ -373,13 +381,50 @@ public class FrmPaciente extends JFrame {
 		btnLimpiar.setIcon(new ImageIcon(FrmPaciente.class.getResource("/Image/icons8_trash_64px.png")));
 		btnLimpiar.setBounds(397, 397, 64, 64);
 		panelFRM.add(btnLimpiar);
+		
+		RSDateChooser chooser = new RSDateChooser();
+		chooser.setPlaceholder("SELECCIONAR FECHA");
+		chooser.setFormatoFecha("dd/MM/yyyy");
+		chooser.setBounds(212, 5, 240, 40);
+		panelFRM.add(chooser);
+		
+		JButton btnAplicarFecha = new JButton("aplicar fecha");
+		btnAplicarFecha.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				PacientesVO pac = new PacientesVO();
+				if(chooser.getDatoFecha() == null) {
+					JOptionPane.showMessageDialog(contentPane, "Seleccione una fecha", "Error", JOptionPane.ERROR_MESSAGE);
+				}else {
+					String formatoFecha = "dd/MM/yyyy";
+					Date fecha = chooser.getDatoFecha();
+					SimpleDateFormat formateador = new SimpleDateFormat(formatoFecha);
+					txtFecha.setText(formateador.format(fecha).toString());
+					pac.setFecha_nacimiento(txtFecha.getText());
+					
+					//JOptionPane.showMessageDialog(contentPane, "La fecha seleccionada es:"+formateador.format(fecha), "Información", JOptionPane.ERROR_MESSAGE);
+				}
+				
+				
+			}
+		});
+		btnAplicarFecha.setBounds(372, 160, 89, 23);
+		panelFRM.add(btnAplicarFecha);
+		
 	}
-
+	
 	private void registrarPacienteActionPerformed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_registrarProveedorActionPerformed
         PacientesVO pac = new PacientesVO();
         pac.setNombre(txtNombre.getText());
         pac.setApellidos(txtApellidos.getText());
-        pac.setFecha_nacimiento(txtFecha.getText());
+        if(chooser.getDatoFecha() == null) {
+			JOptionPane.showMessageDialog(contentPane, "Seleccione una fecha", "Error", JOptionPane.ERROR_MESSAGE);
+		}else {
+			String formatoFecha = "dd/MM/yyyy";
+			Date fecha = chooser.getDatoFecha();
+			SimpleDateFormat formateador = new SimpleDateFormat(formatoFecha);
+			txtFecha.setText(formateador.format(fecha).toString());
+			pac.setFecha_nacimiento(txtFecha.getText());
+        //pac.setFecha_nacimiento(txtFecha.getText());
         pac.setRut(txtRut.getText());
         pac.setDireccion(txtDireccion.getText());
         pac.setTelefono(txtTelefono.getText());

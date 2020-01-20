@@ -130,7 +130,7 @@ public class Registrarse extends JFrame {
 		panel.add(lblIngreseElCodigo);
 		
 		JSeparator separator = new JSeparator();
-		separator.setBounds(105, 78, 208, 11);
+		separator.setBounds(132, 78, 150, 11);
 		panel.add(separator);
 		
 		JSeparator separator_1 = new JSeparator();
@@ -200,7 +200,7 @@ public class Registrarse extends JFrame {
 		panel.add(passwordField_3);
 		
 		JSeparator separator_3 = new JSeparator();
-		separator_3.setBounds(458, 78, 208, 11);
+		separator_3.setBounds(485, 78, 168, 11);
 		panel.add(separator_3);
 		
 		JLabel lblIngreseSuCiudad = new JLabel("Ingrese su apellido");

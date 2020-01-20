@@ -68,7 +68,7 @@ public class Login extends JFrame {
 		Usuario usu = gestionUsuario.obtenerUsuario(usuario2);
 		System.out.println("usuario: "+usu);
 		if(usu!=null) {
-			JOptionPane.showMessageDialog(contentPane, "Bienvenido");
+			//JOptionPane.showMessageDialog(contentPane, "Bienvenido");
 			
 			this.dispose();
 			

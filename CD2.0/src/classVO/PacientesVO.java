@@ -26,8 +26,8 @@ public class PacientesVO {
 	public String getFecha_nacimiento() {
 		return fecha_nacimiento;
 	}
-	public void setFecha_nacimiento(String fecha_nacimiento) {
-		this.fecha_nacimiento = fecha_nacimiento;
+	public String setFecha_nacimiento(String fecha_nacimiento) {
+		return this.fecha_nacimiento = fecha_nacimiento;
 	}
 	public String getApellidos() {
 		return apellidos;

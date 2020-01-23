@@ -384,7 +384,7 @@ public class ProgramaFRM extends javax.swing.JFrame {
         PacientesVO pac = new PacientesVO();
         pac.setNombre(p_nombre.getText());
         pac.setApellidos(p_apellido.getText());
-        pac.setFecha_nacimiento(p_fecha.getText());
+       // pac.setFecha_nacimiento(p_fecha.getDate());
         pac.setRut(p_rut.getText());
         pac.setDireccion(p_direccion.getText());
         pac.setTelefono(p_telefono.getText());
@@ -405,7 +405,7 @@ public class ProgramaFRM extends javax.swing.JFrame {
         pac.setIdPaciente(Integer.parseInt(p_clave.getText()));
         pac.setNombre(p_nombre.getText());
         pac.setApellidos(p_apellido.getText());
-        pac.setFecha_nacimiento(p_fecha.getText());
+        //pac.setFecha_nacimiento(p_fecha.getText());
         pac.setRut(p_rut.getText());
         pac.setDireccion(p_direccion.getText());
         pac.setTelefono(p_telefono.getText());
@@ -428,7 +428,7 @@ public class ProgramaFRM extends javax.swing.JFrame {
         p_clave.setText(pac.getIdPaciente()+"");
         p_nombre.setText(pac.getNombre());
         p_apellido.setText(pac.getApellidos());
-        p_fecha.setText(pac.getFecha_nacimiento());
+        //p_fecha.setText(pac.getFecha_nacimiento());
         p_rut.setText(pac.getRut());
         p_direccion.setText(pac.getDireccion());
         p_telefono.setText(pac.getTelefono());

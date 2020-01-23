@@ -1,7 +1,5 @@
 package main;
 
-import java.awt.BorderLayout;
-import javafx.*;
 import java.awt.Color;
 import java.awt.EventQueue;
 
@@ -14,10 +12,12 @@ import classVO.PacientesVO;
 import rspanelgradiente.RSPanelGradiente;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import main.CalendarioVentana;
 
 import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -32,6 +32,11 @@ import rojeru_san.componentes.RSDateChooser;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import rojeru_san.componentes.RSCalendar;
+import rojeru_san.componentes.RSCalendarBeanInfo;
+import rojeru_san.componentes.RSDateChooserBeanInfo;
+import com.toedter.calendar.JDateChooser;
+import com.toedter.calendar.JCalendar;
 
 public class FrmPaciente extends JFrame {
 
@@ -39,7 +44,7 @@ public class FrmPaciente extends JFrame {
 	private JTextField txtID;
 	private JTextField txtNombre;
 	private JTextField txtApellidos;
-	private JTextField txtFecha;
+	public JTextField txtFecha;
 	private JTextField txtRut;
 	private JTextField txtDireccion;
 	private JTextField txtTelefono;
@@ -54,11 +59,13 @@ public class FrmPaciente extends JFrame {
 	/**
 	 * Create the frame.
 	 */
+	
 	public FrmPaciente() {
 		initComponents();
 		//cargarPacientes(0);
 	
 	}
+	
 	private void initComponents() {
 		
 		
@@ -176,7 +183,7 @@ public class FrmPaciente extends JFrame {
 		txtFecha.setForeground(new Color(255, 255, 255));
 		txtFecha.setColumns(10);
 		txtFecha.setBackground(new Color(19, 30, 49));
-		txtFecha.setBounds(122, 152, 129, 38);
+		txtFecha.setBounds(122, 152, 221, 38);
 		panelFRM.add(txtFecha);
 		
 		txtRut = new JTextField();
@@ -287,10 +294,39 @@ public class FrmPaciente extends JFrame {
 		lblEliminarTodo.setBounds(397, 472, 83, 14);
 		panelFRM.add(lblEliminarTodo);
 		
+		/*RSDateChooser chooser = new RSDateChooser();
+		chooser.setBackground(new Color(0, 0, 128));
+		chooser.setColorTextDiaActual(new Color(0, 255, 0));
+		chooser.setColorSelForeground(new Color(0, 0, 128));
+		chooser.setColorForeground(new Color(138, 43, 226));
+		chooser.setColorDiaActual(new Color(210, 105, 30));
+		chooser.setColorButtonHover(new Color(46, 139, 87));
+		chooser.setPlaceholder("SELECCIONAR FECHA");
+		
+		chooser.setFormatoFecha("dd/MM/yyyy");
+		chooser.setBounds(236, 5, 240, 40);
+		if(chooser.getDatoFecha()!=null) {
+			txtFecha.setText(chooser.getDatoFecha().toString());
+		}
+		panelFRM.add(chooser);
+		*/
+		
 		JLabel btnRegistrar = new JLabel("");
 		btnRegistrar.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent evt) {
+				
+			/*	PacientesVO pac = new PacientesVO();
+				if(chooser.getDatoFecha() == null) {
+					JOptionPane.showMessageDialog(contentPane, "Seleccione una fecha", "Error", JOptionPane.ERROR_MESSAGE);
+				}else {
+					String formatoFecha = "dd/MM/yyyy";
+					Date fecha = chooser.getDatoFecha();
+					SimpleDateFormat formateador = new SimpleDateFormat(formatoFecha);
+					txtFecha.setText(formateador.format(fecha).toString());
+					pac.setFecha_nacimiento(txtFecha.getText());
+				}
+				*/
 				registrarPacienteActionPerformed(evt);
 			}
 			@Override
@@ -329,7 +365,7 @@ public class FrmPaciente extends JFrame {
 		btnBuscar.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				buscarPacienteActionPerformed(e);
+					buscarPacienteActionPerformed(e);
 			}
 			@Override
 			public void mouseEntered(MouseEvent e) {
@@ -382,13 +418,35 @@ public class FrmPaciente extends JFrame {
 		btnLimpiar.setBounds(397, 397, 64, 64);
 		panelFRM.add(btnLimpiar);
 		
-		RSDateChooser chooser = new RSDateChooser();
-		chooser.setPlaceholder("SELECCIONAR FECHA");
-		chooser.setFormatoFecha("dd/MM/yyyy");
-		chooser.setBounds(212, 5, 240, 40);
-		panelFRM.add(chooser);
+		JLabel calendario = new JLabel("");
+		calendario.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				
+				CalendarioVentana calendar = new CalendarioVentana();
+				calendar.setVisible(true);
+				calendar.setBounds(calendario.getX()+115, calendario.getY()+140, calendar.getWidth(), calendar.getHeight());
+				
+				
+			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				calendario.setIcon(new ImageIcon(FrmPaciente.class.getResource("/Image/icons8_calendar_32px_2.png")));
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				calendario.setIcon(new ImageIcon(FrmPaciente.class.getResource("/Image/icons8_calendar_32px_1.png")));
+			}
+		});
+		calendario.setIcon(new ImageIcon(FrmPaciente.class.getResource("/Image/icons8_calendar_32px_1.png")));
+		calendario.setBounds(353, 152, 32, 32);
+		panelFRM.add(calendario);
 		
-		JButton btnAplicarFecha = new JButton("aplicar fecha");
+		
+		
+		
+		
+		/*JButton btnAplicarFecha = new JButton("aplicar fecha");
 		btnAplicarFecha.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				PacientesVO pac = new PacientesVO();
@@ -400,7 +458,7 @@ public class FrmPaciente extends JFrame {
 					SimpleDateFormat formateador = new SimpleDateFormat(formatoFecha);
 					txtFecha.setText(formateador.format(fecha).toString());
 					pac.setFecha_nacimiento(txtFecha.getText());
-					
+					 
 					//JOptionPane.showMessageDialog(contentPane, "La fecha seleccionada es:"+formateador.format(fecha), "Información", JOptionPane.ERROR_MESSAGE);
 				}
 				
@@ -408,23 +466,19 @@ public class FrmPaciente extends JFrame {
 			}
 		});
 		btnAplicarFecha.setBounds(372, 160, 89, 23);
-		panelFRM.add(btnAplicarFecha);
+		panelFRM.add(btnAplicarFecha);*/
 		
 	}
 	
+	
 	private void registrarPacienteActionPerformed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_registrarProveedorActionPerformed
         PacientesVO pac = new PacientesVO();
+        //RSDateChooser chooser = new RSDateChooser();
+        
         pac.setNombre(txtNombre.getText());
         pac.setApellidos(txtApellidos.getText());
-        if(chooser.getDatoFecha() == null) {
-			JOptionPane.showMessageDialog(contentPane, "Seleccione una fecha", "Error", JOptionPane.ERROR_MESSAGE);
-		}else {
-			String formatoFecha = "dd/MM/yyyy";
-			Date fecha = chooser.getDatoFecha();
-			SimpleDateFormat formateador = new SimpleDateFormat(formatoFecha);
-			txtFecha.setText(formateador.format(fecha).toString());
-			pac.setFecha_nacimiento(txtFecha.getText());
-        //pac.setFecha_nacimiento(txtFecha.getText());
+        //chooser.setDatoFecha(fecha);
+        pac.setFecha_nacimiento(txtFecha.getText());
         pac.setRut(txtRut.getText());
         pac.setDireccion(txtDireccion.getText());
         pac.setTelefono(txtTelefono.getText());
@@ -462,7 +516,6 @@ public class FrmPaciente extends JFrame {
     }//GEN-LAST:event_actualizarProveedorActionPerformed
 	
 	private void buscarPacienteActionPerformed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_buscarProveedorActionPerformed
-	
 	        //PacientesVO pac = PacientesDAO.buscarPacientes(txtID.getText());
 			PacientesVO pac = PacientesDAO.buscarPacientes(txtRut.getText());
 	        txtID.setText(pac.getIdPaciente()+"");

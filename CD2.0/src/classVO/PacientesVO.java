@@ -5,7 +5,7 @@ public class PacientesVO {
 	private Integer idPaciente;
 	private String nombre;
 	private String apellidos;
-	private String fecha_nacimiento;
+	public String fecha_nacimiento;
 	private String rut;
 	private String direccion;
 	private String telefono;
@@ -26,8 +26,8 @@ public class PacientesVO {
 	public String getFecha_nacimiento() {
 		return fecha_nacimiento;
 	}
-	public String setFecha_nacimiento(String fecha_nacimiento) {
-		return this.fecha_nacimiento = fecha_nacimiento;
+	public void setFecha_nacimiento(String fecha_nacimiento) {
+		this.fecha_nacimiento = fecha_nacimiento;
 	}
 	public String getApellidos() {
 		return apellidos;

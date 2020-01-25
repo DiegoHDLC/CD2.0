@@ -51,6 +51,7 @@ public class Login extends JFrame {
 	public Login() {
 		setUndecorated(true);
 		initComponents();
+		setLocationRelativeTo(null);
 		
 	}
 	

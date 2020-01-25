@@ -29,16 +29,18 @@ import javax.swing.JTabbedPane;
 import javax.swing.JRadioButton;
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
+import java.awt.MouseInfo;
+import java.awt.Point;
+
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.LayoutStyle.ComponentPlacement;
+import rojerusan.RSPasswordTextPlaceHolder;
 
 @SuppressWarnings("serial")
 public class Registrarse extends JFrame {
 
 	private JPanel contentPane;
-	private JPasswordField passwordField;
-	private JPasswordField passwordField_1;
 	private JPasswordField passwordField_2;
 	private JPasswordField passwordField_3;
 	private JPasswordField passwordField_4;
@@ -48,6 +50,7 @@ public class Registrarse extends JFrame {
 	public Registrarse() {
 		setUndecorated(true);
 		initComponents();
+		this.setLocationRelativeTo(null);
 		
 	}
 		
@@ -120,7 +123,7 @@ public class Registrarse extends JFrame {
 		JLabel lblIngreseSuContrasea = new JLabel("Ingrese su contrase\u00F1a");
 		lblIngreseSuContrasea.setForeground(Color.WHITE);
 		lblIngreseSuContrasea.setFont(new Font("Sitka Small", Font.PLAIN, 14));
-		lblIngreseSuContrasea.setBounds(132, 131, 162, 25);
+		lblIngreseSuContrasea.setBounds(131, 131, 162, 25);
 		panel.add(lblIngreseSuContrasea);
 		
 		JLabel lblIngreseElCodigo = new JLabel("Ingrese el c\u00F3digo maestro");
@@ -140,18 +143,6 @@ public class Registrarse extends JFrame {
 		JSeparator separator_2 = new JSeparator();
 		separator_2.setBounds(120, 222, 185, 11);
 		panel.add(separator_2);
-		
-		passwordField = new JPasswordField();
-		passwordField.setForeground(Color.WHITE);
-		passwordField.setBounds(105, 91, 208, 38);
-		passwordField.setBackground(new Color(19, 30, 49));
-		panel.add(passwordField);
-		
-		passwordField_1 = new JPasswordField();
-		passwordField_1.setForeground(Color.WHITE);
-		passwordField_1.setBackground(new Color(19, 30, 49));
-		passwordField_1.setBounds(105, 161, 208, 38);
-		panel.add(passwordField_1);
 		
 		passwordField_2 = new JPasswordField();
 		passwordField_2.setForeground(Color.WHITE);
@@ -295,7 +286,30 @@ public class Registrarse extends JFrame {
 			}
 		});
 		panel.add(btnRegistrarse);
-
+		
+		passwordField_1 = new JPasswordField();
+		passwordField_1.setBounds(315, 118, 6, 20);
+		panel.add(passwordField_1);
+		
+		passwordField = new JPasswordField();
+		passwordField.setBounds(153, 100, 6, 20);
+		panel.add(passwordField);
+		
 		
 	}
+	
+	private int x;
+    private int y;
+    private JPasswordField passwordField_1;
+    private JPasswordField passwordField;
+    
+    protected void this_mousePressed(MouseEvent e) {
+        x = e.getX();
+        y = e.getY();
+}
+
+    protected void this_mouseDragged(MouseEvent e) {
+        Point point = MouseInfo.getPointerInfo().getLocation();
+        setLocation(point.x - x, point.y - y);
+}
 }	

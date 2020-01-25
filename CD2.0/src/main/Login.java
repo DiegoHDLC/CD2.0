@@ -21,6 +21,8 @@ import mantenimientos.GestionUsuario;
 import rspanelgradiente.RSPanelGradiente;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
+
 import javax.swing.border.BevelBorder;
 
 @SuppressWarnings("serial")
@@ -29,6 +31,7 @@ public class Login extends JFrame {
 	private JPanel contentPane;
 	private JTextField txtUsuario;
 	private JPasswordField txtContraseña;
+	int xx,xy;
 
 	/**
 	 * Launch the application.
@@ -49,6 +52,26 @@ public class Login extends JFrame {
 	 * Create the frame.
 	 */
 	public Login() {
+		
+		addMouseMotionListener(new MouseMotionAdapter() {
+			@Override
+			public void mouseDragged(MouseEvent arg0) {
+				int x = arg0.getXOnScreen();
+				int y = arg0.getYOnScreen();
+				
+				setLocation(x-xx, y-xy);
+			}
+		});
+		
+		addMouseListener(new MouseAdapter() {
+			
+			@Override
+			public void mousePressed(MouseEvent e) {
+				
+				xx = e.getX();
+				xy = e.getY();
+			}
+		});
 		setUndecorated(true);
 		initComponents();
 		setLocationRelativeTo(null);

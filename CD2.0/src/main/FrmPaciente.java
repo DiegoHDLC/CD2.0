@@ -14,7 +14,7 @@ import sun.awt.RepaintArea;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import main.CalendarioVentana;
+import main.CalendarioVent;
 
 import java.awt.Font;
 import java.awt.event.MouseAdapter;
@@ -34,6 +34,7 @@ import java.awt.event.ActionEvent;
 import rojeru_san.componentes.RSCalendar;
 import rojeru_san.componentes.RSCalendarBeanInfo;
 import rojeru_san.componentes.RSDateChooserBeanInfo;
+import java.awt.event.MouseMotionAdapter;
 
 
 public class FrmPaciente extends javax.swing.JFrame {
@@ -47,6 +48,7 @@ public class FrmPaciente extends javax.swing.JFrame {
 	private JTextField txtDireccion;
 	private JTextField txtTelefono;
 	private JTextField txtStatus;
+	int xx,xy;
 	
 	private WindowAdapter windowAdapter = null;
 	
@@ -59,10 +61,11 @@ public class FrmPaciente extends javax.swing.JFrame {
 	/**
 	 * Create the frame.
 	 */
-	
 	public FrmPaciente(){
+		
+		
 		initComponents();
-		CalendarioVentana cln = new CalendarioVentana(null);
+		CalendarioVent cln = new CalendarioVent(null);
 		txtFecha.setText(cln.fechaTexto);
 		setLocationRelativeTo(null);
 	
@@ -493,7 +496,7 @@ public class FrmPaciente extends javax.swing.JFrame {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				
-				CalendarioVentana calendar = new CalendarioVentana(new eventoCerrar());
+				CalendarioVent calendar = new CalendarioVent(new eventoCerrar());
 				calendar.settxtNombre(txtNombre.getText());
 				calendar.settxtID(txtID.getText());
 				calendar.settxtApellidos(txtApellidos.getText());
@@ -649,6 +652,7 @@ public class FrmPaciente extends javax.swing.JFrame {
         @Override
         public void mouseClicked(MouseEvent arg0) {
             // TODO Auto-generated method stub
+        	
             dispose();
         }
 

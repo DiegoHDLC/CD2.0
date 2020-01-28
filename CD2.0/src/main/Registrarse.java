@@ -13,6 +13,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JSeparator;
+import javax.swing.border.BevelBorder;
 import javax.swing.border.EmptyBorder;
 
 import classVO.Usuario;
@@ -36,15 +37,12 @@ import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import rojerusan.RSPasswordTextPlaceHolder;
+import javax.swing.JTextField;
 
 @SuppressWarnings("serial")
 public class Registrarse extends JFrame {
 
 	private JPanel contentPane;
-	private JPasswordField passwordField_2;
-	private JPasswordField passwordField_3;
-	private JPasswordField passwordField_4;
-	private JPasswordField passwordField_5;
 
 	
 	public Registrarse() {
@@ -144,12 +142,6 @@ public class Registrarse extends JFrame {
 		separator_2.setBounds(120, 222, 185, 11);
 		panel.add(separator_2);
 		
-		passwordField_2 = new JPasswordField();
-		passwordField_2.setForeground(Color.WHITE);
-		passwordField_2.setBackground(new Color(19, 30, 49));
-		passwordField_2.setBounds(105, 233, 216, 38);
-		panel.add(passwordField_2);
-		
 		JButton btnRegresar = new JButton("Regresar");
 		btnRegresar.setForeground(Color.WHITE);
 		btnRegresar.setFont(new Font("Sitka Small", Font.PLAIN, 11));
@@ -164,13 +156,13 @@ public class Registrarse extends JFrame {
 		});
 		panel.add(btnRegresar);
 		
-		JRadioButton rdbtnNewRadioButton_1 = new JRadioButton("Secretari@");
-		rdbtnNewRadioButton_1.setBounds(435, 311, 89, 23);
-		panel.add(rdbtnNewRadioButton_1);
+		JRadioButton rdSecretaria = new JRadioButton("Secretari@");
+		rdSecretaria.setBounds(435, 311, 89, 23);
+		panel.add(rdSecretaria);
 		
-		JRadioButton rdbtnNewRadioButton = new JRadioButton("M\u00E9dico");
-		rdbtnNewRadioButton.setBounds(243, 311, 90, 23);
-		panel.add(rdbtnNewRadioButton);
+		JRadioButton rdMedico = new JRadioButton("M\u00E9dico");
+		rdMedico.setBounds(243, 311, 90, 23);
+		panel.add(rdMedico);
 		
 		JLabel lblElijaSuProfesin = new JLabel("Elija su profesi\u00F3n");
 		lblElijaSuProfesin.setBounds(321, 277, 150, 38);
@@ -183,12 +175,6 @@ public class Registrarse extends JFrame {
 		lblIngreseSuNombre.setFont(new Font("Sitka Small", Font.PLAIN, 14));
 		lblIngreseSuNombre.setBounds(505, 59, 139, 25);
 		panel.add(lblIngreseSuNombre);
-		
-		passwordField_3 = new JPasswordField();
-		passwordField_3.setForeground(Color.WHITE);
-		passwordField_3.setBackground(new Color(19, 30, 49));
-		passwordField_3.setBounds(458, 91, 208, 38);
-		panel.add(passwordField_3);
 		
 		JSeparator separator_3 = new JSeparator();
 		separator_3.setBounds(485, 78, 168, 11);
@@ -204,12 +190,6 @@ public class Registrarse extends JFrame {
 		separator_4.setBounds(485, 150, 168, 11);
 		panel.add(separator_4);
 		
-		passwordField_4 = new JPasswordField();
-		passwordField_4.setForeground(Color.WHITE);
-		passwordField_4.setBackground(new Color(19, 30, 49));
-		passwordField_4.setBounds(458, 161, 208, 38);
-		panel.add(passwordField_4);
-		
 		JLabel lblIngreseSuCiudad_1 = new JLabel("Ingrese su ciudad");
 		lblIngreseSuCiudad_1.setForeground(Color.WHITE);
 		lblIngreseSuCiudad_1.setFont(new Font("Sitka Small", Font.PLAIN, 14));
@@ -220,12 +200,6 @@ public class Registrarse extends JFrame {
 		separator_5.setBounds(473, 222, 185, 11);
 		panel.add(separator_5);
 		
-		passwordField_5 = new JPasswordField();
-		passwordField_5.setForeground(Color.WHITE);
-		passwordField_5.setBackground(new Color(19, 30, 49));
-		passwordField_5.setBounds(458, 233, 216, 38);
-		panel.add(passwordField_5);
-		
 		JButton btnRegistrarse = new JButton("Registrarse");
 		btnRegistrarse.setForeground(Color.WHITE);
 		btnRegistrarse.setFont(new Font("Sitka Small", Font.PLAIN, 11));
@@ -234,26 +208,26 @@ public class Registrarse extends JFrame {
 		btnRegistrarse.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				//usuario.contentEquals(null) || clave.contentEquals(null) || codigo.contentEquals(null)
-				String usuario = String.copyValueOf(passwordField.getPassword());
-				String clave = String.copyValueOf(passwordField_1.getPassword());
-				String codigo = String.copyValueOf(passwordField_2.getPassword());
-				String nombre = String.copyValueOf(passwordField_3.getPassword());
-				String apellido = String.copyValueOf(passwordField_4.getPassword());
-				String ciudad = String.copyValueOf(passwordField_5.getPassword());
+				String usuario = txtUsuario.getText();
+				String clave = String.copyValueOf(txtPassNoVisible.getPassword());
+				String codigo = txtCodigoMaestro.getText();
+				String nombre = txtNombre.getText();
+				String apellido = txtApellido.getText();
+				String ciudad = txtCiudad.getText();
 				System.out.println("\n"+usuario+clave+codigo);
 				if( !usuario.isEmpty() || !clave.isEmpty() || !codigo.isEmpty() || !nombre.isEmpty() || !apellido.isEmpty() || !ciudad.isEmpty()) {
 					
 					if( codigo.equals(connect_codigoMaestro.getCodigoMaestro())) {
 						
-						if(rdbtnNewRadioButton.isSelected() == true && rdbtnNewRadioButton_1.isSelected() == true) {JOptionPane.showMessageDialog(contentPane, "Escoja solo 1 profesion","Error",JOptionPane.ERROR_MESSAGE);}
-						else if(rdbtnNewRadioButton.isSelected() == false && rdbtnNewRadioButton_1.isSelected() == false) {JOptionPane.showMessageDialog(contentPane, "Escoja una profesion","Error",JOptionPane.ERROR_MESSAGE);}
-						else if(rdbtnNewRadioButton.isSelected() == true) {
+						if(rdMedico.isSelected() == true && rdSecretaria.isSelected() == true) {JOptionPane.showMessageDialog(contentPane, "Escoja solo 1 profesion","Error",JOptionPane.ERROR_MESSAGE);}
+						else if(rdMedico.isSelected() == false && rdSecretaria.isSelected() == false) {JOptionPane.showMessageDialog(contentPane, "Escoja una profesion","Error",JOptionPane.ERROR_MESSAGE);}
+						else if(rdMedico.isSelected() == true) {
 							System.out.println("medico");
 							Usuario usu = new Usuario(usuario,clave,nombre,apellido,ciudad,"1");
 							connect_tbUsuarios.insertUsuario(usu);
 							JOptionPane.showMessageDialog(contentPane, "Registrado exitosamente","OK",JOptionPane.INFORMATION_MESSAGE);
 						}
-						else if(rdbtnNewRadioButton_1.isSelected() == true) {
+						else if(rdSecretaria.isSelected() == true) {
 							System.out.println("secre");
 							Usuario usu1 = new Usuario(usuario,clave,nombre,apellido,ciudad,"0");
 							connect_tbUsuarios.insertUsuario(usu1);
@@ -287,21 +261,123 @@ public class Registrarse extends JFrame {
 		});
 		panel.add(btnRegistrarse);
 		
-		passwordField_1 = new JPasswordField();
-		passwordField_1.setBounds(315, 118, 6, 20);
-		panel.add(passwordField_1);
+		txtUsuario = new JTextField();
+		txtUsuario.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
+		txtUsuario.setCaretColor(new Color(255, 255, 255));
+		txtUsuario.setForeground(Color.WHITE);
+		txtUsuario.setFont(new Font("Sitka Small", Font.PLAIN, 15));
+		txtUsuario.setBackground(new Color(19, 30, 49));
+		txtUsuario.setBounds(105, 86, 216, 34);
+		panel.add(txtUsuario);
+		txtUsuario.setColumns(10);
 		
-		passwordField = new JPasswordField();
-		passwordField.setBounds(153, 100, 6, 20);
-		panel.add(passwordField);
+		txtCodigoMaestro = new JTextField();
+		txtCodigoMaestro.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
+		txtCodigoMaestro.setCaretColor(new Color(255, 255, 255));
+		txtCodigoMaestro.setForeground(Color.WHITE);
+		txtCodigoMaestro.setFont(new Font("Sitka Small", Font.PLAIN, 15));
+		txtCodigoMaestro.setBackground(new Color(19, 30, 49));
+		txtCodigoMaestro.setColumns(10);
+		txtCodigoMaestro.setBounds(105, 232, 216, 34);
+		panel.add(txtCodigoMaestro);
+		
+		txtNombre = new JTextField();
+		txtNombre.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
+		txtNombre.setCaretColor(new Color(255, 255, 255));
+		txtNombre.setForeground(Color.WHITE);
+		txtNombre.setFont(new Font("Sitka Small", Font.PLAIN, 15));
+		txtNombre.setBackground(new Color(19, 30, 49));
+		txtNombre.setColumns(10);
+		txtNombre.setBounds(458, 86, 216, 34);
+		panel.add(txtNombre);
+		
+		txtApellido = new JTextField();
+		txtApellido.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
+		txtApellido.setCaretColor(new Color(255, 255, 255));
+		txtApellido.setForeground(Color.WHITE);
+		txtApellido.setFont(new Font("Sitka Small", Font.PLAIN, 15));
+		txtApellido.setBackground(new Color(19, 30, 49));
+		txtApellido.setColumns(10);
+		txtApellido.setBounds(458, 158, 216, 34);
+		panel.add(txtApellido);
+		
+		txtCiudad = new JTextField();
+		txtCiudad.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
+		txtCiudad.setCaretColor(new Color(255, 255, 255));
+		txtCiudad.setForeground(Color.WHITE);
+		txtCiudad.setFont(new Font("Sitka Small", Font.PLAIN, 15));
+		txtCiudad.setBackground(new Color(19, 30, 49));
+		txtCiudad.setColumns(10);
+		txtCiudad.setBounds(458, 239, 216, 34);
+		panel.add(txtCiudad);
+		
+		txtPassVisible = new JTextField();
+		txtPassVisible.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
+		txtPassVisible.setCaretColor(new Color(255, 255, 255));
+		txtPassVisible.setForeground(Color.WHITE);
+		txtPassVisible.setFont(new Font("Sitka Small", Font.PLAIN, 15));
+		txtPassVisible.setBackground(new Color(19, 30, 49));
+		txtPassVisible.setColumns(10);
+		txtPassVisible.setBounds(105, 158, 216, 34);
+		txtPassVisible.setVisible(false);
+		panel.add(txtPassVisible);
+		
+		txtPassNoVisible = new JPasswordField();
+		txtPassNoVisible.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
+		txtPassNoVisible.setCaretColor(new Color(255, 255, 255));
+		txtPassNoVisible.setForeground(Color.WHITE);
+		txtPassNoVisible.setFont(new Font("Sitka Small", Font.PLAIN, 25));
+		txtPassNoVisible.setBackground(new Color(19, 30, 49));
+		txtPassNoVisible.setBounds(105, 158, 216, 34);
+		panel.add(txtPassNoVisible);
+		
+		JLabel Visibilidad = new JLabel("");
+		Visibilidad.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent arg0) {
+				
+				Visibilidad.setIcon(new ImageIcon(Registrarse.class.getResource("/Image/icons8_eye_40px_1.png")));
+				txtPassVisible.setText(String.copyValueOf(txtPassNoVisible.getPassword()));
+				txtPassVisible.setVisible(true);
+				txtPassNoVisible.setVisible(false);
+				
+			}
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				
+			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				Visibilidad.setIcon(new ImageIcon(Registrarse.class.getResource("/Image/icons8_closed_eye_40px_2.png")));
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				Visibilidad.setIcon(new ImageIcon(Registrarse.class.getResource("/Image/icons8_closed_eye_40px.png")));
+			}
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				Visibilidad.setIcon(new ImageIcon(Registrarse.class.getResource("/Image/icons8_closed_eye_40px_2.png")));
+				txtPassVisible.setVisible(false);
+				txtPassNoVisible.setVisible(true);
+				
+			}
+		});
+		Visibilidad.setIcon(new ImageIcon(Registrarse.class.getResource("/Image/icons8_closed_eye_40px.png")));
+		Visibilidad.setBounds(331, 150, 40, 40);
+		panel.add(Visibilidad);
 		
 		
 	}
 	
 	private int x;
     private int y;
-    private JPasswordField passwordField_1;
-    private JPasswordField passwordField;
+    private JTextField txtUsuario;
+    private JTextField txtCodigoMaestro;
+    private JTextField txtNombre;
+    private JTextField txtApellido;
+    private JTextField txtCiudad;
+    private JTextField txtPassVisible;
+    private JPasswordField txtPassNoVisible;
     
     protected void this_mousePressed(MouseEvent e) {
         x = e.getX();

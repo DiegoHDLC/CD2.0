@@ -322,31 +322,31 @@ public class FrmPaciente extends javax.swing.JFrame {
 		JLabel lblRegistrar = new JLabel("REGISTRAR");
 		lblRegistrar.setForeground(new Color(255, 255, 255));
 		lblRegistrar.setFont(new Font("Sitka Small", Font.PLAIN, 11));
-		lblRegistrar.setBounds(10, 472, 65, 14);
+		lblRegistrar.setBounds(20, 472, 65, 14);
 		panelFRM.add(lblRegistrar);
 		
 		JLabel lblActualizar = new JLabel("ACTUALIZAR");
 		lblActualizar.setForeground(new Color(255, 255, 255));
 		lblActualizar.setFont(new Font("Sitka Small", Font.PLAIN, 11));
-		lblActualizar.setBounds(194, 472, 73, 14);
+		lblActualizar.setBounds(204, 472, 73, 14);
 		panelFRM.add(lblActualizar);
 		
 		JLabel lblBuscar = new JLabel("BUSCAR POR RUT");
 		lblBuscar.setForeground(new Color(255, 255, 255));
 		lblBuscar.setFont(new Font("Sitka Small", Font.PLAIN, 11));
-		lblBuscar.setBounds(85, 472, 99, 14);
+		lblBuscar.setBounds(95, 472, 99, 14);
 		panelFRM.add(lblBuscar);
 		
 		JLabel lblEliminar = new JLabel("ELIMINAR");
 		lblEliminar.setForeground(new Color(255, 255, 255));
 		lblEliminar.setFont(new Font("Sitka Small", Font.PLAIN, 11));
-		lblEliminar.setBounds(277, 472, 65, 14);
+		lblEliminar.setBounds(287, 472, 65, 14);
 		panelFRM.add(lblEliminar);
 		
 		JLabel lblEliminarTodo = new JLabel("LIMPIAR TODO");
 		lblEliminarTodo.setForeground(new Color(255, 255, 255));
 		lblEliminarTodo.setFont(new Font("Sitka Small", Font.PLAIN, 11));
-		lblEliminarTodo.setBounds(352, 472, 83, 14);
+		lblEliminarTodo.setBounds(362, 472, 83, 14);
 		panelFRM.add(lblEliminarTodo);
 		
 		JLabel btnRegistrar = new JLabel("");
@@ -374,7 +374,7 @@ public class FrmPaciente extends javax.swing.JFrame {
 			}
 		});
 		btnRegistrar.setIcon(new ImageIcon(FrmPaciente.class.getResource("/Image/icons8_add_user_male_64px_1.png")));
-		btnRegistrar.setBounds(14, 397, 64, 64);
+		btnRegistrar.setBounds(24, 397, 64, 64);
 		panelFRM.add(btnRegistrar);
 		
 		JLabel btnActualizar = new JLabel("");
@@ -402,7 +402,7 @@ public class FrmPaciente extends javax.swing.JFrame {
 			}
 		});
 		btnActualizar.setIcon(new ImageIcon(FrmPaciente.class.getResource("/Image/icons8_update_user_64px_1.png")));
-		btnActualizar.setBounds(197, 397, 65, 64);
+		btnActualizar.setBounds(207, 397, 65, 64);
 		panelFRM.add(btnActualizar);
 		
 		JLabel btnBuscar = new JLabel("");
@@ -417,7 +417,7 @@ public class FrmPaciente extends javax.swing.JFrame {
 			}
 			@Override
 			public void mouseExited(MouseEvent e) {
-				btnBuscar.setIcon(new ImageIcon(FrmPaciente.class.getResource("/Image/icons8_search_more_64px_2.png")));
+				btnBuscar.setIcon(new ImageIcon(FrmPaciente.class.getResource("/Image/icons8_search_more_64px_4.png")));
 			}
 			
 			@Override
@@ -430,8 +430,8 @@ public class FrmPaciente extends javax.swing.JFrame {
 				btnBuscar.setIcon(new ImageIcon(FrmPaciente.class.getResource("/Image/icons8_search_more_64px_1.png")));
 			}
 		});
-		btnBuscar.setIcon(new ImageIcon(FrmPaciente.class.getResource("/Image/icons8_search_more_64px_2.png")));
-		btnBuscar.setBounds(103, 397, 64, 64);
+		btnBuscar.setIcon(new ImageIcon(FrmPaciente.class.getResource("/Image/icons8_search_more_64px_4.png")));
+		btnBuscar.setBounds(113, 397, 64, 64);
 		panelFRM.add(btnBuscar);
 		
 		
@@ -460,7 +460,7 @@ public class FrmPaciente extends javax.swing.JFrame {
 			}
 		});
 		btnEliminar.setIcon(new ImageIcon(FrmPaciente.class.getResource("/Image/icons8_denied_64px.png")));
-		btnEliminar.setBounds(277, 397, 64, 64);
+		btnEliminar.setBounds(287, 397, 64, 64);
 		panelFRM.add(btnEliminar);
 		
 		JLabel btnLimpiar = new JLabel("");
@@ -488,7 +488,7 @@ public class FrmPaciente extends javax.swing.JFrame {
 			}
 		});
 		btnLimpiar.setIcon(new ImageIcon(FrmPaciente.class.getResource("/Image/icons8_trash_64px.png")));
-		btnLimpiar.setBounds(359, 397, 64, 64);
+		btnLimpiar.setBounds(369, 397, 64, 64);
 		panelFRM.add(btnLimpiar);
 		
 		JLabel calendario = new JLabel("");
@@ -520,7 +520,7 @@ public class FrmPaciente extends javax.swing.JFrame {
 			}
 			@Override
 			public void mouseExited(MouseEvent e) {
-				calendario.setIcon(new ImageIcon(FrmPaciente.class.getResource("/Image/icons8_calendar_40px_1.png")));
+				calendario.setIcon(new ImageIcon(FrmPaciente.class.getResource("/Image/icons8_calendar_40px_3.png")));
 			}
 			@Override
 			public void mousePressed(MouseEvent e) {
@@ -532,7 +532,7 @@ public class FrmPaciente extends javax.swing.JFrame {
 				calendario.setIcon(new ImageIcon(FrmPaciente.class.getResource("/Image/icons8_calendar_40px_2.png")));
 			}
 		});
-		calendario.setIcon(new ImageIcon(FrmPaciente.class.getResource("/Image/icons8_calendar_40px_1.png")));
+		calendario.setIcon(new ImageIcon(FrmPaciente.class.getResource("/Image/icons8_calendar_40px_3.png")));
 		calendario.setBounds(345, 150, 40, 40);
 		panelFRM.add(calendario);
 		
@@ -547,9 +547,14 @@ public class FrmPaciente extends javax.swing.JFrame {
         PacientesVO pac = new PacientesVO();
         //RSDateChooser chooser = new RSDateChooser();
         
+        if(txtNombre.getText().isEmpty() || txtApellidos.getText().isEmpty() || txtFecha.getText().isEmpty()
+        		|| txtRut.getText().isEmpty() || txtTelefono.getText().isEmpty() || txtDireccion.getText().isEmpty()) 
+        {
+        txtStatus.setText("Complete todos los datos para registrar al paciente");
+        }
+        else {
         pac.setNombre(txtNombre.getText());
         pac.setApellidos(txtApellidos.getText());
-        //chooser.setDatoFecha(fecha);
         pac.setFecha_nacimiento(txtFecha.getText());
         pac.setRut(txtRut.getText());
         pac.setDireccion(txtDireccion.getText());
@@ -563,6 +568,7 @@ public class FrmPaciente extends javax.swing.JFrame {
         txtTelefono.setText("");
         txtDireccion.setText("");
         cargarPacientes(0);
+        }
     }//GEN-LAST:event_registrarProveedorActionPerformed
 
 	private void actualizarPacienteActionPerformed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_actualizarProveedorActionPerformed
@@ -582,6 +588,7 @@ public class FrmPaciente extends javax.swing.JFrame {
         txtRut.setText("");
         txtDireccion.setText("");
         txtTelefono.setText("");
+        txtID.setText("");
         cargarPacientes(0);
     }//GEN-LAST:event_actualizarProveedorActionPerformed
 	
@@ -594,9 +601,10 @@ public class FrmPaciente extends javax.swing.JFrame {
 	}
 	private void buscarPacienteActionPerformed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_buscarProveedorActionPerformed
 	        //PacientesVO pac = PacientesDAO.buscarPacientes(txtID.getText());
+			//JOptionPane.showMessageDialog(contentPane, "RUT : "+txtRut.getText(), "Error", JOptionPane.ERROR_MESSAGE);
 			
-			if(verificarRut(txtRut.getText()) == 0) {
-				JOptionPane.showMessageDialog(contentPane, "Digite el RUT del paciente", "Error", JOptionPane.ERROR_MESSAGE);
+			if(txtRut.getText().isEmpty()) {
+				txtStatus.setText("Porfavor, digite el RUT del paciente");
 			}else {
 			
 			PacientesVO pac = PacientesDAO.buscarPacientes(txtRut.getText());
@@ -612,7 +620,13 @@ public class FrmPaciente extends javax.swing.JFrame {
 	    }//GEN-LAST:event_buscarProveedorActionPerformed
 	
 	private void eliminarPacienteActionPerformed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_eliminarProveedorActionPerformed
-        String resp = PacientesDAO.eliminarPacientes(txtID.getText());
+		if(txtNombre.getText().isEmpty() || txtApellidos.getText().isEmpty() || txtFecha.getText().isEmpty()
+        		|| txtRut.getText().isEmpty() || txtTelefono.getText().isEmpty() || txtDireccion.getText().isEmpty()) 
+        {
+        txtStatus.setText("Complete todos los datos para eliminar al paciente");
+        }
+        else {
+        String resp = PacientesDAO.eliminarPacientes(txtRut.getText());
         txtStatus.setText(resp);
         txtNombre.setText("");
         txtApellidos.setText("");
@@ -621,6 +635,7 @@ public class FrmPaciente extends javax.swing.JFrame {
         txtDireccion.setText("");
         txtTelefono.setText("");
         cargarPacientes(0);
+        }
     }//GEN-LAST:event_eliminarProveedorActionPerformed
 
 	private void limpiarPacienteActionPerformed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_limpiarProveedorActionPerformed

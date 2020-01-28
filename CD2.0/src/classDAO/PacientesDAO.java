@@ -5,7 +5,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+
+import javax.swing.JOptionPane;
+
 import classVO.PacientesVO;
+import main.FrmPaciente;
 import utils.MySQLConexion;
 
 public class PacientesDAO {
@@ -63,7 +67,7 @@ public class PacientesDAO {
 			pst.setString(6,pac.getTelefono());
 			pst.setInt(7,pac.getIdPaciente());
 			pst.execute();
-			result = "Paciente actualizado con exito, ID:"+pac.getIdPaciente();
+			result = "Paciente actualizado con exito, RUT:"+pac.getRut();
 		}catch(SQLException e) {
 			result = "Error en la consulta: "+e.getMessage();
 		}finally {
@@ -89,20 +93,27 @@ public class PacientesDAO {
 		String sql = "SELECT * FROM pacientes WHERE rut = ?";
 		try {
 			pst = cn.prepareStatement(sql);
-			//pst.setString(1,clave);
 			pst.setString(1, rut);
 			ResultSet rs = pst.executeQuery();
+			
 			if(rs.next()) {
-				pac.setIdPaciente(Integer.parseInt(rs.getString(1)));
-				pac.setNombre(rs.getString(2));
-				pac.setApellidos(rs.getString(3));
-				pac.setFecha_nacimiento(rs.getString(4));
-				pac.setRut(rs.getString(5));
-				pac.setDireccion(rs.getString(6));
-				pac.setTelefono(rs.getString(7));
 				
+					pac.setIdPaciente(Integer.parseInt(rs.getString(1)));
+					pac.setNombre(rs.getString(2));
+					pac.setApellidos(rs.getString(3));
+					pac.setFecha_nacimiento(rs.getString(4));
+					pac.setRut(rs.getString(5));
+					pac.setDireccion(rs.getString(6));
+					pac.setTelefono(rs.getString(7));
+					pac.setResultado("Busqueda Exitosa");
+					
+
 			}
-			pac.setResultado("Busqueda Exitosa");
+			else {
+				//pac.setResultado(""+pac.getRut());
+				pac.setResultado("Paciente no encontrado");
+			}
+			
 		}catch(SQLException e) {
 			pac.setResultado("Error en la consulta: "+e.getMessage());
 		}finally {
@@ -123,7 +134,7 @@ public class PacientesDAO {
         @SuppressWarnings("static-access")
 		Connection cn = cc.getConexion();
 		PreparedStatement pst = null;
-		String sql = "DELETE FROM pacientes WHERE id_paciente = ?";
+		String sql = "DELETE FROM pacientes WHERE rut = ?";
 		try {
 			pst = cn.prepareStatement(sql);
 			pst.setString(1,clave);

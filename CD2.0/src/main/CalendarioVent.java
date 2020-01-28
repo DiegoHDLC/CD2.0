@@ -119,7 +119,19 @@ public class CalendarioVent extends JDialog {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 					if(calendar.getDatoFecha() == null) {	
-						JOptionPane.showMessageDialog(contentPanel, "Seleccione una fecha", "Error", JOptionPane.ERROR_MESSAGE);	
+						
+						FrmPaciente frm = new FrmPaciente();
+						frm.settxtNombre(txtNombre);
+						frm.settxtApellidos(txtApellidos);
+						frm.settxtDireccion(txtDireccion);
+						frm.settxtID(txtID);
+						frm.settxtNombre(txtNombre);
+						frm.settxtRut(txtRut);
+						frm.settxtStatus(txtStatus);
+						frm.settxtTelefono(txtTelefono);
+						frm.setVisible(true);
+						JOptionPane.showMessageDialog(contentPanel, "Seleccione una fecha", "Error", JOptionPane.ERROR_MESSAGE);
+						dispose();
 					}else {
 					
 					String formatoFecha = "dd/MM/yyyy";

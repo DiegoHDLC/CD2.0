@@ -33,6 +33,8 @@ import java.awt.GridLayout;
 import java.awt.MouseInfo;
 import java.awt.Point;
 
+import javax.swing.ButtonGroup;
+import javax.swing.ButtonModel;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.LayoutStyle.ComponentPlacement;
@@ -43,6 +45,8 @@ import javax.swing.JTextField;
 public class Registrarse extends JFrame {
 
 	private JPanel contentPane;
+	private ButtonGroup bg = new ButtonGroup();
+	JRadioButton rdSecretaria = new JRadioButton("SECRETARIA");
 
 	
 	public Registrarse() {
@@ -90,11 +94,11 @@ public class Registrarse extends JFrame {
 		lblMinimizar.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseEntered(MouseEvent e) {
-				lblMinimizar.setIcon(new ImageIcon(Registrarse.class.getResource("/Image/icons8_minimize_window_32px_1.png")));
+				lblMinimizar.setIcon(new ImageIcon(Registrarse.class.getResource("/Image/minimizar_blanco_32px.png")));
 			}
 			@Override
 			public void mouseExited(MouseEvent e) {
-				lblMinimizar.setIcon(new ImageIcon(Registrarse.class.getResource("/Image/icons8_minimize_window_32px_2.png")));
+				lblMinimizar.setIcon(new ImageIcon(Registrarse.class.getResource("/Image/minimizar_azul_oscuro_32px.png")));
 			}
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -102,7 +106,7 @@ public class Registrarse extends JFrame {
 				setState(JFrame.ICONIFIED);
 			}
 		});
-		lblMinimizar.setIcon(new ImageIcon(Registrarse.class.getResource("/Image/icons8_minimize_window_32px_2.png")));
+		lblMinimizar.setIcon(new ImageIcon(Registrarse.class.getResource("/Image/minimizar_azul_oscuro_32px.png")));
 		lblMinimizar.setBounds(739, 0, 32, 32);
 		barra.add(lblMinimizar);
 		
@@ -146,7 +150,7 @@ public class Registrarse extends JFrame {
 		btnRegresar.setForeground(Color.WHITE);
 		btnRegresar.setFont(new Font("Sitka Small", Font.PLAIN, 11));
 		btnRegresar.setBackground(new Color(19, 30, 49));
-		btnRegresar.setBounds(192, 352, 113, 38);
+		btnRegresar.setBounds(208, 399, 113, 38);
 		btnRegresar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				dispose();
@@ -156,38 +160,92 @@ public class Registrarse extends JFrame {
 		});
 		panel.add(btnRegresar);
 		
-		JRadioButton rdSecretaria = new JRadioButton("Secretari@");
-		rdSecretaria.setBounds(435, 311, 89, 23);
-		panel.add(rdSecretaria);
 		
-		JRadioButton rdMedico = new JRadioButton("M\u00E9dico");
-		rdMedico.setBounds(243, 311, 90, 23);
+		
+		JRadioButton rdMedico = new JRadioButton("MEDICO");
+		rdMedico.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent arg0) {
+				if(rdMedico.isSelected() == false) {
+					rdMedico.setIcon(new ImageIcon(Registrarse.class.getResource("/Image/icons8_medical_doctor_64px_3.png")));
+				}
+				
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				rdMedico.setIcon(new ImageIcon(Registrarse.class.getResource("/Image/icons8_medical_doctor_64px_1.png")));
+				if(rdMedico.isSelected() == true) {
+					rdMedico.setIcon(new ImageIcon(Registrarse.class.getResource("/Image/icons8_medical_doctor_64px_4.png")));
+				}
+			}
+			@Override
+			public void mouseClicked(MouseEvent e) {
+					rdMedico.setIcon(new ImageIcon(Registrarse.class.getResource("/Image/icons8_medical_doctor_64px_4.png")));
+					rdSecretaria.setIcon(new ImageIcon(Registrarse.class.getResource("/Image/secretaria_celeste_64px.png")));
+			
+			}
+		});
+		rdMedico.setFont(new Font("Sitka Small", Font.BOLD, 14));
+		rdMedico.setForeground(new Color(255, 255, 255));
+		rdMedico.setBackground(new Color(33, 44, 61));
+		rdMedico.setIcon(new ImageIcon(Registrarse.class.getResource("/Image/icons8_medical_doctor_64px_1.png")));
+		rdMedico.setBounds(208, 294, 139, 73);
 		panel.add(rdMedico);
 		
+		
+		rdSecretaria.setFont(new Font("Sitka Small", Font.BOLD, 14));
+		rdSecretaria.setForeground(new Color(255, 255, 255));
+		rdSecretaria.setBackground(new Color(33, 44, 61));
+		rdSecretaria.setIcon(new ImageIcon(Registrarse.class.getResource("/Image/secretaria_celeste_64px.png")));
+		rdSecretaria.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				rdSecretaria.setIcon(new ImageIcon(Registrarse.class.getResource("/Image/secretaria_roja_64px.png")));
+				if(rdSecretaria.isSelected()) {
+					rdMedico.setIcon(new ImageIcon(Registrarse.class.getResource("/Image/icons8_medical_doctor_64px_1.png")));
+				}
+			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+					if(rdSecretaria.isSelected()== false) {
+					rdSecretaria.setIcon(new ImageIcon(Registrarse.class.getResource("/Image/secretaria_blanca_64px.png")));
+					}
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				rdSecretaria.setIcon(new ImageIcon(Registrarse.class.getResource("/Image/secretaria_celeste_64px.png")));
+				if(rdSecretaria.isSelected()) {
+					rdSecretaria.setIcon(new ImageIcon(Registrarse.class.getResource("/Image/secretaria_roja_64px.png")));
+				}
+			}
+		});
+		rdSecretaria.setBounds(432, 294, 173, 73);
+		panel.add(rdSecretaria);
+		
 		JLabel lblElijaSuProfesin = new JLabel("Elija su profesi\u00F3n");
-		lblElijaSuProfesin.setBounds(321, 277, 150, 38);
+		lblElijaSuProfesin.setBounds(312, 277, 152, 22);
 		panel.add(lblElijaSuProfesin);
 		lblElijaSuProfesin.setForeground(Color.WHITE);
-		lblElijaSuProfesin.setFont(new Font("Sitka Small", Font.PLAIN, 14));
+		lblElijaSuProfesin.setFont(new Font("Sitka Small", Font.PLAIN, 17));
 		
 		JLabel lblIngreseSuNombre = new JLabel("Ingrese su nombre");
 		lblIngreseSuNombre.setForeground(Color.WHITE);
 		lblIngreseSuNombre.setFont(new Font("Sitka Small", Font.PLAIN, 14));
-		lblIngreseSuNombre.setBounds(505, 59, 139, 25);
+		lblIngreseSuNombre.setBounds(502, 59, 139, 25);
 		panel.add(lblIngreseSuNombre);
 		
 		JSeparator separator_3 = new JSeparator();
-		separator_3.setBounds(485, 78, 168, 11);
+		separator_3.setBounds(458, 78, 216, 11);
 		panel.add(separator_3);
 		
 		JLabel lblIngreseSuCiudad = new JLabel("Ingrese su apellido");
 		lblIngreseSuCiudad.setForeground(Color.WHITE);
 		lblIngreseSuCiudad.setFont(new Font("Sitka Small", Font.PLAIN, 14));
-		lblIngreseSuCiudad.setBounds(505, 131, 139, 25);
+		lblIngreseSuCiudad.setBounds(502, 131, 139, 25);
 		panel.add(lblIngreseSuCiudad);
 		
 		JSeparator separator_4 = new JSeparator();
-		separator_4.setBounds(485, 150, 168, 11);
+		separator_4.setBounds(458, 150, 216, 11);
 		panel.add(separator_4);
 		
 		JLabel lblIngreseSuCiudad_1 = new JLabel("Ingrese su ciudad");
@@ -197,14 +255,14 @@ public class Registrarse extends JFrame {
 		panel.add(lblIngreseSuCiudad_1);
 		
 		JSeparator separator_5 = new JSeparator();
-		separator_5.setBounds(473, 222, 185, 11);
+		separator_5.setBounds(458, 222, 216, 11);
 		panel.add(separator_5);
 		
 		JButton btnRegistrarse = new JButton("Registrarse");
 		btnRegistrarse.setForeground(Color.WHITE);
 		btnRegistrarse.setFont(new Font("Sitka Small", Font.PLAIN, 11));
 		btnRegistrarse.setBackground(new Color(19, 30, 49));
-		btnRegistrarse.setBounds(473, 352, 113, 38);
+		btnRegistrarse.setBounds(458, 399, 113, 38);
 		btnRegistrarse.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				//usuario.contentEquals(null) || clave.contentEquals(null) || codigo.contentEquals(null)
@@ -308,7 +366,7 @@ public class Registrarse extends JFrame {
 		txtCiudad.setFont(new Font("Sitka Small", Font.PLAIN, 15));
 		txtCiudad.setBackground(new Color(19, 30, 49));
 		txtCiudad.setColumns(10);
-		txtCiudad.setBounds(458, 239, 216, 34);
+		txtCiudad.setBounds(458, 232, 216, 34);
 		panel.add(txtCiudad);
 		
 		txtPassVisible = new JTextField();
@@ -363,10 +421,11 @@ public class Registrarse extends JFrame {
 			}
 		});
 		Visibilidad.setIcon(new ImageIcon(Registrarse.class.getResource("/Image/icons8_closed_eye_40px.png")));
-		Visibilidad.setBounds(331, 150, 40, 40);
+		Visibilidad.setBounds(331, 155, 40, 40);
 		panel.add(Visibilidad);
 		
-		
+		bg.add(rdMedico);
+		bg.add(rdSecretaria);
 	}
 	
 	private int x;

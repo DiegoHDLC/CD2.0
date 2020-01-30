@@ -35,6 +35,15 @@ import rojeru_san.componentes.RSCalendar;
 import rojeru_san.componentes.RSCalendarBeanInfo;
 import rojeru_san.componentes.RSDateChooserBeanInfo;
 import java.awt.event.MouseMotionAdapter;
+import javax.swing.JLayeredPane;
+import javax.swing.SwingConstants;
+import rojeru_san.componentes.RSDateChooser;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeEvent;
+import java.awt.Rectangle;
+import com.toedter.components.JSpinField;
+import com.toedter.calendar.JDateChooser;
+import javax.swing.border.SoftBevelBorder;
 
 
 public class FrmPaciente extends javax.swing.JFrame {
@@ -48,6 +57,10 @@ public class FrmPaciente extends javax.swing.JFrame {
 	private JTextField txtDireccion;
 	private JTextField txtTelefono;
 	private JTextField txtStatus;
+	RSPanelGradiente panelFRM = new RSPanelGradiente();
+	RSPanelGradiente panelHorarios = new RSPanelGradiente();
+	JPanel pestañaHorarios = new JPanel();
+	
 	int xx,xy;
 	
 	private WindowAdapter windowAdapter = null;
@@ -65,13 +78,13 @@ public class FrmPaciente extends javax.swing.JFrame {
 		
 		
 		initComponents();
-		CalendarioVent cln = new CalendarioVent(null);
-		txtFecha.setText(cln.fechaTexto);
+		
+		
 		setLocationRelativeTo(null);
-	
+		
 	}
 	
-
+	
 	public void settxtNombre(String txtNombre) {
 		this.txtNombre.setText(txtNombre);
 	}
@@ -126,7 +139,6 @@ public class FrmPaciente extends javax.swing.JFrame {
 
 	private void initComponents() {
 		
-		
 		setUndecorated(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 497, 540);
@@ -136,7 +148,7 @@ public class FrmPaciente extends javax.swing.JFrame {
 		contentPane.setLayout(null);
 		
 		JPanel barra = new JPanel();
-		barra.setBackground(new Color(66, 169, 174));
+		barra.setBackground(new Color(46, 118, 121));
 		barra.setBounds(0, 0, 497, 32);
 		contentPane.add(barra);
 		barra.setLayout(null);
@@ -166,11 +178,11 @@ public class FrmPaciente extends javax.swing.JFrame {
 		lblMinimizar.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseEntered(MouseEvent e) {
-				lblMinimizar.setIcon(new ImageIcon(Login.class.getResource("/Image/icons8_minimize_window_32px_1.png")));
+				lblMinimizar.setIcon(new ImageIcon(Login.class.getResource("/Image/minimizar_blanco_32px.png")));
 			}
 			@Override
 			public void mouseExited(MouseEvent e) {
-				lblMinimizar.setIcon(new ImageIcon(Login.class.getResource("/Image/icons8_minimize_window_32px_2.png")));
+				lblMinimizar.setIcon(new ImageIcon(Login.class.getResource("/Image/minimizar_azul_oscuro_32px.png")));
 			}
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -178,22 +190,101 @@ public class FrmPaciente extends javax.swing.JFrame {
 				setState(JFrame.ICONIFIED);
 			}
 		});
-		lblMinimizar.setIcon(new ImageIcon(Login.class.getResource("/Image/icons8_minimize_window_32px_2.png")));
+		lblMinimizar.setIcon(new ImageIcon(Login.class.getResource("/Image/minimizar_azul_oscuro_32px.png")));
 		lblMinimizar.setBounds(436, 0, 32, 32);
 		barra.add(lblMinimizar);
 		
+		JPanel pestañaPaciente = new JPanel();
+		pestañaPaciente.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
+		panelFRM.setVisible(true);
+		panelHorarios.setVisible(false);
+		pestañaPaciente.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent arg0) {
+				if(panelHorarios.isVisible() == false) {
+					pestañaPaciente.setBackground(new Color(66, 169, 174));
+				}else {
+				pestañaPaciente.setBackground(new Color(127, 197, 200));
+				}
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				if(panelHorarios.isVisible() == true) {
+					pestañaPaciente.setBackground(new Color(46, 118, 121));
+				}else {
+					pestañaPaciente.setBackground(new Color(66, 169, 174));
+				}
+			}
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if(panelHorarios.isVisible() == true) {
+					pestañaHorarios.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
+					pestañaPaciente.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
+					pestañaPaciente.setBackground(new Color(66, 169, 174));
+					pestañaHorarios.setBackground(new Color(46, 118, 121));
+					panelFRM.setVisible(true);
+					panelHorarios.setVisible(false);
+				}
+			}
+		});
+		pestañaPaciente.setBackground(new Color(66, 169, 174));
+		pestañaPaciente.setBounds(0, 0, 103, 32);
+		barra.add(pestañaPaciente);
+		
 		JLabel tituloPaciente = new JLabel("PACIENTE");
+		pestañaPaciente.add(tituloPaciente);
 		tituloPaciente.setForeground(new Color(33, 44, 61));
 		tituloPaciente.setFont(new Font("Sitka Small", Font.BOLD, 15));
-		tituloPaciente.setBounds(10, 0, 86, 32);
-		barra.add(tituloPaciente);
+		pestañaHorarios.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
 		
-		RSPanelGradiente panelFRM = new RSPanelGradiente();
+		
+		pestañaHorarios.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				if(panelHorarios.isVisible()==false) {
+					pestañaHorarios.setBackground(new Color(127, 197, 200));
+				}
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				if(panelFRM.isVisible() == false) {
+					pestañaPaciente.setBackground(new Color(46, 118, 121));
+					pestañaHorarios.setBackground(new Color(66, 169, 174));
+				}else {
+				pestañaHorarios.setBackground(new Color(46, 118, 121));
+				}
+			}
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if(panelFRM.isVisible() == true) {
+					pestañaPaciente.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
+					pestañaHorarios.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
+					pestañaHorarios.setBackground(new Color(66, 169, 174));
+					pestañaPaciente.setBackground(new Color(46, 118, 121));
+					panelHorarios.setVisible(true);
+					panelFRM.setVisible(false);
+				}
+				
+				
+				
+			}
+		});
+		pestañaHorarios.setBackground(new Color(46, 118, 121));
+		pestañaHorarios.setBounds(103, 0, 103, 32);
+		barra.add(pestañaHorarios);
+		
+		JLabel label = new JLabel("HORARIOS");
+		label.setForeground(new Color(33, 44, 61));
+		label.setFont(new Font("Sitka Small", Font.BOLD, 15));
+		pestañaHorarios.add(label);
+		
+		
 		panelFRM.setBounds(0, 32, 497, 508);
 		contentPane.add(panelFRM);
 		panelFRM.setColorSecundario(new Color(33, 44, 61));
 		panelFRM.setColorPrimario(new Color(66, 169, 174));
 		panelFRM.setLayout(null);
+		
 		
 		JLabel lblID = new JLabel("ID:");
 		lblID.setForeground(new Color(255, 255, 255));
@@ -232,13 +323,14 @@ public class FrmPaciente extends javax.swing.JFrame {
 		panelFRM.add(txtApellidos);
 		
 		txtFecha = new JTextField();
+		txtFecha.setIgnoreRepaint(true);
 		txtFecha.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		txtFecha.setCaretColor(new Color(255, 255, 255));
 		txtFecha.setFont(new Font("Sitka Small", Font.PLAIN, 15));
 		txtFecha.setForeground(new Color(255, 255, 255));
 		txtFecha.setColumns(10);
 		txtFecha.setBackground(new Color(19, 30, 49));
-		txtFecha.setBounds(122, 152, 221, 38);
+		txtFecha.setBounds(122, 152, 129, 38);
 		panelFRM.add(txtFecha);
 		
 		txtRut = new JTextField();
@@ -490,55 +582,104 @@ public class FrmPaciente extends javax.swing.JFrame {
 		btnLimpiar.setIcon(new ImageIcon(FrmPaciente.class.getResource("/Image/icons8_trash_64px.png")));
 		btnLimpiar.setBounds(369, 397, 64, 64);
 		panelFRM.add(btnLimpiar);
+	
 		
-		JLabel calendario = new JLabel("");
-		calendario.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent arg0) {
-				
-				CalendarioVent calendar = new CalendarioVent(new eventoCerrar());
-				calendar.settxtNombre(txtNombre.getText());
-				calendar.settxtID(txtID.getText());
-				calendar.settxtApellidos(txtApellidos.getText());
-				calendar.settxtRut(txtRut.getText());
-				calendar.settxtDireccion(txtDireccion.getText());
-				calendar.settxtTelefono(txtTelefono.getText());
-				calendar.settxtStatus(txtStatus.getText());
-			
-				calendar.setVisible(true);
-				calendar.setBounds(calendario.getX()+450, calendario.getY()+140, calendar.getWidth(), calendar.getHeight());
-				
-				
-				
+		RSDateChooser calendarioTest = new RSDateChooser();
+		calendarioTest.addPropertyChangeListener("DatoFecha",new PropertyChangeListener() {
+			public void propertyChange(PropertyChangeEvent arg0) {
+				if(arg0.getNewValue() !=null) {
+				JOptionPane.showMessageDialog(contentPane, "Seleccione una fecha"+arg0.getPropertyName()+":"+arg0.getNewValue(), "Error", JOptionPane.ERROR_MESSAGE);
+				}
 			}
+		});
+		calendarioTest.setColorBackground(new Color(19, 30, 49));
+		calendarioTest.setBounds(new Rectangle(0, 0, 0, 40));
+		calendarioTest.setRequestFocusEnabled(false);
+		calendarioTest.setBorder(null);
+		calendarioTest.setBounds(246, 152, 38, 32);
+		calendarioTest.setOpaque(false);
+		
+		
+		panelFRM.add(calendarioTest);
+		
+		
+		panelHorarios.setBounds(0, 32, 497, 508);
+		contentPane.add(panelHorarios);
+		panelHorarios.setColorSecundario(new Color(33, 44, 61));
+		panelHorarios.setColorPrimario(new Color(66, 169, 174));
+		
+		CalendarioVent cln = new CalendarioVent(null);
+		txtFecha.setText(cln.fechaTexto);
+		
+		JLabel lblLogout = new JLabel("Cerrar Sesi\u00F3n");
+		lblLogout.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseEntered(MouseEvent e) {
-				//CalendarioVentana.calendar.getDatoFecha().toString();
-				
-				
-				calendario.setIcon(new ImageIcon(FrmPaciente.class.getResource("/Image/icons8_calendar_40px_2.png")));
+				lblLogout.setIcon(new ImageIcon(FrmPaciente.class.getResource("/Image/icons8_logout_rounded_left_20px.png")));
+				lblLogout.setForeground(new Color(255,255,255));
 			}
 			@Override
 			public void mouseExited(MouseEvent e) {
-				calendario.setIcon(new ImageIcon(FrmPaciente.class.getResource("/Image/icons8_calendar_40px_3.png")));
-			}
-			@Override
-			public void mousePressed(MouseEvent e) {
-				calendario.setIcon(new ImageIcon(FrmPaciente.class.getResource("/Image/icons8_calendar_40px.png")));
-			
+				lblLogout.setIcon(new ImageIcon(FrmPaciente.class.getResource("/Image/icons8_logout_rounded_left_20px_1.png")));
+				lblLogout.setForeground(new Color(66, 169, 174));
 			}
 			@Override
 			public void mouseReleased(MouseEvent e) {
-				calendario.setIcon(new ImageIcon(FrmPaciente.class.getResource("/Image/icons8_calendar_40px_2.png")));
+				lblLogout.setIcon(new ImageIcon(FrmPaciente.class.getResource("/Image/icons8_logout_rounded_left_20px.png")));
+				lblLogout.setForeground(new Color(255,255,255));
+			}
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				Login lg = new Login();
+				lg.setVisible(true);
+				dispose();
+			}
+			@Override
+			public void mousePressed(MouseEvent e) {
+				lblLogout.setIcon(new ImageIcon(FrmPaciente.class.getResource("/Image/icons8_logout_rounded_left_20px_2.png")));
+				lblLogout.setForeground(new Color(174, 178, 185));
 			}
 		});
-		calendario.setIcon(new ImageIcon(FrmPaciente.class.getResource("/Image/icons8_calendar_40px_3.png")));
-		calendario.setBounds(345, 150, 40, 40);
-		panelFRM.add(calendario);
+		lblLogout.setForeground(new Color(66, 169, 174));
+		lblLogout.setVerticalAlignment(SwingConstants.TOP);
+		lblLogout.setIcon(new ImageIcon(FrmPaciente.class.getResource("/Image/icons8_logout_rounded_left_20px_1.png")));
+		lblLogout.setBounds(369, 8, 111, 20);
+		panelFRM.add(lblLogout);
 		
-		JLabel txtLabel = new JLabel("");
-		txtLabel.setBounds(336, 225, 46, 14);
-		panelFRM.add(txtLabel);
+		lblLogout.setToolTipText("Cerrar sesión");
+		
+		
+		
+		JLabel lvlAdd = new JLabel("");
+		lvlAdd.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent arg0) {
+				lvlAdd.setIcon(new ImageIcon(FrmPaciente.class.getResource("/Image/icons8_add_32px_1.png")));
+			}
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				lvlAdd.setIcon(new ImageIcon(FrmPaciente.class.getResource("/Image/icons8_add_32px_2.png")));
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				lvlAdd.setIcon(new ImageIcon(FrmPaciente.class.getResource("/Image/icons8_add_32px.png")));
+			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				lvlAdd.setIcon(new ImageIcon(FrmPaciente.class.getResource("/Image/icons8_add_32px_2.png")));
+			}
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				String formatoFecha = "dd/MM/yyyy";
+				SimpleDateFormat formateador = new SimpleDateFormat(formatoFecha);
+				txtFecha.setText(formateador.format(calendarioTest.getDatoFecha()));
+			}
+		});
+		lvlAdd.setIcon(new ImageIcon(FrmPaciente.class.getResource("/Image/icons8_add_32px.png")));
+		lvlAdd.setBounds(287, 148, 32, 38);
+		panelFRM.add(lvlAdd);
+		
+		
 		
 	}
 	

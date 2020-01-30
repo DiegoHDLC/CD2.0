@@ -113,52 +113,6 @@ public class Login extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		JPanel barra = new JPanel();
-		barra.setBounds(0, 0, 800, 32);
-		barra.setBackground(new java.awt.Color(66, 169, 174));
-		contentPane.add(barra);
-		barra.setLayout(null);
-		
-		JLabel lblCerrar = new JLabel("");
-		lblCerrar.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent arg0) {
-				System.exit(0);
-			}
-			@Override
-			public void mouseEntered(MouseEvent e) {
-				lblCerrar.setIcon(new ImageIcon(Login.class.getResource("/Image/icons8_close_window_32px_1.png")));
-				
-			}
-			@Override
-			public void mouseExited(MouseEvent e) {
-				lblCerrar.setIcon(new ImageIcon(Login.class.getResource("/Image/icons8_close_window_32px.png")));
-			}
-		});
-		lblCerrar.setIcon(new ImageIcon(Login.class.getResource("/Image/icons8_close_window_32px.png")));
-		lblCerrar.setBounds(768, 0, 32, 32);
-		barra.add(lblCerrar);
-		
-		JLabel lblMinimizar = new JLabel("");
-		lblMinimizar.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseEntered(MouseEvent e) {
-				lblMinimizar.setIcon(new ImageIcon(Login.class.getResource("/Image/icons8_minimize_window_32px_1.png")));
-			}
-			@Override
-			public void mouseExited(MouseEvent e) {
-				lblMinimizar.setIcon(new ImageIcon(Login.class.getResource("/Image/icons8_minimize_window_32px_2.png")));
-			}
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				
-				setState(JFrame.ICONIFIED);
-			}
-		});
-		lblMinimizar.setIcon(new ImageIcon(Login.class.getResource("/Image/icons8_minimize_window_32px_2.png")));
-		lblMinimizar.setBounds(739, 0, 32, 32);
-		barra.add(lblMinimizar);
-		
 		JPanel panel_der = new JPanel();
 		panel_der.setBounds(450, 0, 350, 448);
 		panel_der.setBackground(new java.awt.Color(33, 44, 61));
@@ -254,6 +208,25 @@ public class Login extends JFrame {
 		lblregistrar.setForeground(Color.CYAN);
 		lblregistrar.setBounds(131, 336, 113, 14);
 		panel_der.add(lblregistrar);
+		
+		JLabel lblMinimizar = new JLabel("");
+		lblMinimizar.setBounds(318, 0, 32, 32);
+		panel_der.add(lblMinimizar);
+		lblMinimizar.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				lblMinimizar.setIcon(new ImageIcon(Login.class.getResource("/Image/minimizar_blanco_32px.png")));
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				lblMinimizar.setIcon(new ImageIcon(Login.class.getResource("/Image/minimizar_celeste_32px.png")));
+			}
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				setState(JFrame.ICONIFIED);
+			}
+		});
+		lblMinimizar.setIcon(new ImageIcon(Login.class.getResource("/Image/minimizar_celeste_32px.png")));
 		lblregistrar.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseEntered(MouseEvent e) {
@@ -283,15 +256,20 @@ public class Login extends JFrame {
 		panel_izq.setLayout(null);
 		
 		JLabel lblCentro = new JLabel("CENTRO DENTAL");
-		lblCentro.setBounds(28, 72, 372, 46);
+		lblCentro.setBounds(29, 46, 372, 46);
 		panel_izq.add(lblCentro);
 		lblCentro.setForeground(new Color(255, 255, 255));
 		lblCentro.setBackground(new Color(255, 255, 255));
 		lblCentro.setFont(new Font("Sitka Small", Font.PLAIN, 42));
 		
 		JLabel lblNewLabel_1 = new JLabel("");
-		lblNewLabel_1.setBounds(166, 195, 120, 120);
+		lblNewLabel_1.setBounds(156, 103, 120, 120);
 		panel_izq.add(lblNewLabel_1);
 		lblNewLabel_1.setIcon(new ImageIcon(Login.class.getResource("/Image/icons8_tooth_120px.png")));
+		
+		JLabel lblNewLabel = new JLabel("");
+		lblNewLabel.setIcon(new ImageIcon(Login.class.getResource("/Image/CD.jpg")));
+		lblNewLabel.setBounds(0, 0, 450, 450);
+		panel_izq.add(lblNewLabel);
 	}
 }	

@@ -129,6 +129,7 @@ public class CalendarioVent extends JDialog {
 						frm.settxtRut(txtRut);
 						frm.settxtStatus(txtStatus);
 						frm.settxtTelefono(txtTelefono);
+						//FrmPaciente.calendario.setVisible(false);
 						frm.setVisible(true);
 						JOptionPane.showMessageDialog(contentPanel, "Seleccione una fecha", "Error", JOptionPane.ERROR_MESSAGE);
 						dispose();
@@ -147,6 +148,7 @@ public class CalendarioVent extends JDialog {
 					frm.settxtRut(txtRut);
 					frm.settxtStatus(txtStatus);
 					frm.settxtTelefono(txtTelefono);
+					//FrmPaciente.calendario.setVisible(true);
 					frm.setVisible(true);
 					dispose();
 					

@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import javax.swing.JOptionPane;
 
 import classVO.PacientesVO;
-import main.FrmPaciente;
+import main.Secre;
 import utils.MySQLConexion;
 
 public class PacientesDAO {

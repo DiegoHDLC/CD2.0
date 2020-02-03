@@ -10,133 +10,49 @@ import javax.swing.border.EmptyBorder;
 import classDAO.PacientesDAO;
 import classVO.PacientesVO;
 import rspanelgradiente.RSPanelGradiente;
-import sun.awt.RepaintArea;
+import utils.MySQLConexion;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import main.CalendarioVent;
+
 
 import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import javax.swing.ImageIcon;
 import javax.swing.JTextField;
-import javax.swing.SwingUtilities;
 import javax.swing.border.BevelBorder;
-import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import rojeru_san.componentes.RSCalendar;
-import rojeru_san.componentes.RSCalendarBeanInfo;
-import rojeru_san.componentes.RSDateChooserBeanInfo;
-import java.awt.event.MouseMotionAdapter;
-import javax.swing.JLayeredPane;
-import javax.swing.SwingConstants;
 import rojeru_san.componentes.RSDateChooser;
 import java.beans.PropertyChangeListener;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.beans.PropertyChangeEvent;
 import java.awt.Rectangle;
-import com.toedter.components.JSpinField;
-import com.toedter.calendar.JDateChooser;
 import javax.swing.border.SoftBevelBorder;
+import javax.swing.JMenuBar;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
+import javax.swing.DefaultComboBoxModel;
+import rojerusan.RSComboMetro;
+import jcalendar.JDateChooser;
+//import com.toedter.calendar.JDateChooser;
 
 
-public class FrmPaciente extends javax.swing.JFrame {
+public class Secre extends javax.swing.JFrame {
 
-	private JPanel contentPane;
-	private JTextField txtID;
-	private JTextField txtNombre;
-	private JTextField txtApellidos;
-	public static JTextField txtFecha;
-	private JTextField txtRut;
-	private JTextField txtDireccion;
-	private JTextField txtTelefono;
-	private JTextField txtStatus;
-	RSPanelGradiente panelFRM = new RSPanelGradiente();
-	RSPanelGradiente panelHorarios = new RSPanelGradiente();
-	JPanel pestañaHorarios = new JPanel();
-	
-	int xx,xy;
-	
-	private WindowAdapter windowAdapter = null;
-	
-
-	/**
-	 * Launch the application.
-	 */
-	
-
-	/**
-	 * Create the frame.
-	 */
-	public FrmPaciente(){
-		
-		
+	private static final long serialVersionUID = 1L;
+	public Secre(){
 		initComponents();
-		
-		
 		setLocationRelativeTo(null);
-		
 	}
 	
-	
-	public void settxtNombre(String txtNombre) {
-		this.txtNombre.setText(txtNombre);
-	}
-	public void settxtID(String txtID) {
-		this.txtID.setText(txtID);
-	}
-	public void settxtApellidos(String txtApellidos) {
-		this.txtApellidos.setText(txtApellidos);
-	}
-	public void settxtFecha(String txtFecha) {
-		this.txtFecha.setText(txtFecha);
-	}
-	public void settxtRut(String txtRut) {
-		this.txtRut.setText(txtRut);
-	}
-	public void settxtDireccion(String txtDireccion) {
-		this.txtDireccion.setText(txtDireccion);
-	}
-	public void settxtTelefono(String txtTelefono) {
-		this.txtTelefono.setText(txtTelefono);
-	}
-	public void settxtStatus(String txtStatus) {
-		this.txtStatus.setText(txtStatus);
-	}
-	public String gettxtNombre() {
-		return txtNombre.getText();
-	}
-	public String gettxtApellidos() {
-		return txtApellidos.getText();
-	}
-	public String gettxtID() {
-		return txtID.getText();
-	}
-	public String gettxtFecha() {
-		return txtFecha.getText();
-	}
-	public String gettxtRut() {
-		return txtRut.getText();
-	}
-	public String gettxtDireccion() {
-		return txtDireccion.getText();
-	}
-	public String gettxtTelefono() {
-		return txtTelefono.getText();
-	}
-	public String gettxtStatus() {
-		return txtStatus.getText();
-	}
-	
-
-	
-
+	@SuppressWarnings("unchecked")
 	private void initComponents() {
 		
 		setUndecorated(true);
@@ -151,9 +67,10 @@ public class FrmPaciente extends javax.swing.JFrame {
 		barra.setBackground(new Color(46, 118, 121));
 		barra.setBounds(0, 0, 497, 32);
 		contentPane.add(barra);
-		barra.setLayout(null);
+		
 		
 		JLabel lblCerrar = new JLabel("");
+		lblCerrar.setBounds(465, 0, 32, 32);
 		lblCerrar.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
@@ -169,12 +86,13 @@ public class FrmPaciente extends javax.swing.JFrame {
 				lblCerrar.setIcon(new ImageIcon(Login.class.getResource("/Image/icons8_close_window_32px.png")));
 			}
 		});
-		lblCerrar.setIcon(new ImageIcon(FrmPaciente.class.getResource("/Image/icons8_close_window_32px.png")));
-		lblCerrar.setBounds(465, 0, 32, 32);
+		barra.setLayout(null);
+		lblCerrar.setIcon(new ImageIcon(Secre.class.getResource("/Image/icons8_close_window_32px.png")));
 		barra.add(lblCerrar);
 
 		
 		JLabel lblMinimizar = new JLabel("");
+		lblMinimizar.setBounds(436, 0, 32, 32);
 		lblMinimizar.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseEntered(MouseEvent e) {
@@ -191,20 +109,71 @@ public class FrmPaciente extends javax.swing.JFrame {
 			}
 		});
 		lblMinimizar.setIcon(new ImageIcon(Login.class.getResource("/Image/minimizar_azul_oscuro_32px.png")));
-		lblMinimizar.setBounds(436, 0, 32, 32);
 		barra.add(lblMinimizar);
+		JMenuBar menuBar = new JMenuBar();
+		menuBar.setBorder(null);
+		menuBar.setBackground(new Color(46, 118, 121));
+		menuBar.setBounds(400, 0, 41, 34);
+		barra.add(menuBar);
 		
+		JMenu menu = new JMenu("");
+		menu.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent arg0) {
+				menu.setIcon(new ImageIcon(Secre.class.getResource("/Image/icons8_menu_32px_2.png")));
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				menu.setIcon(new ImageIcon(Secre.class.getResource("/Image/icons8_menu_32px_1.png")));
+			}
+			@Override
+			public void mousePressed(MouseEvent e) {
+				menu.setIcon(new ImageIcon(Secre.class.getResource("/Image/icons8_menu_32px_3.png")));
+			}
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				menu.setIcon(new ImageIcon(Secre.class.getResource("/Image/icons8_menu_32px_2.png")));
+			}
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				
+			}
+		});
+		menu.setContentAreaFilled(false);
+		menu.setBorder(null);
+		menu.setBackground(new Color(33, 44, 61));
+		menu.setIcon(new ImageIcon(Secre.class.getResource("/Image/icons8_menu_32px_1.png")));
+		menuBar.add(menu);
+		
+		JMenuItem btnCerrarSesion = new JMenuItem("Cerrar Sesión");
+		btnCerrarSesion.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				Login lg = new Login();
+				lg.setVisible(true);
+				dispose();
+			}
+		});
+		menu.add(btnCerrarSesion);
+		btnCerrarSesion.setOpaque(true);
+		btnCerrarSesion.setContentAreaFilled(false);
+		btnCerrarSesion.setBorder(null);
+		btnCerrarSesion.setIcon(new ImageIcon(Secre.class.getResource("/Image/icons8_logout_rounded_left_20px.png")));
+		btnCerrarSesion.setFont(new Font("Sitka Small", Font.BOLD, 14));
+		btnCerrarSesion.setForeground(new Color(255, 255, 255));
+		btnCerrarSesion.setBackground(new Color(33, 44, 61));
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////		
+/////////////////////////////PACIENTE///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////		
 		JPanel pestañaPaciente = new JPanel();
+		pestañaPaciente.setBounds(0, 0, 103, 32);
 		pestañaPaciente.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
-		panelFRM.setVisible(true);
-		panelHorarios.setVisible(false);
 		pestañaPaciente.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseEntered(MouseEvent arg0) {
 				if(panelHorarios.isVisible() == false) {
 					pestañaPaciente.setBackground(new Color(66, 169, 174));
 				}else {
-				pestañaPaciente.setBackground(new Color(127, 197, 200));
+					pestañaPaciente.setBackground(new Color(127, 197, 200));
 				}
 			}
 			@Override
@@ -228,56 +197,15 @@ public class FrmPaciente extends javax.swing.JFrame {
 			}
 		});
 		pestañaPaciente.setBackground(new Color(66, 169, 174));
-		pestañaPaciente.setBounds(0, 0, 103, 32);
 		barra.add(pestañaPaciente);
 		
 		JLabel tituloPaciente = new JLabel("PACIENTE");
 		pestañaPaciente.add(tituloPaciente);
 		tituloPaciente.setForeground(new Color(33, 44, 61));
 		tituloPaciente.setFont(new Font("Sitka Small", Font.BOLD, 15));
-		pestañaHorarios.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
 		
-		
-		pestañaHorarios.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseEntered(MouseEvent e) {
-				if(panelHorarios.isVisible()==false) {
-					pestañaHorarios.setBackground(new Color(127, 197, 200));
-				}
-			}
-			@Override
-			public void mouseExited(MouseEvent e) {
-				if(panelFRM.isVisible() == false) {
-					pestañaPaciente.setBackground(new Color(46, 118, 121));
-					pestañaHorarios.setBackground(new Color(66, 169, 174));
-				}else {
-				pestañaHorarios.setBackground(new Color(46, 118, 121));
-				}
-			}
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				if(panelFRM.isVisible() == true) {
-					pestañaPaciente.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
-					pestañaHorarios.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
-					pestañaHorarios.setBackground(new Color(66, 169, 174));
-					pestañaPaciente.setBackground(new Color(46, 118, 121));
-					panelHorarios.setVisible(true);
-					panelFRM.setVisible(false);
-				}
-				
-				
-				
-			}
-		});
-		pestañaHorarios.setBackground(new Color(46, 118, 121));
-		pestañaHorarios.setBounds(103, 0, 103, 32);
-		barra.add(pestañaHorarios);
-		
-		JLabel label = new JLabel("HORARIOS");
-		label.setForeground(new Color(33, 44, 61));
-		label.setFont(new Font("Sitka Small", Font.BOLD, 15));
-		pestañaHorarios.add(label);
-		
+		panelHorarios.setVisible(false);
+		panelFRM.setVisible(true);
 		
 		panelFRM.setBounds(0, 32, 497, 508);
 		contentPane.add(panelFRM);
@@ -450,22 +378,22 @@ public class FrmPaciente extends javax.swing.JFrame {
 			}
 			@Override
 			public void mouseEntered(MouseEvent arg0) {
-				btnRegistrar.setIcon(new ImageIcon(FrmPaciente.class.getResource("/Image/icons8_add_user_male_64px_4.png")));
+				btnRegistrar.setIcon(new ImageIcon(Secre.class.getResource("/Image/icons8_add_user_male_64px_4.png")));
 			}
 			@Override
 			public void mouseExited(MouseEvent e) {
-				btnRegistrar.setIcon(new ImageIcon(FrmPaciente.class.getResource("/Image/icons8_add_user_male_64px_1.png")));
+				btnRegistrar.setIcon(new ImageIcon(Secre.class.getResource("/Image/icons8_add_user_male_64px_1.png")));
 			}
 			@Override
 			public void mousePressed(MouseEvent arg0) {
-				btnRegistrar.setIcon(new ImageIcon(FrmPaciente.class.getResource("/Image/icons8_add_user_male_64px.png")));
+				btnRegistrar.setIcon(new ImageIcon(Secre.class.getResource("/Image/icons8_add_user_male_64px.png")));
 			}
 			@Override
 			public void mouseReleased(MouseEvent e) {
-				btnRegistrar.setIcon(new ImageIcon(FrmPaciente.class.getResource("/Image/icons8_add_user_male_64px_4.png")));
+				btnRegistrar.setIcon(new ImageIcon(Secre.class.getResource("/Image/icons8_add_user_male_64px_4.png")));
 			}
 		});
-		btnRegistrar.setIcon(new ImageIcon(FrmPaciente.class.getResource("/Image/icons8_add_user_male_64px_1.png")));
+		btnRegistrar.setIcon(new ImageIcon(Secre.class.getResource("/Image/icons8_add_user_male_64px_1.png")));
 		btnRegistrar.setBounds(24, 397, 64, 64);
 		panelFRM.add(btnRegistrar);
 		
@@ -477,23 +405,23 @@ public class FrmPaciente extends javax.swing.JFrame {
 			}
 			@Override
 			public void mouseEntered(MouseEvent e) {
-				btnActualizar.setIcon(new ImageIcon(FrmPaciente.class.getResource("/Image/icons8_update_user_64px_2.png")));
+				btnActualizar.setIcon(new ImageIcon(Secre.class.getResource("/Image/icons8_update_user_64px_2.png")));
 			}
 			@Override
 			public void mouseExited(MouseEvent e) {
-				btnActualizar.setIcon(new ImageIcon(FrmPaciente.class.getResource("/Image/icons8_update_user_64px_1.png")));
+				btnActualizar.setIcon(new ImageIcon(Secre.class.getResource("/Image/icons8_update_user_64px_1.png")));
 			}
 			@Override
 			public void mousePressed(MouseEvent e) {
-				btnActualizar.setIcon(new ImageIcon(FrmPaciente.class.getResource("/Image/icons8_update_user_64px.png")));
+				btnActualizar.setIcon(new ImageIcon(Secre.class.getResource("/Image/icons8_update_user_64px.png")));
 			}
 			@Override
 			public void mouseReleased(MouseEvent e) {
-				btnActualizar.setIcon(new ImageIcon(FrmPaciente.class.getResource("/Image/icons8_update_user_64px_2.png")));
+				btnActualizar.setIcon(new ImageIcon(Secre.class.getResource("/Image/icons8_update_user_64px_2.png")));
 				
 			}
 		});
-		btnActualizar.setIcon(new ImageIcon(FrmPaciente.class.getResource("/Image/icons8_update_user_64px_1.png")));
+		btnActualizar.setIcon(new ImageIcon(Secre.class.getResource("/Image/icons8_update_user_64px_1.png")));
 		btnActualizar.setBounds(207, 397, 65, 64);
 		panelFRM.add(btnActualizar);
 		
@@ -505,24 +433,24 @@ public class FrmPaciente extends javax.swing.JFrame {
 			}
 			@Override
 			public void mouseEntered(MouseEvent e) {
-				btnBuscar.setIcon(new ImageIcon(FrmPaciente.class.getResource("/Image/icons8_search_more_64px_3.png")));
+				btnBuscar.setIcon(new ImageIcon(Secre.class.getResource("/Image/icons8_search_more_64px_3.png")));
 			}
 			@Override
 			public void mouseExited(MouseEvent e) {
-				btnBuscar.setIcon(new ImageIcon(FrmPaciente.class.getResource("/Image/icons8_search_more_64px_4.png")));
+				btnBuscar.setIcon(new ImageIcon(Secre.class.getResource("/Image/icons8_search_more_64px_4.png")));
 			}
 			
 			@Override
 			public void mouseReleased(MouseEvent e) {
-				btnBuscar.setIcon(new ImageIcon(FrmPaciente.class.getResource("/Image/icons8_search_more_64px_3.png")));
+				btnBuscar.setIcon(new ImageIcon(Secre.class.getResource("/Image/icons8_search_more_64px_3.png")));
 			}
 			
 			@Override
 			public void mousePressed(MouseEvent e) {
-				btnBuscar.setIcon(new ImageIcon(FrmPaciente.class.getResource("/Image/icons8_search_more_64px_1.png")));
+				btnBuscar.setIcon(new ImageIcon(Secre.class.getResource("/Image/icons8_search_more_64px_1.png")));
 			}
 		});
-		btnBuscar.setIcon(new ImageIcon(FrmPaciente.class.getResource("/Image/icons8_search_more_64px_4.png")));
+		btnBuscar.setIcon(new ImageIcon(Secre.class.getResource("/Image/icons8_search_more_64px_4.png")));
 		btnBuscar.setBounds(113, 397, 64, 64);
 		panelFRM.add(btnBuscar);
 		
@@ -536,22 +464,22 @@ public class FrmPaciente extends javax.swing.JFrame {
 			}
 			@Override
 			public void mouseEntered(MouseEvent e) {
-				btnEliminar.setIcon(new ImageIcon(FrmPaciente.class.getResource("/Image/icons8_denied_64px_1.png")));
+				btnEliminar.setIcon(new ImageIcon(Secre.class.getResource("/Image/icons8_denied_64px_1.png")));
 			}
 			@Override
 			public void mouseExited(MouseEvent e) {
-				btnEliminar.setIcon(new ImageIcon(FrmPaciente.class.getResource("/Image/icons8_denied_64px.png")));
+				btnEliminar.setIcon(new ImageIcon(Secre.class.getResource("/Image/icons8_denied_64px.png")));
 			}
 			@Override
 			public void mousePressed(MouseEvent e) {
-				btnEliminar.setIcon(new ImageIcon(FrmPaciente.class.getResource("/Image/icons8_denied_64px_3.png")));
+				btnEliminar.setIcon(new ImageIcon(Secre.class.getResource("/Image/icons8_denied_64px_3.png")));
 			}
 			@Override
 			public void mouseReleased(MouseEvent e) {
-				btnEliminar.setIcon(new ImageIcon(FrmPaciente.class.getResource("/Image/icons8_denied_64px_1.png")));
+				btnEliminar.setIcon(new ImageIcon(Secre.class.getResource("/Image/icons8_denied_64px_1.png")));
 			}
 		});
-		btnEliminar.setIcon(new ImageIcon(FrmPaciente.class.getResource("/Image/icons8_denied_64px.png")));
+		btnEliminar.setIcon(new ImageIcon(Secre.class.getResource("/Image/icons8_denied_64px.png")));
 		btnEliminar.setBounds(287, 397, 64, 64);
 		panelFRM.add(btnEliminar);
 		
@@ -563,126 +491,161 @@ public class FrmPaciente extends javax.swing.JFrame {
 			}
 			@Override
 			public void mouseEntered(MouseEvent e) {
-				btnLimpiar.setIcon(new ImageIcon(FrmPaciente.class.getResource("/Image/icons8_trash_64px_1.png")));
+				btnLimpiar.setIcon(new ImageIcon(Secre.class.getResource("/Image/icons8_trash_64px_1.png")));
 			}
 			@Override
 			public void mouseExited(MouseEvent e) {
-				btnLimpiar.setIcon(new ImageIcon(FrmPaciente.class.getResource("/Image/icons8_trash_64px.png")));
+				btnLimpiar.setIcon(new ImageIcon(Secre.class.getResource("/Image/icons8_trash_64px.png")));
 			}
 			@Override
 			public void mousePressed(MouseEvent e) {
-				btnLimpiar.setIcon(new ImageIcon(FrmPaciente.class.getResource("/Image/icons8_trash_64px_2.png")));
+				btnLimpiar.setIcon(new ImageIcon(Secre.class.getResource("/Image/icons8_trash_64px_2.png")));
 			}
 			@Override
 			public void mouseReleased(MouseEvent e) {
-				btnLimpiar.setIcon(new ImageIcon(FrmPaciente.class.getResource("/Image/icons8_trash_64px_1.png")));
+				btnLimpiar.setIcon(new ImageIcon(Secre.class.getResource("/Image/icons8_trash_64px_1.png")));
 				
 			}
 		});
-		btnLimpiar.setIcon(new ImageIcon(FrmPaciente.class.getResource("/Image/icons8_trash_64px.png")));
+		btnLimpiar.setIcon(new ImageIcon(Secre.class.getResource("/Image/icons8_trash_64px.png")));
 		btnLimpiar.setBounds(369, 397, 64, 64);
 		panelFRM.add(btnLimpiar);
-	
 		
-		RSDateChooser calendarioTest = new RSDateChooser();
-		calendarioTest.addPropertyChangeListener("DatoFecha",new PropertyChangeListener() {
-			public void propertyChange(PropertyChangeEvent arg0) {
-				if(arg0.getNewValue() !=null) {
-				JOptionPane.showMessageDialog(contentPane, "Seleccione una fecha"+arg0.getPropertyName()+":"+arg0.getNewValue(), "Error", JOptionPane.ERROR_MESSAGE);
+			
+			RSDateChooser calendarioTest = new RSDateChooser();
+			calendarioTest.addPropertyChangeListener("DatoFecha",new PropertyChangeListener() {
+				public void propertyChange(PropertyChangeEvent arg0) {
+					if(arg0.getNewValue() !=null) {
+					JOptionPane.showMessageDialog(contentPane, "Seleccione una fecha"+arg0.getPropertyName()+":"+arg0.getNewValue(), "Error", JOptionPane.ERROR_MESSAGE);
+					}
 				}
-			}
-		});
-		calendarioTest.setColorBackground(new Color(19, 30, 49));
-		calendarioTest.setBounds(new Rectangle(0, 0, 0, 40));
-		calendarioTest.setRequestFocusEnabled(false);
-		calendarioTest.setBorder(null);
-		calendarioTest.setBounds(246, 152, 38, 32);
-		calendarioTest.setOpaque(false);
-		
-		
-		panelFRM.add(calendarioTest);
-		
+			});
+			calendarioTest.setColorBackground(new Color(19, 30, 49));
+			calendarioTest.setBounds(new Rectangle(0, 0, 0, 40));
+			calendarioTest.setRequestFocusEnabled(false);
+			calendarioTest.setBorder(null);
+			calendarioTest.setBounds(246, 152, 38, 32);
+			calendarioTest.setOpaque(false);
+			
+			
+			panelFRM.add(calendarioTest);
+			
+			JLabel lvlAdd = new JLabel("");
+			lvlAdd.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mousePressed(MouseEvent arg0) {
+					lvlAdd.setIcon(new ImageIcon(Secre.class.getResource("/Image/icons8_add_32px_1.png")));
+				}
+				@Override
+				public void mouseReleased(MouseEvent e) {
+					lvlAdd.setIcon(new ImageIcon(Secre.class.getResource("/Image/icons8_add_32px_2.png")));
+				}
+				@Override
+				public void mouseExited(MouseEvent e) {
+					lvlAdd.setIcon(new ImageIcon(Secre.class.getResource("/Image/icons8_add_32px.png")));
+				}
+				@Override
+				public void mouseEntered(MouseEvent e) {
+					lvlAdd.setIcon(new ImageIcon(Secre.class.getResource("/Image/icons8_add_32px_2.png")));
+				}
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					String formatoFecha = "dd/MM/yyyy";
+					SimpleDateFormat formateador = new SimpleDateFormat(formatoFecha);
+					txtFecha.setText(formateador.format(calendarioTest.getDatoFecha()));
+				}
+			});
+			lvlAdd.setIcon(new ImageIcon(Secre.class.getResource("/Image/icons8_add_32px.png")));
+			lvlAdd.setBounds(287, 148, 32, 38);
+			panelFRM.add(lvlAdd);
 		
 		panelHorarios.setBounds(0, 32, 497, 508);
 		contentPane.add(panelHorarios);
 		panelHorarios.setColorSecundario(new Color(33, 44, 61));
 		panelHorarios.setColorPrimario(new Color(66, 169, 174));
+		panelHorarios.setLayout(null);
 		
-		CalendarioVent cln = new CalendarioVent(null);
-		txtFecha.setText(cln.fechaTexto);
+		comboEspecial.setColorFondo(new Color(66, 169, 174));
+		comboEspecial.setColorBorde(new Color(66, 169, 174));
+		comboEspecial.setColorArrow(new Color(66, 169, 174));
+		comboEspecial.setFont(new Font("Sitka Small", Font.BOLD, 12));
+		comboEspecial.setBounds(55, 45, 303, 32);
+		panelHorarios.add(comboEspecial);
 		
-		JLabel lblLogout = new JLabel("Cerrar Sesi\u00F3n");
-		lblLogout.addMouseListener(new MouseAdapter() {
+		RSComboMetro comboMetro_1 = new RSComboMetro();
+		comboMetro_1.setFont(new Font("Sitka Small", Font.BOLD, 12));
+		comboMetro_1.setModel(new DefaultComboBoxModel(new String[] {"Medicos"}));
+		comboMetro_1.setBounds(55, 144, 303, 32);
+		panelHorarios.add(comboMetro_1);
+//////////////////////////////////////////////////////////////////////////////////		
+////////////////////////////HORARIOS/////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////			
+		pestañaHorarios.setBounds(103, 0, 103, 32);
+		pestañaHorarios.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
+		pestañaHorarios.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseEntered(MouseEvent e) {
-				lblLogout.setIcon(new ImageIcon(FrmPaciente.class.getResource("/Image/icons8_logout_rounded_left_20px.png")));
-				lblLogout.setForeground(new Color(255,255,255));
+				if(panelHorarios.isVisible()==false) {
+					pestañaHorarios.setBackground(new Color(127, 197, 200));
+				}
 			}
 			@Override
 			public void mouseExited(MouseEvent e) {
-				lblLogout.setIcon(new ImageIcon(FrmPaciente.class.getResource("/Image/icons8_logout_rounded_left_20px_1.png")));
-				lblLogout.setForeground(new Color(66, 169, 174));
-			}
-			@Override
-			public void mouseReleased(MouseEvent e) {
-				lblLogout.setIcon(new ImageIcon(FrmPaciente.class.getResource("/Image/icons8_logout_rounded_left_20px.png")));
-				lblLogout.setForeground(new Color(255,255,255));
-			}
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				Login lg = new Login();
-				lg.setVisible(true);
-				dispose();
-			}
-			@Override
-			public void mousePressed(MouseEvent e) {
-				lblLogout.setIcon(new ImageIcon(FrmPaciente.class.getResource("/Image/icons8_logout_rounded_left_20px_2.png")));
-				lblLogout.setForeground(new Color(174, 178, 185));
-			}
-		});
-		lblLogout.setForeground(new Color(66, 169, 174));
-		lblLogout.setVerticalAlignment(SwingConstants.TOP);
-		lblLogout.setIcon(new ImageIcon(FrmPaciente.class.getResource("/Image/icons8_logout_rounded_left_20px_1.png")));
-		lblLogout.setBounds(369, 8, 111, 20);
-		panelFRM.add(lblLogout);
-		
-		lblLogout.setToolTipText("Cerrar sesión");
-		
-		
-		
-		JLabel lvlAdd = new JLabel("");
-		lvlAdd.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mousePressed(MouseEvent arg0) {
-				lvlAdd.setIcon(new ImageIcon(FrmPaciente.class.getResource("/Image/icons8_add_32px_1.png")));
-			}
-			@Override
-			public void mouseReleased(MouseEvent e) {
-				lvlAdd.setIcon(new ImageIcon(FrmPaciente.class.getResource("/Image/icons8_add_32px_2.png")));
-			}
-			@Override
-			public void mouseExited(MouseEvent e) {
-				lvlAdd.setIcon(new ImageIcon(FrmPaciente.class.getResource("/Image/icons8_add_32px.png")));
-			}
-			@Override
-			public void mouseEntered(MouseEvent e) {
-				lvlAdd.setIcon(new ImageIcon(FrmPaciente.class.getResource("/Image/icons8_add_32px_2.png")));
+				if(panelFRM.isVisible() == false) {
+					pestañaPaciente.setBackground(new Color(46, 118, 121));
+					pestañaHorarios.setBackground(new Color(66, 169, 174));
+				}else {
+				pestañaHorarios.setBackground(new Color(46, 118, 121));
+				}
 			}
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				String formatoFecha = "dd/MM/yyyy";
-				SimpleDateFormat formateador = new SimpleDateFormat(formatoFecha);
-				txtFecha.setText(formateador.format(calendarioTest.getDatoFecha()));
+				if(panelFRM.isVisible() == true) {
+					pestañaPaciente.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
+					pestañaHorarios.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
+					pestañaHorarios.setBackground(new Color(66, 169, 174));
+					pestañaPaciente.setBackground(new Color(46, 118, 121));
+					panelHorarios.setVisible(true);
+					panelFRM.setVisible(false);
+				}
 			}
 		});
-		lvlAdd.setIcon(new ImageIcon(FrmPaciente.class.getResource("/Image/icons8_add_32px.png")));
-		lvlAdd.setBounds(287, 148, 32, 38);
-		panelFRM.add(lvlAdd);
+		pestañaHorarios.setBackground(new Color(46, 118, 121));
+		barra.add(pestañaHorarios);
 		
-		
-		
+		JLabel label = new JLabel("HORARIOS");
+		label.setForeground(new Color(33, 44, 61));
+		label.setFont(new Font("Sitka Small", Font.BOLD, 15));
+		pestañaHorarios.add(label);
+		comboEspecialidades();
+				
 	}
 	
+	private void comboEspecialidades() {
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		MySQLConexion conn = new MySQLConexion();
+		Connection con = MySQLConexion.getConexion();
+		
+		try {
+			
+			String sql = "SELECT * FROM especialidades_medicas";
+			ps = con.prepareStatement(sql);
+			rs = ps.executeQuery();
+			
+			comboEspecial.addItem("Seleccione especialidad");
+			
+			while(rs.next()) {
+				comboEspecial.addItem(rs.getString("especialidad"));
+			}
+			
+			rs.close();
+			
+		}catch(SQLException ex) {
+			
+			System.err.println(ex.toString());
+		}
+	}
 	
 	private void registrarPacienteActionPerformed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_registrarProveedorActionPerformed
         PacientesVO pac = new PacientesVO();
@@ -733,16 +696,7 @@ public class FrmPaciente extends javax.swing.JFrame {
         cargarPacientes(0);
     }//GEN-LAST:event_actualizarProveedorActionPerformed
 	
-	private int verificarRut(String rut) {
-		if(rut != null) {
-			return 1;
-		}
-			return 0;
-		
-	}
 	private void buscarPacienteActionPerformed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_buscarProveedorActionPerformed
-	        //PacientesVO pac = PacientesDAO.buscarPacientes(txtID.getText());
-			//JOptionPane.showMessageDialog(contentPane, "RUT : "+txtRut.getText(), "Error", JOptionPane.ERROR_MESSAGE);
 			
 			if(txtRut.getText().isEmpty()) {
 				txtStatus.setText("Porfavor, digite el RUT del paciente");
@@ -791,10 +745,8 @@ public class FrmPaciente extends javax.swing.JFrame {
 	
 	public void cargarPacientes(int busca){
         int index = 1;
-        list_pacientes.removeAllItems();
-        //list_pacientes.addItem("Selecciona un paciente");
+        list_pacientes.removeAllItems();   
         for(PacientesVO pac: PacientesDAO.getListPacientes()){
-            //list_pacientes.addItem(pac);
             if(pac.getIdPaciente() == busca){
                 list_pacientes.setSelectedIndex(index);
             }
@@ -841,7 +793,7 @@ public class FrmPaciente extends javax.swing.JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					FrmPaciente frame = new FrmPaciente();
+					Secre frame = new Secre();
 					frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 					frame.setVisible(true);
 				} catch (Exception e) {
@@ -853,4 +805,18 @@ public class FrmPaciente extends javax.swing.JFrame {
 	
 	@SuppressWarnings("rawtypes")
 	private javax.swing.JComboBox list_pacientes;
+	private JPanel contentPane;
+	private JTextField txtID;
+	private JTextField txtNombre;
+	private JTextField txtApellidos;
+	public static JTextField txtFecha;
+	private JTextField txtRut;
+	private JTextField txtDireccion;
+	private JTextField txtTelefono;
+	private JTextField txtStatus;
+	RSPanelGradiente panelFRM = new RSPanelGradiente();
+	RSPanelGradiente panelHorarios = new RSPanelGradiente();
+	JPanel pestañaHorarios = new JPanel();
+	RSComboMetro comboEspecial = new RSComboMetro();
+	int xx,xy;
 }

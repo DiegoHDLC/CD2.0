@@ -93,7 +93,7 @@ public class Login extends JFrame {
 		System.out.println("usuario: "+usu);
 		if(usu!=null) {
 			this.dispose();
-			FrmPaciente FrmSecretaria = new FrmPaciente();
+			Secre FrmSecretaria = new Secre();
 			FrmSecretaria.setVisible(true);
 			
 		}else {

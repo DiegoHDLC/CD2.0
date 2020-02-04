@@ -8,6 +8,8 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import classDAO.PacientesDAO;
+import classVO.EspecialidadesVO;
+import classVO.MedicosVO;
 import classVO.PacientesVO;
 import rspanelgradiente.RSPanelGradiente;
 import utils.MySQLConexion;
@@ -41,6 +43,9 @@ import javax.swing.JMenuItem;
 import javax.swing.DefaultComboBoxModel;
 import rojerusan.RSComboMetro;
 import jcalendar.JDateChooser;
+import javax.swing.JComboBox;
+import java.awt.event.ItemListener;
+import java.awt.event.ItemEvent;
 //import com.toedter.calendar.JDateChooser;
 
 
@@ -203,9 +208,46 @@ public class Secre extends javax.swing.JFrame {
 		pestañaPaciente.add(tituloPaciente);
 		tituloPaciente.setForeground(new Color(33, 44, 61));
 		tituloPaciente.setFont(new Font("Sitka Small", Font.BOLD, 15));
+		panelFRM.setVisible(true);
 		
 		panelHorarios.setVisible(false);
-		panelFRM.setVisible(true);
+		
+		panelHorarios.setBounds(0, 32, 497, 508);
+		contentPane.add(panelHorarios);
+		panelHorarios.setColorSecundario(new Color(33, 44, 61));
+		panelHorarios.setColorPrimario(new Color(66, 169, 174));
+		panelHorarios.setLayout(null);
+		comboEsp.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				
+			}
+		});
+		
+		
+		
+		comboEsp.setFont(new Font("Sitka Small", Font.BOLD, 12));
+		comboEsp.setBounds(55, 45, 303, 32);
+		panelHorarios.add(comboEsp);
+		
+
+
+		
+		JComboBox comboMedico = new JComboBox();
+		comboMedico.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				if(e.getStateChange() == ItemEvent.SELECTED) {
+					
+					EspecialidadesVO esp = (EspecialidadesVO) comboEsp.getSelectedItem();
+					MedicosVO med = new MedicosVO();
+					DefaultComboBoxModel modlMedico = new DefaultComboBoxModel(med.mostrarMedicos(esp.getId()));
+					comboMedico.setModel(modlMedico);
+				}
+			}
+		});
+		comboMedico.setBounds(55, 204, 303, 32);
+		panelHorarios.add(comboMedico);
+		
+		
 		
 		panelFRM.setBounds(0, 32, 497, 508);
 		contentPane.add(panelFRM);
@@ -558,25 +600,6 @@ public class Secre extends javax.swing.JFrame {
 			lvlAdd.setIcon(new ImageIcon(Secre.class.getResource("/Image/icons8_add_32px.png")));
 			lvlAdd.setBounds(287, 148, 32, 38);
 			panelFRM.add(lvlAdd);
-		
-		panelHorarios.setBounds(0, 32, 497, 508);
-		contentPane.add(panelHorarios);
-		panelHorarios.setColorSecundario(new Color(33, 44, 61));
-		panelHorarios.setColorPrimario(new Color(66, 169, 174));
-		panelHorarios.setLayout(null);
-		
-		comboEspecial.setColorFondo(new Color(66, 169, 174));
-		comboEspecial.setColorBorde(new Color(66, 169, 174));
-		comboEspecial.setColorArrow(new Color(66, 169, 174));
-		comboEspecial.setFont(new Font("Sitka Small", Font.BOLD, 12));
-		comboEspecial.setBounds(55, 45, 303, 32);
-		panelHorarios.add(comboEspecial);
-		
-		RSComboMetro comboMetro_1 = new RSComboMetro();
-		comboMetro_1.setFont(new Font("Sitka Small", Font.BOLD, 12));
-		comboMetro_1.setModel(new DefaultComboBoxModel(new String[] {"Medicos"}));
-		comboMetro_1.setBounds(55, 144, 303, 32);
-		panelHorarios.add(comboMetro_1);
 //////////////////////////////////////////////////////////////////////////////////		
 ////////////////////////////HORARIOS/////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////			
@@ -633,10 +656,10 @@ public class Secre extends javax.swing.JFrame {
 			ps = con.prepareStatement(sql);
 			rs = ps.executeQuery();
 			
-			comboEspecial.addItem("Seleccione especialidad");
+			comboEsp.addItem("Seleccione especialidad");
 			
 			while(rs.next()) {
-				comboEspecial.addItem(rs.getString("especialidad"));
+				comboEsp.addItem(rs.getString("especialidad"));
 			}
 			
 			rs.close();
@@ -819,4 +842,5 @@ public class Secre extends javax.swing.JFrame {
 	JPanel pestañaHorarios = new JPanel();
 	RSComboMetro comboEspecial = new RSComboMetro();
 	int xx,xy;
+	JComboBox comboEsp = new JComboBox();
 }

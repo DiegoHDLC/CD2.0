@@ -1,12 +1,21 @@
 package classVO;
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Vector;
+
+import com.mysql.jdbc.Connection;
+
+import utils.MySQLConexion;
+
 public class MedicosVO {
 	private Integer idMedico;
 	private String nombre;
 	private String apellidos;
 	private String rut;
-	private String telefono;
-	private String resultado;
+	private String especialidad;
+	
 	public Integer getIdMedico() {
 		return idMedico;
 	}
@@ -31,21 +40,52 @@ public class MedicosVO {
 	public void setApellidos(String apellidos) {
 		this.apellidos = apellidos;
 	}
-	public String getTelefono() {
-		return telefono;
-	}
-	public void setTelefono(String telefono) {
-		this.telefono = telefono;
-	}
-	public String getResultado() {
-		return resultado;
-	}
-	public void setResultado(String resultado) {
-		this.resultado = resultado;
-	}
+
 	@Override
 	public String toString() {
 		return nombre;	
+	}
+	public String getEspecialidad() {
+		return especialidad;
+	}
+	public void setEspecialidad(String especialidad) {
+		this.especialidad = especialidad;
+	}
+	
+	public Vector<MedicosVO> mostrarMedicos(Integer idEspecialidad){
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		MySQLConexion conn = new MySQLConexion();
+		Connection con = (Connection) MySQLConexion.getConexion();
+		
+		Vector<MedicosVO> datos = new Vector<MedicosVO>();
+		MedicosVO dat = null;
+		
+		try {
+			String sql = "SELECT * FROM medicos WHERE id_especialidad="+idEspecialidad;
+			ps = con.clientPrepareStatement(sql);
+			rs = ps.executeQuery();
+			
+			dat = new MedicosVO();
+			dat.setIdMedico(0);
+			dat.setNombre("Selecciona medico");
+			datos.add(dat);
+			
+			while(rs.next()) {
+				dat = new MedicosVO();
+				dat.setIdMedico(rs.getInt("id_medico"));
+				dat.setNombre(rs.getString("nombre"));
+				dat.setApellidos(rs.getString("apellido"));
+				dat.setRut(rs.getString("rut"));
+				dat.setEspecialidad(rs.getString("especialidad"));
+			}
+			rs.close();
+			
+		}catch(SQLException ex) {
+			System.err.println(ex.toString());
+		}
+		return datos;
+		
 	}
 
 }

@@ -8,8 +8,10 @@ public class Usuario {
 	private String apellidos;
 	private String ciudad;
 	private String esMedico;
-
-	public Usuario(String usuario, String clave, String nombre, String apellidos, String ciudad, String esMedico) {
+	private int especialidad=-1;
+	private String rut;
+	
+	public Usuario(String usuario, String clave, String nombre, String apellidos, String ciudad, String esMedico,String rut) {
 
 		this.usuario = usuario;
 		this.clave = clave;
@@ -17,6 +19,19 @@ public class Usuario {
 		this.apellidos = apellidos;
 		this.ciudad = ciudad;
 		this.esMedico = esMedico;
+		this.rut=rut;
+	}
+	
+	public Usuario(String usuario, String clave, String nombre, String apellidos, String ciudad, String esMedico,int especialidad,String rut) {
+
+		this.usuario = usuario;
+		this.clave = clave;
+		this.nombre = nombre;
+		this.apellidos = apellidos;
+		this.ciudad = ciudad;
+		this.esMedico = esMedico;
+		this.especialidad=especialidad;
+		this.rut=rut;
 	}
 
 	public Usuario() {
@@ -69,6 +84,20 @@ public class Usuario {
 	
 	public void setesMedico(String esMedico) {
 		this.esMedico = esMedico;
+	}
+	public int getEspecialidad() {
+		return especialidad;
+	}
+
+	public void setEspecialidad(int especialidad) {
+		this.especialidad = especialidad;
+	}
+	public String getRut() {
+		return rut;
+	}
+
+	public void setRut(String rut) {
+		this.rut = rut;
 	}
 
 }

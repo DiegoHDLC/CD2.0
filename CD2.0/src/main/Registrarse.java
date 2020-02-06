@@ -5,6 +5,9 @@ import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -21,8 +24,15 @@ import mantenimientos.GestionUsuario;
 import mantenimientos.connect_codigoMaestro;
 import mantenimientos.connect_tbUsuarios;
 import rspanelgradiente.RSPanelGradiente;
+import utils.MySQLConexion;
+
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 import javax.swing.SwingConstants;
 import java.awt.SystemColor;
 import javax.swing.UIManager;
@@ -40,6 +50,7 @@ import javax.swing.GroupLayout.Alignment;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import rojerusan.RSPasswordTextPlaceHolder;
 import javax.swing.JTextField;
+import javax.swing.JComboBox;
 
 @SuppressWarnings("serial")
 public class Registrarse extends JFrame {
@@ -111,7 +122,7 @@ public class Registrarse extends JFrame {
 		barra.add(lblMinimizar);
 		
 		JPanel panel = new JPanel();
-		panel.setBounds(0, 0, 800, 448);
+		panel.setBounds(-10, 0, 800, 448);
 		panel.setBackground(new java.awt.Color(33, 44, 61));
 		contentPane.add(panel);
 		panel.setLayout(null);
@@ -150,7 +161,7 @@ public class Registrarse extends JFrame {
 		btnRegresar.setForeground(Color.WHITE);
 		btnRegresar.setFont(new Font("Sitka Small", Font.PLAIN, 11));
 		btnRegresar.setBackground(new Color(19, 30, 49));
-		btnRegresar.setBounds(208, 399, 113, 38);
+		btnRegresar.setBounds(26, 399, 113, 38);
 		btnRegresar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				dispose();
@@ -189,7 +200,7 @@ public class Registrarse extends JFrame {
 		rdMedico.setForeground(new Color(255, 255, 255));
 		rdMedico.setBackground(new Color(33, 44, 61));
 		rdMedico.setIcon(new ImageIcon(Registrarse.class.getResource("/Image/icons8_medical_doctor_64px_1.png")));
-		rdMedico.setBounds(208, 294, 139, 73);
+		rdMedico.setBounds(213, 382, 139, 73);
 		panel.add(rdMedico);
 		
 		
@@ -219,14 +230,14 @@ public class Registrarse extends JFrame {
 				}
 			}
 		});
-		rdSecretaria.setBounds(432, 294, 173, 73);
+		rdSecretaria.setBounds(393, 382, 173, 73);
 		panel.add(rdSecretaria);
 		
 		JLabel lblElijaSuProfesin = new JLabel("Elija su profesi\u00F3n");
-		lblElijaSuProfesin.setBounds(312, 277, 152, 22);
+		lblElijaSuProfesin.setBounds(319, 366, 128, 25);
 		panel.add(lblElijaSuProfesin);
 		lblElijaSuProfesin.setForeground(Color.WHITE);
-		lblElijaSuProfesin.setFont(new Font("Sitka Small", Font.PLAIN, 17));
+		lblElijaSuProfesin.setFont(new Font("Sitka Small", Font.PLAIN, 14));
 		
 		JLabel lblIngreseSuNombre = new JLabel("Ingrese su nombre");
 		lblIngreseSuNombre.setForeground(Color.WHITE);
@@ -262,7 +273,7 @@ public class Registrarse extends JFrame {
 		btnRegistrarse.setForeground(Color.WHITE);
 		btnRegistrarse.setFont(new Font("Sitka Small", Font.PLAIN, 11));
 		btnRegistrarse.setBackground(new Color(19, 30, 49));
-		btnRegistrarse.setBounds(458, 399, 113, 38);
+		btnRegistrarse.setBounds(677, 399, 113, 38);
 		btnRegistrarse.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				//usuario.contentEquals(null) || clave.contentEquals(null) || codigo.contentEquals(null)
@@ -272,28 +283,38 @@ public class Registrarse extends JFrame {
 				String nombre = txtNombre.getText();
 				String apellido = txtApellido.getText();
 				String ciudad = txtCiudad.getText();
-				System.out.println("\n"+usuario+clave+codigo);
-				if( !usuario.isEmpty() || !clave.isEmpty() || !codigo.isEmpty() || !nombre.isEmpty() || !apellido.isEmpty() || !ciudad.isEmpty()) {
-					
-					if( codigo.equals(connect_codigoMaestro.getCodigoMaestro())) {
+				String rut = txtRut.getText();
+				
+				
+				
+					if( !usuario.isEmpty() || !clave.isEmpty() || !codigo.isEmpty() || !nombre.isEmpty() || !apellido.isEmpty() || !ciudad.isEmpty() || !rut.isEmpty()) {
 						
-						if(rdMedico.isSelected() == true && rdSecretaria.isSelected() == true) {JOptionPane.showMessageDialog(contentPane, "Escoja solo 1 profesion","Error",JOptionPane.ERROR_MESSAGE);}
-						else if(rdMedico.isSelected() == false && rdSecretaria.isSelected() == false) {JOptionPane.showMessageDialog(contentPane, "Escoja una profesion","Error",JOptionPane.ERROR_MESSAGE);}
-						else if(rdMedico.isSelected() == true) {
-							System.out.println("medico");
-							Usuario usu = new Usuario(usuario,clave,nombre,apellido,ciudad,"1");
-							connect_tbUsuarios.insertUsuario(usu);
-							JOptionPane.showMessageDialog(contentPane, "Registrado exitosamente","OK",JOptionPane.INFORMATION_MESSAGE);
+						if( codigo.equals(connect_codigoMaestro.getCodigoMaestro())) {
+							if(repiteUsuario(usuario)==0) {
+								if(rdMedico.isSelected() == true && rdSecretaria.isSelected() == true) {JOptionPane.showMessageDialog(contentPane, "Escoja solo 1 profesion","Error",JOptionPane.ERROR_MESSAGE);}
+								else if(rdMedico.isSelected() == false && rdSecretaria.isSelected() == false) {JOptionPane.showMessageDialog(contentPane, "Escoja una profesion","Error",JOptionPane.ERROR_MESSAGE);}
+								else if(rdMedico.isSelected() == true) {
+									if(!(comboEsp.getItemAt(0).toString()).equals(comboEsp.getSelectedItem().toString())) {
+										
+										System.out.println("\n"+rut);
+										Usuario usu = new Usuario(usuario,clave,nombre,apellido,ciudad,"1",comboEsp.getSelectedIndex(),rut);
+										registrarEnTablaMedico(usu);
+										connect_tbUsuarios.insertUsuario(usu);
+										JOptionPane.showMessageDialog(contentPane, "Registrado exitosamente","OK",JOptionPane.INFORMATION_MESSAGE);
+									}else {JOptionPane.showMessageDialog(contentPane, "Escoja una especialidad","Error",JOptionPane.ERROR_MESSAGE);};
+								}
+								else if(rdSecretaria.isSelected() == true) {
+									System.out.println("secre");
+									Usuario usu1 = new Usuario(usuario,clave,nombre,apellido,ciudad,"0",rut);
+									connect_tbUsuarios.insertUsuario(usu1);
+									JOptionPane.showMessageDialog(contentPane, "Registrado exitosamente","OK",JOptionPane.INFORMATION_MESSAGE);
+								}
+							}else {JOptionPane.showMessageDialog(contentPane, "Escoja otro nombre de usuario, ese está repetido","Error",JOptionPane.ERROR_MESSAGE);}
 						}
-						else if(rdSecretaria.isSelected() == true) {
-							System.out.println("secre");
-							Usuario usu1 = new Usuario(usuario,clave,nombre,apellido,ciudad,"0");
-							connect_tbUsuarios.insertUsuario(usu1);
-							JOptionPane.showMessageDialog(contentPane, "Registrado exitosamente","OK",JOptionPane.INFORMATION_MESSAGE);
-						}
-					}
-					else{JOptionPane.showMessageDialog(contentPane, "Codigo maestro erroneo","Error",JOptionPane.ERROR_MESSAGE);}
-				}else {JOptionPane.showMessageDialog(contentPane, "Datos invalidos","Error",JOptionPane.ERROR_MESSAGE);}
+						else{JOptionPane.showMessageDialog(contentPane, "Codigo maestro erroneo","Error",JOptionPane.ERROR_MESSAGE);}
+					}else {JOptionPane.showMessageDialog(contentPane, "Datos invalidos","Error",JOptionPane.ERROR_MESSAGE);}
+				
+				
 				/*
 				GestionUsuario gestionUsuario = new GestionUsuario();
 				
@@ -426,8 +447,135 @@ public class Registrarse extends JFrame {
 		
 		bg.add(rdMedico);
 		bg.add(rdSecretaria);
+		
+		JLabel lblElijaSuEspecialidad = new JLabel("Elija su especialidad");
+		lblElijaSuEspecialidad.setForeground(Color.WHITE);
+		lblElijaSuEspecialidad.setFont(new Font("Sitka Small", Font.PLAIN, 14));
+		lblElijaSuEspecialidad.setBounds(480, 277, 150, 22);
+		panel.add(lblElijaSuEspecialidad);
+		comboEsp.setForeground(Color.BLACK);
+		comboEsp.setBackground(SystemColor.windowBorder);
+		
+		
+		comboEsp.setBounds(405, 305, 323, 25);
+		comboEsp.setFont(new Font("Sitka Small", Font.BOLD, 12));
+		comboEspecialidades();
+		panel.add(comboEsp);
+		
+		txtRut = new JTextField();
+		txtRut.setForeground(Color.WHITE);
+		txtRut.setFont(new Font("Sitka Small", Font.PLAIN, 15));
+		txtRut.setColumns(10);
+		txtRut.setCaretColor(Color.WHITE);
+		txtRut.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
+		txtRut.setBackground(new Color(19, 30, 49));
+		txtRut.setBounds(105, 300, 216, 34);
+		panel.add(txtRut);
+		
+		JLabel lblIngreseSuRut = new JLabel("Ingrese su rut");
+		lblIngreseSuRut.setForeground(Color.WHITE);
+		lblIngreseSuRut.setFont(new Font("Sitka Small", Font.PLAIN, 14));
+		lblIngreseSuRut.setBounds(152, 277, 139, 25);
+		panel.add(lblIngreseSuRut);
+		
+		JSeparator separator_6 = new JSeparator();
+		separator_6.setBounds(105, 296, 216, 11);
+		panel.add(separator_6);
+	}
+	private void registrarEnTablaMedico(Usuario usu) {
+		Connection con = null;
+		PreparedStatement pst = null;
+		ResultSet rs = null;
+		
+		
+		try {
+		
+			con = MySQLConexion.getConexion();
+				String sql = "INSERT INTO medicos values (null,?, ?, ?, ?)";
+				pst = con.prepareStatement(sql);
+				pst.setString(1, usu.getNombre());
+				pst.setString(2, usu.getApellidos());
+				pst.setString(3, usu.getRut());
+				pst.setInt(4, usu.getEspecialidad());
+				pst.executeUpdate();
+			
+			
+			pst.close();
+			con.close();
+			
+			
+			
+			} 
+			catch (Exception e) {
+				System.out.println("Error en 'Registrarse.registrarEnTablaMedico'");
+				System.out.println(e.getMessage());
+			}
+		
 	}
 	
+	private void comboEspecialidades() {
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		MySQLConexion conn = new MySQLConexion();
+		Connection con = MySQLConexion.getConexion();
+		
+		try {
+			
+			String sql = "SELECT * FROM especialidades_medicas";
+			ps = con.prepareStatement(sql);
+			rs = ps.executeQuery();
+			
+			comboEsp.addItem("Seleccione especialidad");
+			
+			while(rs.next()) {
+				comboEsp.addItem(rs.getString("especialidad"));
+			}
+			
+			rs.close();
+			
+		}catch(SQLException ex) {
+			
+			System.err.println(ex.toString());
+		}
+	}
+	private int repiteUsuario(String usuario1) {
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		MySQLConexion conn = new MySQLConexion();
+		Connection con = MySQLConexion.getConexion();
+
+		try {
+			
+			String sql = "SELECT * FROM tb_usuario WHERE usuario="+usuario1;
+			ps = con.prepareStatement(sql);
+			rs = ps.executeQuery();
+			System.out.println("\nMostrando datos:\n");		
+			while(rs.next()) {
+				System.out.println("base "+rs.getString(1)+" usuario1  "+usuario1);				
+			}
+			rs = ps.executeQuery();
+			while(rs.next()) {
+				if(rs.getString(1).equals(usuario1)) {
+					System.out.println("\nhay repetido\n");
+					rs.close();
+					con.close();
+					return 1;
+				}
+				
+			}
+			System.out.println("no hay repetido");
+			con.close();
+			rs.close();
+			
+			return 0;
+			
+		}catch(SQLException ex) {
+			
+			System.err.println(ex.toString());
+			return 0;
+		}
+	}
+	JComboBox comboEsp = new JComboBox();
 	private int x;
     private int y;
     private JTextField txtUsuario;
@@ -437,6 +585,7 @@ public class Registrarse extends JFrame {
     private JTextField txtCiudad;
     private JTextField txtPassVisible;
     private JPasswordField txtPassNoVisible;
+    private JTextField txtRut;
     
     protected void this_mousePressed(MouseEvent e) {
         x = e.getX();

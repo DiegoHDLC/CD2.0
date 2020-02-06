@@ -25,6 +25,7 @@ import java.awt.event.MouseListener;
 import java.text.SimpleDateFormat;
 import javax.swing.ImageIcon;
 import javax.swing.JTextField;
+import javax.swing.ListModel;
 import javax.swing.border.BevelBorder;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -46,6 +47,8 @@ import jcalendar.JDateChooser;
 import javax.swing.JComboBox;
 import java.awt.event.ItemListener;
 import java.awt.event.ItemEvent;
+import javax.swing.JButton;
+import javax.swing.JList;
 //import com.toedter.calendar.JDateChooser;
 
 
@@ -217,34 +220,28 @@ public class Secre extends javax.swing.JFrame {
 		panelHorarios.setColorSecundario(new Color(33, 44, 61));
 		panelHorarios.setColorPrimario(new Color(66, 169, 174));
 		panelHorarios.setLayout(null);
-		comboEsp.addItemListener(new ItemListener() {
-			public void itemStateChanged(ItemEvent e) {
-				
-			}
-		});
 		
 		
 		
-		comboEsp.setFont(new Font("Sitka Small", Font.BOLD, 12));
-		comboEsp.setBounds(55, 45, 303, 32);
-		panelHorarios.add(comboEsp);
+		
 		
 
 
 		
-		JComboBox comboMedico = new JComboBox();
+		
 		comboMedico.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				if(e.getStateChange() == ItemEvent.SELECTED) {
 					
+					/*
 					EspecialidadesVO esp = (EspecialidadesVO) comboEsp.getSelectedItem();
 					MedicosVO med = new MedicosVO();
 					DefaultComboBoxModel modlMedico = new DefaultComboBoxModel(med.mostrarMedicos(esp.getId()));
-					comboMedico.setModel(modlMedico);
+					comboMedico.setModel(modlMedico);*/
 				}
 			}
 		});
-		comboMedico.setBounds(55, 204, 303, 32);
+		comboMedico.setBounds(10, 43, 303, 32);
 		panelHorarios.add(comboMedico);
 		
 		
@@ -640,10 +637,143 @@ public class Secre extends javax.swing.JFrame {
 		label.setForeground(new Color(33, 44, 61));
 		label.setFont(new Font("Sitka Small", Font.BOLD, 15));
 		pestañaHorarios.add(label);
+		
+		comboEsp.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				System.out.println("\nentrando");
+				if(!comboEsp.getItemAt(0).toString().equals(comboEsp.getSelectedItem())){
+					// vamos a guardar los id de los medicos para poder tener 
+					// acceso a ellos, ya que en el combo box se mostrara el nombre y apellido juntos
+					idMedicos = new int[100];
+					filtrarMedico(idMedicos);
+					filtrarHorario(idMedicos);
+				}
+				
+			}
+			
+		});
+		comboEsp.setFont(new Font("Sitka Small", Font.BOLD, 12));
+		comboEsp.setBounds(10, 11, 303, 32);
+		panelHorarios.add(comboEsp);
+		
+		JButton btnMostrarHorarioDel = new JButton("Horario de Medico");
+		btnMostrarHorarioDel.setBackground(Color.GRAY);
+		btnMostrarHorarioDel.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(idMedicos!=null) {
+					
+					HorarioMedico horario = new HorarioMedico(idMedicos[comboMedico.getSelectedIndex()]);
+					horario.setVisible(true);
+				}
+				
+			}
+		});
+		btnMostrarHorarioDel.setFont(new Font("Sitka Small", Font.ITALIC, 14));
+		btnMostrarHorarioDel.setBounds(323, 11, 160, 61);
+		panelHorarios.add(btnMostrarHorarioDel);
+		
+		
+		
+		JList listFechas = new JList();
+		listFechas.setBounds(10, 121, 303, 116);
+		panelHorarios.add(listFechas);
+		
+		JButton btnMostrarFechas = new JButton("Mostrar Fechas Ocupadas");
+		btnMostrarFechas.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				if(idMedicos!=null) {
+					Object[] fechas = new Object[500];
+					guardarFechasOcupadas(fechas);
+					listFechas.setListData(fechas);
+					
+				}else {JOptionPane.showMessageDialog(contentPane, "Seleccione una especialidad","Error",JOptionPane.ERROR_MESSAGE);}
+				
+				
+				/*
+				 if (index == listModel.getSize()) {
+			            //removed item in last position
+			            index--;
+			     }*/
+				
+			}
+		});
+		btnMostrarFechas.setFont(new Font("Sitka Small", Font.ITALIC, 14));
+		btnMostrarFechas.setBounds(10, 86, 303, 32);
+		panelHorarios.add(btnMostrarFechas);
 		comboEspecialidades();
 				
 	}
-	
+	private void guardarFechasOcupadas(Object fechas[]) {
+		int i=0;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		MySQLConexion conn = new MySQLConexion();
+		Connection con = MySQLConexion.getConexion();
+		
+		
+		try {
+			//busco en la tabla especialidad el numerito correspondiente a mi especialidad en formato string
+			String sql = "SELECT * FROM fechas_ocupadas WHERE id_medico="+idMedicos[comboMedico.getSelectedIndex()];
+			ps = con.prepareStatement(sql);
+			rs = ps.executeQuery();
+			
+			while(rs.next()) {
+				
+				
+				fechas[i]=rs.getInt(6)+"/"+rs.getInt(4);
+				i++;
+			}
+			ps.close();
+			rs.close();
+			
+		}catch(SQLException ex) {
+			
+			System.err.println(ex.toString());
+		}
+	}
+	private void filtrarHorario(int idMedicos[]) {
+		
+	}
+	private void filtrarMedico(int idMedicos[]) {
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		MySQLConexion conn = new MySQLConexion();
+		Connection con = MySQLConexion.getConexion();
+		int nEspecialidad=-1;
+		
+		try {
+			//busco en la tabla especialidad el numerito correspondiente a mi especialidad en formato string
+			
+			String sql = "SELECT * FROM especialidades_medicas WHERE especialidad="+"'"+comboEsp.getSelectedItem().toString()+"'";
+			ps = con.prepareStatement(sql);
+			rs = ps.executeQuery();
+			
+			while(rs.next()) {
+				nEspecialidad=rs.getInt(1);
+				
+			}
+			//luego en la tabla medico busco todos los medicos que tengan el numerito de la especialidad
+			sql = "SELECT * FROM medicos WHERE id_especialidad="+nEspecialidad;
+			ps = con.prepareStatement(sql);
+			rs = ps.executeQuery();
+			int i=0;
+			
+			while(rs.next()) {// y los añado al combo box
+				
+				idMedicos[i]=rs.getInt(1);
+				comboMedico.addItem(rs.getString(2)+" "+rs.getString(3));
+				i++;
+			}
+			rs.close();
+			
+		}catch(SQLException ex) {
+			
+			System.err.println(ex.toString());
+		}
+	}
 	private void comboEspecialidades() {
 		PreparedStatement ps = null;
 		ResultSet rs = null;
@@ -827,6 +957,8 @@ public class Secre extends javax.swing.JFrame {
 	}
 	
 	@SuppressWarnings("rawtypes")
+	private int i=0;
+	private int idMedicos[]=null;
 	private javax.swing.JComboBox list_pacientes;
 	private JPanel contentPane;
 	private JTextField txtID;
@@ -843,4 +975,5 @@ public class Secre extends javax.swing.JFrame {
 	RSComboMetro comboEspecial = new RSComboMetro();
 	int xx,xy;
 	JComboBox comboEsp = new JComboBox();
+	JComboBox comboMedico = new JComboBox();
 }

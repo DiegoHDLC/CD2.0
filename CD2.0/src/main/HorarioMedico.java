@@ -44,6 +44,8 @@ public class HorarioMedico extends JFrame {
 	 * Create the frame.
 	 */
 	public HorarioMedico(int id_medico) {
+		setLocationRelativeTo(null);
+		setUndecorated(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 695, 269);
 		contentPane = new JPanel();

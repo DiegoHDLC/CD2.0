@@ -755,11 +755,14 @@ public class Secre extends javax.swing.JFrame {
 				nEspecialidad=rs.getInt(1);
 				
 			}
+			
 			//luego en la tabla medico busco todos los medicos que tengan el numerito de la especialidad
 			sql = "SELECT * FROM medicos WHERE id_especialidad="+nEspecialidad;
 			ps = con.prepareStatement(sql);
 			rs = ps.executeQuery();
 			int i=0;
+			
+			comboMedico.removeAllItems();
 			
 			while(rs.next()) {// y los añado al combo box
 				
@@ -767,6 +770,7 @@ public class Secre extends javax.swing.JFrame {
 				comboMedico.addItem(rs.getString(2)+" "+rs.getString(3));
 				i++;
 			}
+			
 			rs.close();
 			
 		}catch(SQLException ex) {

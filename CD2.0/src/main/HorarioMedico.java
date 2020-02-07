@@ -18,6 +18,11 @@ import javax.swing.JTable;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.Color;
+import java.awt.Font;
+import javax.swing.ImageIcon;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class HorarioMedico extends JFrame {
 
@@ -44,10 +49,9 @@ public class HorarioMedico extends JFrame {
 	 * Create the frame.
 	 */
 	public HorarioMedico(int id_medico) {
-		setLocationRelativeTo(null);
 		setUndecorated(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 695, 269);
+		setBounds(100, 100, 695, 211);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -80,12 +84,20 @@ public class HorarioMedico extends JFrame {
 			data[ocupadosXY[0][i]][ocupadosXY[1][i]]="Disponible";
 			i++;
 		}
-				
-		table = new JTable(data,columnNames);
-		table.setBounds(0, 11, 679, 128);
-		contentPane.add(table);
 		
-		JButton btnNewButton = new JButton("Aceptar");
+		JButton btnNewButton = new JButton("");
+		btnNewButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent arg0) {
+				btnNewButton.setSelectedIcon(new ImageIcon(HorarioMedico.class.getResource("/Image/icons8_checkmark_yes_64px_3.png")));
+			}
+		});
+		btnNewButton.setFont(new Font("Sitka Small", Font.BOLD, 11));
+		
+		btnNewButton.setBorder(null);
+		btnNewButton.setBorderPainted(false);
+		btnNewButton.setBackground(new Color(66, 169, 174));
+		btnNewButton.setIcon(new ImageIcon(HorarioMedico.class.getResource("/Image/icons8_checkmark_yes_64px_2.png")));
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				dispose();
@@ -93,6 +105,14 @@ public class HorarioMedico extends JFrame {
 		});
 		btnNewButton.setBounds(244, 153, 148, 50);
 		contentPane.add(btnNewButton);
+				
+		table = new JTable(data,columnNames);
+		table.setGridColor(new Color(255, 255, 255));
+		table.setForeground(new Color(255, 255, 255));
+		table.setFont(new Font("Sitka Small", Font.BOLD, 13));
+		table.setBackground(new Color(66, 169, 174));
+		table.setBounds(0, 0, 695, 211);
+		contentPane.add(table);
 	}
 	public void buscarDisponible(int ocupadosXY[][],int id_medico,int max[]) {
 		PreparedStatement ps = null;

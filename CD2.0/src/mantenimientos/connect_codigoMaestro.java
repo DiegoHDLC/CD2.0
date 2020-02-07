@@ -32,7 +32,7 @@ public class connect_codigoMaestro{
 		
 		} 
 		catch (Exception e) {
-			System.out.println("Error en obtener usuario");
+			System.out.println("Error en obtener codigo maestro");
 			return null;
 		}
 	}

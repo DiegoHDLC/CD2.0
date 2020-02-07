@@ -21,8 +21,10 @@ import javax.swing.border.EmptyBorder;
 
 import classVO.Usuario;
 import mantenimientos.GestionUsuario;
+import mantenimientos.HorarioRandom;
 import mantenimientos.connect_codigoMaestro;
 import mantenimientos.connect_tbUsuarios;
+import mantenimientos.medico_database;
 import rspanelgradiente.RSPanelGradiente;
 import utils.MySQLConexion;
 
@@ -55,19 +57,18 @@ import javax.swing.JComboBox;
 @SuppressWarnings("serial")
 public class Registrarse extends JFrame {
 
-	private JPanel contentPane;
-	private ButtonGroup bg = new ButtonGroup();
-	JRadioButton rdSecretaria = new JRadioButton("SECRETARIA");
-
+	
 	
 	public Registrarse() {
 		setUndecorated(true);
 		initComponents();
 		this.setLocationRelativeTo(null);
 		
+		
 	}
 		
 	public void initComponents(){
+		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 800, 448);
 		contentPane = new JPanel();
@@ -122,46 +123,46 @@ public class Registrarse extends JFrame {
 		barra.add(lblMinimizar);
 		
 		JPanel panel = new JPanel();
-		panel.setBounds(-10, 0, 800, 448);
+		panel.setBounds(0, 0, 800, 448);
 		panel.setBackground(new java.awt.Color(33, 44, 61));
 		contentPane.add(panel);
 		panel.setLayout(null);
 		
-		JLabel lblNewLabel = new JLabel("Ingrese su usuario");
+		JLabel lblNewLabel = new JLabel("Usuario");
 		lblNewLabel.setForeground(new Color(255, 255, 255));
 		lblNewLabel.setFont(new Font("Sitka Small", Font.PLAIN, 14));
-		lblNewLabel.setBounds(143, 59, 139, 25);
+		lblNewLabel.setBounds(181, 131, 55, 19);
 		panel.add(lblNewLabel);
 		
 		JLabel lblIngreseSuContrasea = new JLabel("Ingrese su contrase\u00F1a");
 		lblIngreseSuContrasea.setForeground(Color.WHITE);
 		lblIngreseSuContrasea.setFont(new Font("Sitka Small", Font.PLAIN, 14));
-		lblIngreseSuContrasea.setBounds(131, 131, 162, 25);
+		lblIngreseSuContrasea.setBounds(132, 203, 162, 25);
 		panel.add(lblIngreseSuContrasea);
 		
 		JLabel lblIngreseElCodigo = new JLabel("Ingrese el c\u00F3digo maestro");
 		lblIngreseElCodigo.setForeground(Color.WHITE);
 		lblIngreseElCodigo.setFont(new Font("Sitka Small", Font.PLAIN, 14));
-		lblIngreseElCodigo.setBounds(120, 203, 185, 25);
+		lblIngreseElCodigo.setBounds(116, 273, 185, 25);
 		panel.add(lblIngreseElCodigo);
 		
 		JSeparator separator = new JSeparator();
-		separator.setBounds(132, 78, 150, 11);
+		separator.setBounds(100, 146, 216, 11);
 		panel.add(separator);
 		
 		JSeparator separator_1 = new JSeparator();
-		separator_1.setBounds(132, 150, 150, 11);
+		separator_1.setBounds(100, 222, 216, 11);
 		panel.add(separator_1);
 		
 		JSeparator separator_2 = new JSeparator();
-		separator_2.setBounds(120, 222, 185, 11);
+		separator_2.setBounds(100, 292, 216, 11);
 		panel.add(separator_2);
 		
 		JButton btnRegresar = new JButton("Regresar");
 		btnRegresar.setForeground(Color.WHITE);
 		btnRegresar.setFont(new Font("Sitka Small", Font.PLAIN, 11));
 		btnRegresar.setBackground(new Color(19, 30, 49));
-		btnRegresar.setBounds(26, 399, 113, 38);
+		btnRegresar.setBounds(458, 399, 113, 38);
 		btnRegresar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				dispose();
@@ -173,7 +174,7 @@ public class Registrarse extends JFrame {
 		
 		
 		
-		JRadioButton rdMedico = new JRadioButton("MEDICO");
+		
 		rdMedico.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseEntered(MouseEvent arg0) {
@@ -187,12 +188,15 @@ public class Registrarse extends JFrame {
 				rdMedico.setIcon(new ImageIcon(Registrarse.class.getResource("/Image/icons8_medical_doctor_64px_1.png")));
 				if(rdMedico.isSelected() == true) {
 					rdMedico.setIcon(new ImageIcon(Registrarse.class.getResource("/Image/icons8_medical_doctor_64px_4.png")));
+					
 				}
 			}
 			@Override
 			public void mouseClicked(MouseEvent e) {
 					rdMedico.setIcon(new ImageIcon(Registrarse.class.getResource("/Image/icons8_medical_doctor_64px_4.png")));
 					rdSecretaria.setIcon(new ImageIcon(Registrarse.class.getResource("/Image/secretaria_celeste_64px.png")));
+					comboEsp.setVisible(true);
+					lblElijaSuEspecialidad.setVisible(true);
 			
 			}
 		});
@@ -200,7 +204,7 @@ public class Registrarse extends JFrame {
 		rdMedico.setForeground(new Color(255, 255, 255));
 		rdMedico.setBackground(new Color(33, 44, 61));
 		rdMedico.setIcon(new ImageIcon(Registrarse.class.getResource("/Image/icons8_medical_doctor_64px_1.png")));
-		rdMedico.setBounds(213, 382, 139, 73);
+		rdMedico.setBounds(158, 59, 139, 73);
 		panel.add(rdMedico);
 		
 		
@@ -211,6 +215,8 @@ public class Registrarse extends JFrame {
 		rdSecretaria.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				comboEsp.setVisible(false);
+				lblElijaSuEspecialidad.setVisible(false);
 				rdSecretaria.setIcon(new ImageIcon(Registrarse.class.getResource("/Image/secretaria_roja_64px.png")));
 				if(rdSecretaria.isSelected()) {
 					rdMedico.setIcon(new ImageIcon(Registrarse.class.getResource("/Image/icons8_medical_doctor_64px_1.png")));
@@ -230,11 +236,11 @@ public class Registrarse extends JFrame {
 				}
 			}
 		});
-		rdSecretaria.setBounds(393, 382, 173, 73);
+		rdSecretaria.setBounds(470, 59, 173, 73);
 		panel.add(rdSecretaria);
 		
 		JLabel lblElijaSuProfesin = new JLabel("Elija su profesi\u00F3n");
-		lblElijaSuProfesin.setBounds(319, 366, 128, 25);
+		lblElijaSuProfesin.setBounds(336, 41, 128, 25);
 		panel.add(lblElijaSuProfesin);
 		lblElijaSuProfesin.setForeground(Color.WHITE);
 		lblElijaSuProfesin.setFont(new Font("Sitka Small", Font.PLAIN, 14));
@@ -242,38 +248,38 @@ public class Registrarse extends JFrame {
 		JLabel lblIngreseSuNombre = new JLabel("Ingrese su nombre");
 		lblIngreseSuNombre.setForeground(Color.WHITE);
 		lblIngreseSuNombre.setFont(new Font("Sitka Small", Font.PLAIN, 14));
-		lblIngreseSuNombre.setBounds(502, 59, 139, 25);
+		lblIngreseSuNombre.setBounds(502, 128, 139, 25);
 		panel.add(lblIngreseSuNombre);
 		
 		JSeparator separator_3 = new JSeparator();
-		separator_3.setBounds(458, 78, 216, 11);
+		separator_3.setBounds(458, 146, 216, 11);
 		panel.add(separator_3);
 		
 		JLabel lblIngreseSuCiudad = new JLabel("Ingrese su apellido");
 		lblIngreseSuCiudad.setForeground(Color.WHITE);
 		lblIngreseSuCiudad.setFont(new Font("Sitka Small", Font.PLAIN, 14));
-		lblIngreseSuCiudad.setBounds(502, 131, 139, 25);
+		lblIngreseSuCiudad.setBounds(497, 203, 139, 25);
 		panel.add(lblIngreseSuCiudad);
 		
 		JSeparator separator_4 = new JSeparator();
-		separator_4.setBounds(458, 150, 216, 11);
+		separator_4.setBounds(458, 222, 216, 11);
 		panel.add(separator_4);
 		
 		JLabel lblIngreseSuCiudad_1 = new JLabel("Ingrese su ciudad");
 		lblIngreseSuCiudad_1.setForeground(Color.WHITE);
 		lblIngreseSuCiudad_1.setFont(new Font("Sitka Small", Font.PLAIN, 14));
-		lblIngreseSuCiudad_1.setBounds(505, 203, 139, 25);
+		lblIngreseSuCiudad_1.setBounds(504, 273, 124, 19);
 		panel.add(lblIngreseSuCiudad_1);
 		
 		JSeparator separator_5 = new JSeparator();
-		separator_5.setBounds(458, 222, 216, 11);
+		separator_5.setBounds(458, 292, 216, 11);
 		panel.add(separator_5);
 		
 		JButton btnRegistrarse = new JButton("Registrarse");
 		btnRegistrarse.setForeground(Color.WHITE);
 		btnRegistrarse.setFont(new Font("Sitka Small", Font.PLAIN, 11));
 		btnRegistrarse.setBackground(new Color(19, 30, 49));
-		btnRegistrarse.setBounds(677, 399, 113, 38);
+		btnRegistrarse.setBounds(668, 399, 113, 38);
 		btnRegistrarse.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				//usuario.contentEquals(null) || clave.contentEquals(null) || codigo.contentEquals(null)
@@ -299,6 +305,9 @@ public class Registrarse extends JFrame {
 										System.out.println("\n"+rut);
 										Usuario usu = new Usuario(usuario,clave,nombre,apellido,ciudad,"1",comboEsp.getSelectedIndex(),rut);
 										registrarEnTablaMedico(usu);
+										medico_database med = new medico_database();
+										HorarioRandom hr = new HorarioRandom(med.getUltimoId_medico());
+										hr.generarHorario();
 										connect_tbUsuarios.insertUsuario(usu);
 										JOptionPane.showMessageDialog(contentPane, "Registrado exitosamente","OK",JOptionPane.INFORMATION_MESSAGE);
 									}else {JOptionPane.showMessageDialog(contentPane, "Escoja una especialidad","Error",JOptionPane.ERROR_MESSAGE);};
@@ -346,7 +355,7 @@ public class Registrarse extends JFrame {
 		txtUsuario.setForeground(Color.WHITE);
 		txtUsuario.setFont(new Font("Sitka Small", Font.PLAIN, 15));
 		txtUsuario.setBackground(new Color(19, 30, 49));
-		txtUsuario.setBounds(105, 86, 216, 34);
+		txtUsuario.setBounds(100, 153, 216, 34);
 		panel.add(txtUsuario);
 		txtUsuario.setColumns(10);
 		
@@ -357,7 +366,7 @@ public class Registrarse extends JFrame {
 		txtCodigoMaestro.setFont(new Font("Sitka Small", Font.PLAIN, 15));
 		txtCodigoMaestro.setBackground(new Color(19, 30, 49));
 		txtCodigoMaestro.setColumns(10);
-		txtCodigoMaestro.setBounds(105, 232, 216, 34);
+		txtCodigoMaestro.setBounds(100, 369, 216, 34);
 		panel.add(txtCodigoMaestro);
 		
 		txtNombre = new JTextField();
@@ -367,7 +376,7 @@ public class Registrarse extends JFrame {
 		txtNombre.setFont(new Font("Sitka Small", Font.PLAIN, 15));
 		txtNombre.setBackground(new Color(19, 30, 49));
 		txtNombre.setColumns(10);
-		txtNombre.setBounds(458, 86, 216, 34);
+		txtNombre.setBounds(458, 153, 216, 34);
 		panel.add(txtNombre);
 		
 		txtApellido = new JTextField();
@@ -377,7 +386,7 @@ public class Registrarse extends JFrame {
 		txtApellido.setFont(new Font("Sitka Small", Font.PLAIN, 15));
 		txtApellido.setBackground(new Color(19, 30, 49));
 		txtApellido.setColumns(10);
-		txtApellido.setBounds(458, 158, 216, 34);
+		txtApellido.setBounds(458, 228, 216, 34);
 		panel.add(txtApellido);
 		
 		txtCiudad = new JTextField();
@@ -387,7 +396,7 @@ public class Registrarse extends JFrame {
 		txtCiudad.setFont(new Font("Sitka Small", Font.PLAIN, 15));
 		txtCiudad.setBackground(new Color(19, 30, 49));
 		txtCiudad.setColumns(10);
-		txtCiudad.setBounds(458, 232, 216, 34);
+		txtCiudad.setBounds(458, 301, 216, 34);
 		panel.add(txtCiudad);
 		
 		txtPassVisible = new JTextField();
@@ -397,7 +406,7 @@ public class Registrarse extends JFrame {
 		txtPassVisible.setFont(new Font("Sitka Small", Font.PLAIN, 15));
 		txtPassVisible.setBackground(new Color(19, 30, 49));
 		txtPassVisible.setColumns(10);
-		txtPassVisible.setBounds(105, 158, 216, 34);
+		txtPassVisible.setBounds(100, 231, 216, 34);
 		txtPassVisible.setVisible(false);
 		panel.add(txtPassVisible);
 		
@@ -407,7 +416,7 @@ public class Registrarse extends JFrame {
 		txtPassNoVisible.setForeground(Color.WHITE);
 		txtPassNoVisible.setFont(new Font("Sitka Small", Font.PLAIN, 25));
 		txtPassNoVisible.setBackground(new Color(19, 30, 49));
-		txtPassNoVisible.setBounds(105, 158, 216, 34);
+		txtPassNoVisible.setBounds(100, 231, 216, 34);
 		panel.add(txtPassNoVisible);
 		
 		JLabel Visibilidad = new JLabel("");
@@ -442,23 +451,24 @@ public class Registrarse extends JFrame {
 			}
 		});
 		Visibilidad.setIcon(new ImageIcon(Registrarse.class.getResource("/Image/icons8_closed_eye_40px.png")));
-		Visibilidad.setBounds(331, 155, 40, 40);
+		Visibilidad.setBounds(326, 226, 40, 40);
 		panel.add(Visibilidad);
 		
 		bg.add(rdMedico);
 		bg.add(rdSecretaria);
 		
-		JLabel lblElijaSuEspecialidad = new JLabel("Elija su especialidad");
+	
 		lblElijaSuEspecialidad.setForeground(Color.WHITE);
 		lblElijaSuEspecialidad.setFont(new Font("Sitka Small", Font.PLAIN, 14));
-		lblElijaSuEspecialidad.setBounds(480, 277, 150, 22);
+		lblElijaSuEspecialidad.setBounds(502, 339, 150, 22);
 		panel.add(lblElijaSuEspecialidad);
+		lblElijaSuEspecialidad.setVisible(false);
+		
 		comboEsp.setForeground(Color.BLACK);
 		comboEsp.setBackground(SystemColor.windowBorder);
-		
-		
-		comboEsp.setBounds(405, 305, 323, 25);
+		comboEsp.setBounds(458, 363, 323, 25);
 		comboEsp.setFont(new Font("Sitka Small", Font.BOLD, 12));
+		comboEsp.setVisible(false);;
 		comboEspecialidades();
 		panel.add(comboEsp);
 		
@@ -469,17 +479,17 @@ public class Registrarse extends JFrame {
 		txtRut.setCaretColor(Color.WHITE);
 		txtRut.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		txtRut.setBackground(new Color(19, 30, 49));
-		txtRut.setBounds(105, 300, 216, 34);
+		txtRut.setBounds(100, 301, 216, 34);
 		panel.add(txtRut);
 		
 		JLabel lblIngreseSuRut = new JLabel("Ingrese su rut");
 		lblIngreseSuRut.setForeground(Color.WHITE);
 		lblIngreseSuRut.setFont(new Font("Sitka Small", Font.PLAIN, 14));
-		lblIngreseSuRut.setBounds(152, 277, 139, 25);
+		lblIngreseSuRut.setBounds(158, 341, 99, 19);
 		panel.add(lblIngreseSuRut);
 		
 		JSeparator separator_6 = new JSeparator();
-		separator_6.setBounds(105, 296, 216, 11);
+		separator_6.setBounds(100, 360, 216, 11);
 		panel.add(separator_6);
 	}
 	private void registrarEnTablaMedico(Usuario usu) {
@@ -586,6 +596,12 @@ public class Registrarse extends JFrame {
     private JTextField txtPassVisible;
     private JPasswordField txtPassNoVisible;
     private JTextField txtRut;
+    JRadioButton rdMedico = new JRadioButton("MEDICO");
+    private JPanel contentPane;
+	private ButtonGroup bg = new ButtonGroup();
+	JRadioButton rdSecretaria = new JRadioButton("SECRETARIA");
+	JLabel lblElijaSuEspecialidad = new JLabel("Elija su especialidad");
+
     
     protected void this_mousePressed(MouseEvent e) {
         x = e.getX();

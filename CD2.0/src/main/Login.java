@@ -18,7 +18,11 @@ import javax.swing.border.EmptyBorder;
 
 import classVO.Usuario;
 import mantenimientos.GestionUsuario;
+import mantenimientos.Medico_database;
+import mantenimientos.tbUsuarios_database;
 import rspanelgradiente.RSPanelGradiente;
+import utils.Boton;
+
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
@@ -81,20 +85,32 @@ public class Login extends JFrame {
 	protected void ingresar() {
 		String usuario = txtUsuario.getText();
 		String clave = String.copyValueOf(txtContraseña.getPassword());
-		
+	
 		GestionUsuario gestionUsuario = new GestionUsuario();
-		
+		//JOptionPane.showMessageDialog(contentPane, "xDDdd","Error",JOptionPane.ERROR_MESSAGE);
 		Usuario usuario2 = new Usuario();
 		
 		usuario2.setUsuario(usuario);
 		usuario2.setClave(clave);
 		
 		Usuario usu = gestionUsuario.obtenerUsuario(usuario2);
-		System.out.println("usuario: "+usu);
+		
 		if(usu!=null) {
-			this.dispose();
-			Secre FrmSecretaria = new Secre();
-			FrmSecretaria.setVisible(true);
+			
+			if(tbUsuarios_database.esMedico(usuario, clave)==true) {
+				
+				String rut= tbUsuarios_database.getRut(usuario, clave);
+			
+				Medico med = new Medico(Medico_database.getId_medico(rut));
+				med.setVisible(true);
+				this.dispose();
+			}else {
+	
+				this.dispose();
+				Secre FrmSecretaria = new Secre();
+				FrmSecretaria.setVisible(true);
+			}
+			
 			
 		}else {
 			JOptionPane.showMessageDialog(contentPane, "Datos invalidos","Error",JOptionPane.ERROR_MESSAGE);
@@ -169,16 +185,12 @@ public class Login extends JFrame {
 		label_1.setBounds(44, 273, 46, 37);
 		panel_der.add(label_1);
 		
-		JButton btnIngresar = new JButton("INGRESAR");
+		JButton btnIngresar = new Boton(201, 368, 113, 38,"INGRESAR");
 		btnIngresar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				ingresar();
 			}
 		});
-		btnIngresar.setFont(new Font("Sitka Small", Font.PLAIN, 11));
-		btnIngresar.setForeground(new Color(255, 255, 255));
-		btnIngresar.setBackground(new  Color(19, 30, 49));
-		btnIngresar.setBounds(201, 368, 113, 38);
 		panel_der.add(btnIngresar);
 		
 		JLabel label_2 = new JLabel("");
@@ -186,16 +198,12 @@ public class Login extends JFrame {
 		label_2.setBounds(41, 146, 50, 50);
 		panel_der.add(label_2);
 		
-		JButton btnSalir = new JButton("SALIR");
+		JButton btnSalir = new Boton(44,368, 113, 38,"SALIR");
 		btnSalir.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				salir();
 			}
 		});
-		btnSalir.setForeground(Color.WHITE);
-		btnSalir.setFont(new Font("Sitka Small", Font.PLAIN, 11));
-		btnSalir.setBackground(new Color(19, 30, 49));
-		btnSalir.setBounds(44, 368, 113, 38);
 		panel_der.add(btnSalir);
 		
 		JLabel lblLogin = new JLabel("Iniciar Sesi\u00F3n");
@@ -242,11 +250,7 @@ public class Login extends JFrame {
 				Registrarse nuevoRegistro = new Registrarse();
 				nuevoRegistro.setVisible(true);
 			}
-		});
-		
-		
-		
-		
+		});	
 		
 		RSPanelGradiente panel_izq = new RSPanelGradiente();
 		panel_izq.setBounds(0, 0, 450, 448);

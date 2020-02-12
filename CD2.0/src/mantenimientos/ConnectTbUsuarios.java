@@ -11,17 +11,14 @@ import com.mysql.jdbc.Statement;
 import classVO.Usuario;
 import utils.MySQLConexion;
 
-public class connect_tbUsuarios {
+public class ConnectTbUsuarios {
 	
 
 	public static void insertUsuario(Usuario usu) {
 	Connection con = null;
 	PreparedStatement pst = null;
-	ResultSet rs = null;
-	
-	
 	try {
-	
+		
 		con = MySQLConexion.getConexion();
 			String sql = "INSERT INTO tb_usuario values (?,?,?,?,?,?,?,?)";
 			pst = con.prepareStatement(sql);
@@ -30,13 +27,11 @@ public class connect_tbUsuarios {
 			pst.setString(3, usu.getNombre());
 			pst.setString(4, usu.getApellidos());
 			pst.setString(5, usu.getCiudad());
-			pst.setString(6, usu.getesMedico());
+			pst.setInt(6, Integer.parseInt(usu.getesMedico()));
 			pst.setInt(7, usu.getEspecialidad());
 			pst.setString(8,usu.getRut());
 			pst.executeUpdate();
-		
-		
-		pst.close();
+			pst.close();
 		con.close();
 		
 		
@@ -44,7 +39,7 @@ public class connect_tbUsuarios {
 		} 
 		catch (Exception e) {
 			System.out.println("Error en obtener usuario 'connect_tbUsuarios'");
-			System.out.println(e.getMessage());
+			System.err.println(e.toString());
 		}
 	
 	}

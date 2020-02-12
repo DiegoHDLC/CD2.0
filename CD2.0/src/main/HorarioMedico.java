@@ -11,6 +11,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import utils.Boton;
 import utils.MySQLConexion;
 
 import javax.swing.JTextField;
@@ -19,10 +20,6 @@ import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.Color;
-import java.awt.Font;
-import javax.swing.ImageIcon;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 
 public class HorarioMedico extends JFrame {
 
@@ -51,8 +48,9 @@ public class HorarioMedico extends JFrame {
 	public HorarioMedico(int id_medico) {
 		setUndecorated(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 695, 211);
+		setBounds(100, 100, 680, 209);
 		contentPane = new JPanel();
+		contentPane.setBackground(new Color(33, 44, 61));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
@@ -84,43 +82,26 @@ public class HorarioMedico extends JFrame {
 			data[ocupadosXY[0][i]][ocupadosXY[1][i]]="Disponible";
 			i++;
 		}
+				
+		table = new JTable(data,columnNames);
+		table.setGridColor(new Color(128, 128, 128));
+		table.setForeground(new Color(255, 255, 255));
+		table.setBackground(new Color(33, 44, 61));
+		table.setBounds(0, 11, 679, 128);
+		contentPane.add(table);
 		
-		JButton btnNewButton = new JButton("");
-		btnNewButton.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseEntered(MouseEvent arg0) {
-				btnNewButton.setSelectedIcon(new ImageIcon(HorarioMedico.class.getResource("/Image/icons8_checkmark_yes_64px_3.png")));
-			}
-		});
-		btnNewButton.setFont(new Font("Sitka Small", Font.BOLD, 11));
-		
-		btnNewButton.setBorder(null);
-		btnNewButton.setBorderPainted(false);
-		btnNewButton.setBackground(new Color(66, 169, 174));
-		btnNewButton.setIcon(new ImageIcon(HorarioMedico.class.getResource("/Image/icons8_checkmark_yes_64px_2.png")));
+		JButton btnNewButton = new Boton(244, 153, 148, 50,"Aceptar");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				dispose();
 			}
 		});
-		btnNewButton.setBounds(244, 153, 148, 50);
 		contentPane.add(btnNewButton);
-				
-		table = new JTable(data,columnNames);
-		table.setGridColor(new Color(255, 255, 255));
-		table.setForeground(new Color(255, 255, 255));
-		table.setFont(new Font("Sitka Small", Font.BOLD, 13));
-		table.setBackground(new Color(66, 169, 174));
-		table.setBounds(0, 0, 695, 211);
-		contentPane.add(table);
 	}
 	public void buscarDisponible(int ocupadosXY[][],int id_medico,int max[]) {
 		PreparedStatement ps = null;
 		ResultSet rs = null;
-		MySQLConexion conn = new MySQLConexion();
 		Connection con = MySQLConexion.getConexion();
-		int nEspecialidad=-1;
-		
 		try {
 			//busco en la tabla especialidad el numerito correspondiente a mi especialidad en formato string
 			
@@ -129,7 +110,7 @@ public class HorarioMedico extends JFrame {
 			rs = ps.executeQuery();
 			int i=0;
 			int j=0;
-			while(rs.next()) {// y los añado al combo box
+			while(rs.next()) {// y se añade al arreglo el bloque en formato de hora y el dia
 				if(rs.getString(3).equals("8:00-9:30")) {
 					j=1;
 				}

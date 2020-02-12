@@ -39,7 +39,7 @@ public class HorarioRandom {
 			
 			Arrays.numerosAHoras(bloques, horas, horariosCadaDia);
 			
-			horario_database.insertarHorasRandom(horas,id_medico,i,horariosCadaDia);
+			Horario_database.insertarHorasRandom(horas,id_medico,i,horariosCadaDia);
 			
 			i++;
 		}

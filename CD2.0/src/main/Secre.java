@@ -8,15 +8,15 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import classDAO.PacientesDAO;
-import classVO.EspecialidadesVO;
-import classVO.MedicosVO;
 import classVO.PacientesVO;
 import rspanelgradiente.RSPanelGradiente;
+import utils.CTextoSecretaria;
+import utils.Label;
 import utils.MySQLConexion;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-
+import utils.*;
 
 import java.awt.Font;
 import java.awt.event.MouseAdapter;
@@ -25,7 +25,6 @@ import java.awt.event.MouseListener;
 import java.text.SimpleDateFormat;
 import javax.swing.ImageIcon;
 import javax.swing.JTextField;
-import javax.swing.ListModel;
 import javax.swing.border.BevelBorder;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -42,9 +41,10 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.Icon;
+
 import rojerusan.RSComboMetro;
-import jcalendar.JDateChooser;
-import mantenimientos.fechasOcupadas_database;
+import mantenimientos.FechasOcupadas_database;
 
 import javax.swing.JComboBox;
 import java.awt.event.ItemListener;
@@ -52,6 +52,8 @@ import java.awt.event.ItemEvent;
 import javax.swing.JButton;
 import javax.swing.JList;
 //import com.toedter.calendar.JDateChooser;
+import javax.swing.JScrollPane;
+import java.awt.TextArea;
 
 
 public class Secre extends javax.swing.JFrame {
@@ -62,7 +64,7 @@ public class Secre extends javax.swing.JFrame {
 		setLocationRelativeTo(null);
 	}
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void initComponents() {
 		
 		setUndecorated(true);
@@ -81,45 +83,18 @@ public class Secre extends javax.swing.JFrame {
 		
 		JLabel lblCerrar = new JLabel("");
 		lblCerrar.setBounds(465, 0, 32, 32);
-		lblCerrar.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent arg0) {
-				System.exit(0);
-			}
-			@Override
-			public void mouseEntered(MouseEvent e) {
-				lblCerrar.setIcon(new ImageIcon(Login.class.getResource("/Image/icons8_close_window_32px_1.png")));
-				
-			}
-			@Override
-			public void mouseExited(MouseEvent e) {
-				lblCerrar.setIcon(new ImageIcon(Login.class.getResource("/Image/icons8_close_window_32px.png")));
-			}
-		});
+		MouseActionBarra(lblCerrar, CerrEntered, CerrExited, null, 2);
+		lblCerrar.setIcon(new ImageIcon(Registrarse.class.getResource("/Image/icons8_close_window_32px.png")));
 		barra.setLayout(null);
-		lblCerrar.setIcon(new ImageIcon(Secre.class.getResource("/Image/icons8_close_window_32px.png")));
 		barra.add(lblCerrar);
 
 		
 		JLabel lblMinimizar = new JLabel("");
+		MouseActionBarra(lblMinimizar, MinEntered,MinExited ,null, 1);
+		lblMinimizar.setIcon(new ImageIcon(Registrarse.class.getResource("/Image/minimizar_azul_oscuro_32px.png")));
 		lblMinimizar.setBounds(436, 0, 32, 32);
-		lblMinimizar.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseEntered(MouseEvent e) {
-				lblMinimizar.setIcon(new ImageIcon(Login.class.getResource("/Image/minimizar_blanco_32px.png")));
-			}
-			@Override
-			public void mouseExited(MouseEvent e) {
-				lblMinimizar.setIcon(new ImageIcon(Login.class.getResource("/Image/minimizar_azul_oscuro_32px.png")));
-			}
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				
-				setState(JFrame.ICONIFIED);
-			}
-		});
-		lblMinimizar.setIcon(new ImageIcon(Login.class.getResource("/Image/minimizar_azul_oscuro_32px.png")));
 		barra.add(lblMinimizar);
+		
 		JMenuBar menuBar = new JMenuBar();
 		menuBar.setBorder(null);
 		menuBar.setBackground(new Color(46, 118, 121));
@@ -171,9 +146,11 @@ public class Secre extends javax.swing.JFrame {
 		btnCerrarSesion.setFont(new Font("Sitka Small", Font.BOLD, 14));
 		btnCerrarSesion.setForeground(new Color(255, 255, 255));
 		btnCerrarSesion.setBackground(new Color(33, 44, 61));
+		
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////		
 /////////////////////////////PACIENTE///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////		
+		
 		JPanel pestañaPaciente = new JPanel();
 		pestañaPaciente.setBounds(0, 0, 103, 32);
 		pestañaPaciente.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
@@ -213,11 +190,7 @@ public class Secre extends javax.swing.JFrame {
 		pestañaPaciente.add(tituloPaciente);
 		tituloPaciente.setForeground(new Color(33, 44, 61));
 		tituloPaciente.setFont(new Font("Sitka Small", Font.BOLD, 15));
-		
-		panelHorarios.setVisible(false);
 		panelFRM.setVisible(true);
-		
-		
 		
 		panelFRM.setBounds(0, 32, 497, 508);
 		contentPane.add(panelFRM);
@@ -225,366 +198,123 @@ public class Secre extends javax.swing.JFrame {
 		panelFRM.setColorPrimario(new Color(66, 169, 174));
 		panelFRM.setLayout(null);
 		
-		txtNombre = new JTextField();
-		txtNombre.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
-		txtNombre.setCaretColor(new Color(255, 255, 255));
-		txtNombre.setFont(new Font("Sitka Small", Font.PLAIN, 15));
-		txtNombre.setForeground(new Color(255, 255, 255));
-		txtNombre.setColumns(10);
-		txtNombre.setBackground(new Color(19, 30, 49));
-		txtNombre.setBounds(122, 16, 221, 38);
+		txtNombre = new CTextoSecretaria(122,11,128,38);
 		panelFRM.add(txtNombre);
 		
-		txtApellidos = new JTextField();
-		txtApellidos.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
-		txtApellidos.setCaretColor(new Color(255, 255, 255));
-		txtApellidos.setFont(new Font("Sitka Small", Font.PLAIN, 15));
-		txtApellidos.setForeground(new Color(255, 255, 255));
-		txtApellidos.setColumns(10);
-		txtApellidos.setBackground(new Color(19, 30, 49));
-		txtApellidos.setBounds(122, 65, 221, 38);
+		txtApellidos = new CTextoSecretaria(122,60,128,38);
 		panelFRM.add(txtApellidos);
 		
-		txtFecha = new JTextField();
-		txtFecha.setIgnoreRepaint(true);
-		txtFecha.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
-		txtFecha.setCaretColor(new Color(255, 255, 255));
-		txtFecha.setFont(new Font("Sitka Small", Font.PLAIN, 15));
-		txtFecha.setForeground(new Color(255, 255, 255));
-		txtFecha.setColumns(10);
-		txtFecha.setBackground(new Color(19, 30, 49));
-		txtFecha.setBounds(122, 114, 129, 38);
+		txtFecha = new CTextoSecretaria(122,109,128,38);
+		txtFecha.setEditable(false);
 		panelFRM.add(txtFecha);
 		
-		txtRut = new JTextField();
-		txtRut.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
-		txtRut.setCaretColor(new Color(255, 255, 255));
-		txtRut.setFont(new Font("Sitka Small", Font.PLAIN, 15));
-		txtRut.setForeground(new Color(255, 255, 255));
-		txtRut.setColumns(10);
-		txtRut.setBackground(new Color(19, 30, 49));
-		txtRut.setBounds(122, 163, 129, 38);
+		txtRut = new CTextoSecretaria(122,158,128,38);
 		panelFRM.add(txtRut);
 		
-		txtDireccion = new JTextField();
-		txtDireccion.setForeground(new Color(255, 255, 255));
-		txtDireccion.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
-		txtDireccion.setCaretColor(new Color(255, 255, 255));
-		txtDireccion.setFont(new Font("Sitka Small", Font.PLAIN, 15));
-		txtDireccion.setColumns(10);
-		txtDireccion.setBackground(new Color(19, 30, 49));
-		txtDireccion.setBounds(122, 261, 330, 38);
+		txtDireccion = new CTextoSecretaria(122,256,365,38);
 		panelFRM.add(txtDireccion);
 		
-		txtTelefono = new JTextField();
-		txtTelefono.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
-		txtTelefono.setCaretColor(new Color(255, 255, 255));
-		txtTelefono.setForeground(new Color(255, 255, 255));
-		txtTelefono.setFont(new Font("Sitka Small", Font.PLAIN, 15));
-		txtTelefono.setColumns(10);
-		txtTelefono.setBounds(122, 212, 129, 38);
-		txtTelefono.setBackground(new Color(19, 30, 49));
+		txtTelefono = new CTextoSecretaria(122,207,128,38);
 		panelFRM.add(txtTelefono);
 		
-		txtStatus = new JTextField();
-		txtStatus.setBorder(null);
-		txtStatus.setName("");
-		txtStatus.setCaretColor(new Color(255, 255, 255));
-		txtStatus.setForeground(new Color(255, 255, 255));
-		txtStatus.setFont(new Font("Sitka Small", Font.PLAIN, 15));
+		txtStatus = new CTextoSecretaria(10, 348, 477,38);
 		txtStatus.setEditable(false);
-		txtStatus.setColumns(10);
-		txtStatus.setBounds(10, 331, 477, 38);
-		txtStatus.setBackground(new Color(19, 30, 49));
 		panelFRM.add(txtStatus);
 		
-		JLabel lblNombre = new JLabel("NOMBRE:");
-		lblNombre.setForeground(new Color(255, 255, 255));
-		lblNombre.setFont(new Font("Sitka Small", Font.PLAIN, 15));
-		lblNombre.setBounds(10, 25, 75, 20);
+		JLabel lblNombre = new Label(10, 23, 15,"NOMBRE:");
 		panelFRM.add(lblNombre);
 		
-		JLabel lblApellidos = new JLabel("APELLIDOS:");
-		lblApellidos.setForeground(new Color(255, 255, 255));
-		lblApellidos.setFont(new Font("Sitka Small", Font.PLAIN, 15));
-		lblApellidos.setBounds(10, 75, 90, 20);
+		JLabel lblApellidos = new Label(10, 72, 15,"APELLIDOS:");
 		panelFRM.add(lblApellidos);
 		
-		JLabel lblFecha = new JLabel("FECHA:");
-		lblFecha.setForeground(new Color(255, 255, 255));
-		lblFecha.setFont(new Font("Sitka Small", Font.PLAIN, 15));
-		lblFecha.setBounds(10, 123, 57, 20);
+		JLabel lblFecha = new Label(10, 121, 15,"FECHA:");
 		panelFRM.add(lblFecha);
 		
-		JLabel lblRut = new JLabel("RUT:");
-		lblRut.setForeground(new Color(255, 255, 255));
-		lblRut.setFont(new Font("Sitka Small", Font.PLAIN, 15));
-		lblRut.setBounds(10, 169, 46, 26);
+		JLabel lblRut = new Label(10, 164,15,"RUT:");
 		panelFRM.add(lblRut);
 		
-		JLabel lblDireccion = new JLabel("DIRECCION:");
-		lblDireccion.setForeground(new Color(255, 255, 255));
-		lblDireccion.setFont(new Font("Sitka Small", Font.PLAIN, 15));
-		lblDireccion.setBounds(10, 270, 93, 20);
+		JLabel lblDireccion = new Label(10, 265,15,"DIRECCION:");
 		panelFRM.add(lblDireccion);
 		
-		JLabel lblTelefono = new JLabel("TELEFONO:");
-		lblTelefono.setForeground(new Color(255, 255, 255));
-		lblTelefono.setFont(new Font("Sitka Small", Font.PLAIN, 15));
-		lblTelefono.setBounds(10, 221, 93, 20);
+		JLabel lblTelefono = new Label(10,216,15,"TELEFONO:");
 		panelFRM.add(lblTelefono);
 		
-		JLabel lblRegistrar = new JLabel("REGISTRAR");
-		lblRegistrar.setForeground(new Color(255, 255, 255));
-		lblRegistrar.setFont(new Font("Sitka Small", Font.PLAIN, 11));
-		lblRegistrar.setBounds(18, 472, 65, 14);
+		JLabel lblRegistrar = new Label(18, 472,11,"REGISTRAR");
 		panelFRM.add(lblRegistrar);
 		
-		JLabel lblActualizar = new JLabel("ACTUALIZAR");
-		lblActualizar.setForeground(new Color(255, 255, 255));
-		lblActualizar.setFont(new Font("Sitka Small", Font.PLAIN, 11));
-		lblActualizar.setBounds(218, 472, 73, 14);
+		JLabel lblActualizar = new Label(218, 472,11,"ACTUALIZAR");
 		panelFRM.add(lblActualizar);
 		
-		JLabel lblBuscar = new JLabel("BUSCAR POR RUT");
-		lblBuscar.setForeground(new Color(255, 255, 255));
-		lblBuscar.setFont(new Font("Sitka Small", Font.PLAIN, 11));
-		lblBuscar.setBounds(101, 472, 99, 14);
+		JLabel lblBuscar = new Label(101, 472,11,"BUSCAR POR RUT");
 		panelFRM.add(lblBuscar);
 		
-		JLabel lblEliminar = new JLabel("ELIMINAR");
-		lblEliminar.setForeground(new Color(255, 255, 255));
-		lblEliminar.setFont(new Font("Sitka Small", Font.PLAIN, 11));
-		lblEliminar.setBounds(309, 472, 65, 14);
+		JLabel lblEliminar = new Label(309, 472,11,"ELIMINAR");
 		panelFRM.add(lblEliminar);
 		
-		JLabel lblEliminarTodo = new JLabel("LIMPIAR TODO");
-		lblEliminarTodo.setForeground(new Color(255, 255, 255));
-		lblEliminarTodo.setFont(new Font("Sitka Small", Font.PLAIN, 11));
-		lblEliminarTodo.setBounds(392, 472, 83, 14);
+		JLabel lblEliminarTodo = new Label(392, 472,11,"LIMPIAR TODO");
 		panelFRM.add(lblEliminarTodo);
 		
 		JLabel btnRegistrar = new JLabel("");
-		btnRegistrar.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent evt) {
-				
-				registrarPacienteActionPerformed(evt);
-			}
-			@Override
-			public void mouseEntered(MouseEvent arg0) {
-				btnRegistrar.setIcon(new ImageIcon(Secre.class.getResource("/Image/icons8_add_user_male_64px_4.png")));
-			}
-			@Override
-			public void mouseExited(MouseEvent e) {
-				btnRegistrar.setIcon(new ImageIcon(Secre.class.getResource("/Image/icons8_add_user_male_64px_1.png")));
-			}
-			@Override
-			public void mousePressed(MouseEvent arg0) {
-				btnRegistrar.setIcon(new ImageIcon(Secre.class.getResource("/Image/icons8_add_user_male_64px.png")));
-			}
-			@Override
-			public void mouseReleased(MouseEvent e) {
-				btnRegistrar.setIcon(new ImageIcon(Secre.class.getResource("/Image/icons8_add_user_male_64px_4.png")));
-			}
-		});
-		btnRegistrar.setIcon(new ImageIcon(Secre.class.getResource("/Image/icons8_add_user_male_64px_1.png")));
-		btnRegistrar.setBounds(29, 397, 64, 64);
-		panelFRM.add(btnRegistrar);
 		
-		JLabel btnActualizar = new JLabel("");
-		btnActualizar.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				actualizarPacienteActionPerformed(e);
-			}
-			@Override
-			public void mouseEntered(MouseEvent e) {
-				btnActualizar.setIcon(new ImageIcon(Secre.class.getResource("/Image/icons8_update_user_64px_2.png")));
-			}
-			@Override
-			public void mouseExited(MouseEvent e) {
-				btnActualizar.setIcon(new ImageIcon(Secre.class.getResource("/Image/icons8_update_user_64px_1.png")));
-			}
-			@Override
-			public void mousePressed(MouseEvent e) {
-				btnActualizar.setIcon(new ImageIcon(Secre.class.getResource("/Image/icons8_update_user_64px.png")));
-			}
-			@Override
-			public void mouseReleased(MouseEvent e) {
-				btnActualizar.setIcon(new ImageIcon(Secre.class.getResource("/Image/icons8_update_user_64px_2.png")));
-				
-			}
-		});
-		btnActualizar.setIcon(new ImageIcon(Secre.class.getResource("/Image/icons8_update_user_64px_1.png")));
-		btnActualizar.setBounds(215, 397, 65, 64);
-		panelFRM.add(btnActualizar);
-		
-		JLabel btnBuscar = new JLabel("");
-		btnBuscar.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-					buscarPacienteActionPerformed(e);
-			}
-			@Override
-			public void mouseEntered(MouseEvent e) {
-				btnBuscar.setIcon(new ImageIcon(Secre.class.getResource("/Image/icons8_search_more_64px_3.png")));
-			}
-			@Override
-			public void mouseExited(MouseEvent e) {
-				btnBuscar.setIcon(new ImageIcon(Secre.class.getResource("/Image/icons8_search_more_64px_4.png")));
-			}
+			botonesSecretaria( 1, btnRegistrar, registrarBlanco, registrarCeleste, registrarGris,null);
+			btnRegistrar.setIcon(new ImageIcon(Secre.class.getResource("/Image/icons8_add_user_male_64px_1.png")));
+			btnRegistrar.setBounds(29, 397, 64, 64);
+			panelFRM.add(btnRegistrar);
 			
-			@Override
-			public void mouseReleased(MouseEvent e) {
-				btnBuscar.setIcon(new ImageIcon(Secre.class.getResource("/Image/icons8_search_more_64px_3.png")));
-			}
+			JLabel btnActualizar = new JLabel("");
+			botonesSecretaria( 2, btnActualizar, actualizarBlanco, actualizarCeleste, actualizarGris,null);
+			btnActualizar.setIcon(new ImageIcon(Secre.class.getResource("/Image/icons8_update_user_64px_1.png")));
+			btnActualizar.setBounds(215, 397, 65, 64);
+			panelFRM.add(btnActualizar);
 			
-			@Override
-			public void mousePressed(MouseEvent e) {
-				btnBuscar.setIcon(new ImageIcon(Secre.class.getResource("/Image/icons8_search_more_64px_1.png")));
-			}
-		});
-		btnBuscar.setIcon(new ImageIcon(Secre.class.getResource("/Image/icons8_search_more_64px_4.png")));
-		btnBuscar.setBounds(122, 397, 64, 64);
-		panelFRM.add(btnBuscar);
-		
-		
-		
-		JLabel btnEliminar = new JLabel("");
-		btnEliminar.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				eliminarPacienteActionPerformed(e);
-			}
-			@Override
-			public void mouseEntered(MouseEvent e) {
-				btnEliminar.setIcon(new ImageIcon(Secre.class.getResource("/Image/icons8_denied_64px_1.png")));
-			}
-			@Override
-			public void mouseExited(MouseEvent e) {
-				btnEliminar.setIcon(new ImageIcon(Secre.class.getResource("/Image/icons8_denied_64px.png")));
-			}
-			@Override
-			public void mousePressed(MouseEvent e) {
-				btnEliminar.setIcon(new ImageIcon(Secre.class.getResource("/Image/icons8_denied_64px_3.png")));
-			}
-			@Override
-			public void mouseReleased(MouseEvent e) {
-				btnEliminar.setIcon(new ImageIcon(Secre.class.getResource("/Image/icons8_denied_64px_1.png")));
-			}
-		});
-		btnEliminar.setIcon(new ImageIcon(Secre.class.getResource("/Image/icons8_denied_64px.png")));
-		btnEliminar.setBounds(309, 397, 64, 64);
-		panelFRM.add(btnEliminar);
-		
-		JLabel btnLimpiar = new JLabel("");
-		btnLimpiar.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				limpiarPacienteActionPerformed(e);
-			}
-			@Override
-			public void mouseEntered(MouseEvent e) {
-				btnLimpiar.setIcon(new ImageIcon(Secre.class.getResource("/Image/icons8_trash_64px_1.png")));
-			}
-			@Override
-			public void mouseExited(MouseEvent e) {
-				btnLimpiar.setIcon(new ImageIcon(Secre.class.getResource("/Image/icons8_trash_64px.png")));
-			}
-			@Override
-			public void mousePressed(MouseEvent e) {
-				btnLimpiar.setIcon(new ImageIcon(Secre.class.getResource("/Image/icons8_trash_64px_2.png")));
-			}
-			@Override
-			public void mouseReleased(MouseEvent e) {
-				btnLimpiar.setIcon(new ImageIcon(Secre.class.getResource("/Image/icons8_trash_64px_1.png")));
+			JLabel btnBuscar = new JLabel("");
+			botonesSecretaria( 3, btnBuscar, buscarBlanco, buscarCeleste, buscarGris,null);
+			btnBuscar.setIcon(new ImageIcon(Secre.class.getResource("/Image/icons8_search_more_64px_4.png")));
+			btnBuscar.setBounds(122, 397, 64, 64);
+			panelFRM.add(btnBuscar);
+			
+			JLabel btnEliminar = new JLabel("");
+			botonesSecretaria( 4, btnEliminar, eliminarBlanco, eliminarCeleste, eliminarGris,null);
+			btnEliminar.setIcon(new ImageIcon(Secre.class.getResource("/Image/icons8_denied_64px.png")));
+			btnEliminar.setBounds(309, 397, 64, 64);
+			panelFRM.add(btnEliminar);
+			
+			JLabel btnLimpiar = new JLabel("");
+			botonesSecretaria( 5, btnLimpiar, limpiarBlanco, limpiarCeleste, limpiarGris,null);
+			btnLimpiar.setIcon(new ImageIcon(Secre.class.getResource("/Image/icons8_trash_64px.png")));
+			btnLimpiar.setBounds(402, 397, 64, 64);
+			panelFRM.add(btnLimpiar);
 				
-			}
-		});
-		btnLimpiar.setIcon(new ImageIcon(Secre.class.getResource("/Image/icons8_trash_64px.png")));
-		btnLimpiar.setBounds(402, 397, 64, 64);
-		panelFRM.add(btnLimpiar);
-		
-			
-			RSDateChooser calendarioTest = new RSDateChooser();
-			calendarioTest.addPropertyChangeListener("DatoFecha",new PropertyChangeListener() {
-				public void propertyChange(PropertyChangeEvent arg0) {
-					if(arg0.getNewValue() !=null) {
-					JOptionPane.showMessageDialog(contentPane, "Seleccione una fecha"+arg0.getPropertyName()+":"+arg0.getNewValue(), "Error", JOptionPane.ERROR_MESSAGE);
+				RSDateChooser calendarioRS = new RSDateChooser();
+				calendarioRS.addPropertyChangeListener("DatoFecha",new PropertyChangeListener() {
+					public void propertyChange(PropertyChangeEvent arg0) {
+						if(arg0.getNewValue() !=null) {
+						JOptionPane.showMessageDialog(contentPane, "Seleccione una fecha"+arg0.getPropertyName()+":"+arg0.getNewValue(), "Error", JOptionPane.ERROR_MESSAGE);
+						}
 					}
-				}
-			});
-			calendarioTest.setColorBackground(new Color(19, 30, 49));
-			calendarioTest.setBounds(new Rectangle(0, 0, 0, 40));
-			calendarioTest.setRequestFocusEnabled(false);
-			calendarioTest.setBorder(null);
-			calendarioTest.setBounds(239, 114, 38, 32);
-			calendarioTest.setOpaque(false);
-			
-			
-			panelFRM.add(calendarioTest);
-			
-			JLabel lvlAdd = new JLabel("");
-			lvlAdd.addMouseListener(new MouseAdapter() {
-				@Override
-				public void mousePressed(MouseEvent arg0) {
-					lvlAdd.setIcon(new ImageIcon(Secre.class.getResource("/Image/icons8_add_32px_1.png")));
-				}
-				@Override
-				public void mouseReleased(MouseEvent e) {
-					lvlAdd.setIcon(new ImageIcon(Secre.class.getResource("/Image/icons8_add_32px_2.png")));
-				}
-				@Override
-				public void mouseExited(MouseEvent e) {
-					lvlAdd.setIcon(new ImageIcon(Secre.class.getResource("/Image/icons8_add_32px.png")));
-				}
-				@Override
-				public void mouseEntered(MouseEvent e) {
-					lvlAdd.setIcon(new ImageIcon(Secre.class.getResource("/Image/icons8_add_32px_2.png")));
-				}
-				@Override
-				public void mouseClicked(MouseEvent e) {
-					String formatoFecha = "dd/MM/yyyy";
-					SimpleDateFormat formateador = new SimpleDateFormat(formatoFecha);
-					txtFecha.setText(formateador.format(calendarioTest.getDatoFecha()));
-				}
-			});
-			lvlAdd.setIcon(new ImageIcon(Secre.class.getResource("/Image/icons8_add_32px.png")));
-			lvlAdd.setBounds(279, 114, 32, 38);
-			panelFRM.add(lvlAdd);
-		
-		panelHorarios.setBounds(0, 32, 497, 508);
-		contentPane.add(panelHorarios);
-		panelHorarios.setColorSecundario(new Color(33, 44, 61));
-		panelHorarios.setColorPrimario(new Color(66, 169, 174));
-		panelHorarios.setLayout(null);
+				});
+				calendarioRS.setColorBackground(new Color(19, 30, 49));
+				calendarioRS.setBounds(new Rectangle(0, 0, 0, 40));
+				calendarioRS.setRequestFocusEnabled(false);
+				calendarioRS.setBorder(null);
+				calendarioRS.setBounds(236, 109, 38, 38);
+				calendarioRS.setOpaque(false);
+				
+				
+				panelFRM.add(calendarioRS);
+				
+				JLabel lvlAdd = new JLabel("");
+				botonesSecretaria( 6, lvlAdd, addBlanco, addCeleste , addGris, calendarioRS);
+				lvlAdd.setIcon(new ImageIcon(Secre.class.getResource("/Image/icons8_add_32px.png")));
+				lvlAdd.setBounds(271, 109, 32, 38);
+				panelFRM.add(lvlAdd);
+	
 		
 		
-		
-		
-		
-
-
-		
-		
-		comboMedico.addItemListener(new ItemListener() {
-			public void itemStateChanged(ItemEvent e) {
-				if(e.getStateChange() == ItemEvent.SELECTED) {
-					
-					/*
-					EspecialidadesVO esp = (EspecialidadesVO) comboEsp.getSelectedItem();
-					MedicosVO med = new MedicosVO();
-					DefaultComboBoxModel modlMedico = new DefaultComboBoxModel(med.mostrarMedicos(esp.getId()));
-					comboMedico.setModel(modlMedico);*/
-				}
-			}
-		});
-		comboMedico.setBounds(10, 234, 303, 32);
-		panelHorarios.add(comboMedico);
 //////////////////////////////////////////////////////////////////////////////////		
 ////////////////////////////HORARIOS/////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////			
+		panelHorarios.setVisible(false);
 		pestañaHorarios.setBounds(103, 0, 103, 32);
 		pestañaHorarios.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
 		pestañaHorarios.addMouseListener(new MouseAdapter() {
@@ -623,30 +353,105 @@ public class Secre extends javax.swing.JFrame {
 		label.setFont(new Font("Sitka Small", Font.BOLD, 15));
 		pestañaHorarios.add(label);
 		
+		panelHorarios.setBounds(0, 32, 497, 508);
+		contentPane.add(panelHorarios);
+		panelHorarios.setColorSecundario(new Color(33, 44, 61));
+		panelHorarios.setColorPrimario(new Color(66, 169, 174));
+		
+		comboMedico.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				if(e.getStateChange() == ItemEvent.SELECTED) {	
+				}
+			}
+		});
+		
+		JLabel lblNewLabel = new Label(10,67,14,"Ingrese el dia");
+		panelHorarios.add(lblNewLabel);
+		
+		JLabel lblRegistrarUnaHora = new Label(10,11,14,"Registrar una Hora para un Paciente");
+		panelHorarios.add(lblRegistrarUnaHora);
+		
+		JLabel lblIngreseElMes = new Label(10,100,14,"Ingrese el mes");
+		panelHorarios.add(lblIngreseElMes);
+		
+		JLabel lblSeleccioneUnaHora = new Label(10,177,14,"Seleccione una hora");
+		panelHorarios.add(lblSeleccioneUnaHora);
+		
+		JLabel lblIngreseElRut = new Label(10,136,14,"Ingrese el rut de paciente");
+		panelHorarios.add(lblIngreseElRut);
+		
+		txtDia = new CTextoSecretaria(297, 61, 105, 20);
+		txtDia.setText("13");
+		panelHorarios.add(txtDia);
+		
+		txtMes = new CTextoSecretaria(198, 94, 204, 20);
+		txtMes.setText("12");
+		panelHorarios.add(txtMes);
+		
+		textRut = new CTextoSecretaria(198, 130, 204, 20);
+		textRut.setText("00.000.000-0");
+		panelHorarios.add(textRut);
+		
+		comboHora.addItem("8:00-9:30");
+		comboHora.addItem("9:45-11:15");
+		comboHora.addItem("11:30-13:00");
+		comboHora.addItem("14:30-16:00");
+		comboHora.addItem("16:15-17:45");
+		comboHora.addItem("18:00-19:30");
+		comboHora.addItem("19:45-21:15");
+		panelHorarios.add(comboHora);
+		
+		JButton btnRegistrarPaciente = new Boton(10, 465, 473, 32,"Registrar Cita");
+		btnRegistrarPaciente.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(comboEsp.getSelectedIndex()!=0) {
+					if(txtDia.getText().isEmpty()==false || txtMes.getText().isEmpty()==false || textRut.getText().isEmpty()==false ) {
+						FechasOcupadas_database fecha = 
+								new FechasOcupadas_database(comboHora.getSelectedIndex()+1,
+										Integer.parseInt(txtDia.getText().trim()),
+										Integer.parseInt(txtMes.getText().trim()));
+								if(fecha.buscarFecha()==false) {
+									FechasOcupadas_database nuevo = new FechasOcupadas_database(comboHora.getSelectedIndex()+1,
+											Integer.parseInt(txtDia.getText().trim()),
+											Integer.parseInt(txtMes.getText().trim()),
+											textRut.getText(),comboDia.getSelectedIndex()+1,idMedicos[comboMedico.getSelectedIndex()],txtDiagnostico.getText());
+									nuevo.insertarDatos();
+									JOptionPane.showMessageDialog(contentPane, "Cita registrada","OK",JOptionPane.INFORMATION_MESSAGE);
+								}else {JOptionPane.showMessageDialog(contentPane, "Ese dia, mes y hora no esta disponible para una cita","error",JOptionPane.ERROR_MESSAGE);}
+					}else {JOptionPane.showMessageDialog(contentPane, "rellene los campos","Error",JOptionPane.ERROR_MESSAGE);}
+					
+				}else {JOptionPane.showMessageDialog(contentPane, "seleccione una especialidad, y luego un doctor","Error",JOptionPane.ERROR_MESSAGE);}
+			}
+		});
+		panelHorarios.add(btnRegistrarPaciente);
+		
+		comboDia.setModel(new DefaultComboBoxModel(new String[] {"Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sabado"}));
+		panelHorarios.add(comboDia);
+		txtDiagnostico.setVisible(false);
+		
+		txtDiagnostico.setText("Ingrese un diagnostico...");
+		txtDiagnostico.setBounds(10, 298, 303, 102);
+		panelHorarios.add(txtDiagnostico);
+		
+		panelHorarios.setLayout(null);
+		panelHorarios.add(comboMedico);
+		
 		comboEsp.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				
-				
 				comboMedico.removeAllItems();
 				if(!comboEsp.getItemAt(0).toString().equals(comboEsp.getSelectedItem())){
 					// vamos a guardar los id de los medicos para poder tener 
 					// acceso a ellos, ya que en el combo box se mostrara el nombre y apellido juntos
 					idMedicos = new int[100];
 					filtrarMedico(idMedicos);
-					
-				}
-				
-			}
-			
+				}	
+			}	
 		});
-		comboEsp.setFont(new Font("Sitka Small", Font.BOLD, 12));
-		comboEsp.setBounds(10, 202, 303, 32);
 		panelHorarios.add(comboEsp);
 		
-		JButton btnMostrarHorarioDel = new JButton("Horario de Medico");
-		btnMostrarHorarioDel.setBackground(Color.GRAY);
+		JButton btnMostrarHorarioDel = new Boton(323, 266, 161, 61,"Horario de Medico");
 		btnMostrarHorarioDel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if(idMedicos!=null) {
@@ -654,20 +459,24 @@ public class Secre extends javax.swing.JFrame {
 					HorarioMedico horario = new HorarioMedico(idMedicos[comboMedico.getSelectedIndex()]);
 					horario.setVisible(true);
 				}
-				
 			}
 		});
-		btnMostrarHorarioDel.setFont(new Font("Sitka Small", Font.ITALIC, 14));
-		btnMostrarHorarioDel.setBounds(323, 353, 164, 61);
 		panelHorarios.add(btnMostrarHorarioDel);
 		
-		
-		
 		JList listFechas = new JList();
-		listFechas.setBounds(10, 298, 303, 116);
+		listFechas.setForeground(new Color(255, 255, 255));
+		listFechas.setBorder(null);
+		listFechas.setBackground(new Color(19, 30, 49));
+		listFechas.setBounds(1, 1, 259, 98);
 		panelHorarios.add(listFechas);
 		
-		JButton btnMostrarFechas = new JButton("Mostrar Fechas Ocupadas");
+		listFechas.setLayoutOrientation(JList.VERTICAL);
+		JScrollPane scrollbar = new JScrollPane(listFechas);
+		scrollbar.setBackground(new Color(0, 255, 255));
+		scrollbar.setBounds(10, 300, 300, 100);
+		panelHorarios.add(scrollbar);
+		
+		JButton btnMostrarFechas = new Boton(10, 266, 303, 32,"Mostrar Fechas Ocupadas");
 		btnMostrarFechas.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
@@ -677,27 +486,18 @@ public class Secre extends javax.swing.JFrame {
 					listFechas.setListData(fechas);
 					
 				}else {JOptionPane.showMessageDialog(contentPane, "Seleccione una especialidad","Error",JOptionPane.ERROR_MESSAGE);}
-				
-				
-				/*
-				 if (index == listModel.getSize()) {
-			            //removed item in last position
-			            index--;
-			     }*/
-				
 			}
 		});
 		btnMostrarFechas.setFont(new Font("Sitka Small", Font.ITALIC, 14));
-		btnMostrarFechas.setBounds(10, 266, 303, 32);
 		panelHorarios.add(btnMostrarFechas);
 		
-		JButton btnBuscarFechasOcupadas = new JButton("Verificar Fecha");
+		JButton btnBuscarFechasOcupadas = new Boton(323, 202, 160, 61,"Verificar Fecha");
 		btnBuscarFechasOcupadas.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if(comboEsp.getSelectedIndex()!=0) {
 					if(txtDia.getText().isEmpty()==false || txtMes.getText().isEmpty()==false || textRut.getText().isEmpty()==false ) {
-						fechasOcupadas_database fecha = 
-								new fechasOcupadas_database(comboHora.getSelectedIndex()+1,
+						FechasOcupadas_database fecha = 
+								new FechasOcupadas_database(comboHora.getSelectedIndex()+1,
 										Integer.parseInt(txtDia.getText().trim()),
 										Integer.parseInt(txtMes.getText().trim()));
 								if(fecha.buscarFecha()==false) {
@@ -708,106 +508,52 @@ public class Secre extends javax.swing.JFrame {
 				}else {JOptionPane.showMessageDialog(contentPane, "Seleccione una especialidad para poder verificar su fecha","Error",JOptionPane.ERROR_MESSAGE);}
 			}
 		});
-		btnBuscarFechasOcupadas.setFont(new Font("Sitka Small", Font.ITALIC, 14));
-		btnBuscarFechasOcupadas.setBackground(Color.GRAY);
-		btnBuscarFechasOcupadas.setBounds(323, 202, 160, 61);
 		panelHorarios.add(btnBuscarFechasOcupadas);
 		
-		JLabel lblNewLabel = new JLabel("Ingrese el dia");
-		lblNewLabel.setFont(new Font("Sitka Small", Font.ITALIC, 14));
-		lblNewLabel.setBounds(10, 67, 140, 14);
-		panelHorarios.add(lblNewLabel);
-		
-		JLabel lblRegistrarUnaHora = new JLabel("Registrar una Hora para un Paciente");
-		lblRegistrarUnaHora.setFont(new Font("Sitka Small", Font.ITALIC, 14));
-		lblRegistrarUnaHora.setBounds(10, 11, 279, 14);
-		panelHorarios.add(lblRegistrarUnaHora);
-		
-		JLabel lblIngreseElMes = new JLabel("Ingrese el mes");
-		lblIngreseElMes.setFont(new Font("Sitka Small", Font.ITALIC, 14));
-		lblIngreseElMes.setBounds(10, 100, 140, 14);
-		panelHorarios.add(lblIngreseElMes);
-		
-		JLabel lblSeleccioneUnaHora = new JLabel("Seleccione una hora");
-		lblSeleccioneUnaHora.setFont(new Font("Sitka Small", Font.ITALIC, 14));
-		lblSeleccioneUnaHora.setBounds(10, 177, 140, 14);
-		panelHorarios.add(lblSeleccioneUnaHora);
-		
-		JLabel lblIngreseElRut = new JLabel("Ingrese el rut de paciente");
-		lblIngreseElRut.setFont(new Font("Sitka Small", Font.ITALIC, 14));
-		lblIngreseElRut.setBounds(10, 136, 197, 14);
-		panelHorarios.add(lblIngreseElRut);
-		
-		txtDia = new JTextField();
-		txtDia.setText("13");
-		txtDia.setBounds(297, 61, 105, 20);
-		panelHorarios.add(txtDia);
-		txtDia.setColumns(10);
-		
-		txtMes = new JTextField();
-		txtMes.setText("12");
-		txtMes.setColumns(10);
-		txtMes.setBounds(198, 94, 204, 20);
-		panelHorarios.add(txtMes);
-		
-		textRut = new JTextField();
-		textRut.setText("00.000.000-0");
-		textRut.setColumns(10);
-		textRut.setBounds(198, 130, 204, 20);
-		panelHorarios.add(textRut);
-		
-		
-		comboHora.setBounds(198, 171, 204, 20);
-		comboHora.addItem("8:00-9:30");
-		comboHora.addItem("9:45-11:15");
-		comboHora.addItem("11:30-13:00");
-		comboHora.addItem("14:30-16:00");
-		comboHora.addItem("16:15-17:45");
-		comboHora.addItem("18:00-19:30");
-		comboHora.addItem("19:45-21:15");
-		
-		
-		
-		panelHorarios.add(comboHora);
-		
-		JButton btnRegistrarPaciente = new JButton("Registrar Paciente");
-		btnRegistrarPaciente.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if(comboEsp.getSelectedIndex()!=0) {
-					if(txtDia.getText().isEmpty()==false || txtMes.getText().isEmpty()==false || textRut.getText().isEmpty()==false ) {
-						fechasOcupadas_database fecha = 
-								new fechasOcupadas_database(comboHora.getSelectedIndex()+1,
-										Integer.parseInt(txtDia.getText().trim()),
-										Integer.parseInt(txtMes.getText().trim()));
-								if(fecha.buscarFecha()==false) {
-									fechasOcupadas_database nuevo = new fechasOcupadas_database(comboHora.getSelectedIndex()+1,
-											Integer.parseInt(txtDia.getText().trim()),
-											Integer.parseInt(txtMes.getText().trim()),
-											textRut.getText(),comboDia.getSelectedIndex()+1,idMedicos[comboMedico.getSelectedIndex()]);
-									nuevo.insertarDatos();
-									JOptionPane.showMessageDialog(contentPane, "Cita registrada","OK",JOptionPane.INFORMATION_MESSAGE);
-								}else {JOptionPane.showMessageDialog(contentPane, "Ese dia, mes y hora no esta disponible para una cita","error",JOptionPane.ERROR_MESSAGE);}
-					}else {JOptionPane.showMessageDialog(contentPane, "rellene los campos","Error",JOptionPane.ERROR_MESSAGE);}
-					
-				}else {JOptionPane.showMessageDialog(contentPane, "seleccione una especialidad, y luego un doctor","Error",JOptionPane.ERROR_MESSAGE);}
-			}
-		});
-		btnRegistrarPaciente.setFont(new Font("Sitka Small", Font.ITALIC, 14));
-		btnRegistrarPaciente.setBounds(10, 444, 473, 32);
-		panelHorarios.add(btnRegistrarPaciente);
-		
-		
-		comboDia.setModel(new DefaultComboBoxModel(new String[] {"Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sabado"}));
-		comboDia.setBounds(198, 61, 97, 20);
-		panelHorarios.add(comboDia);
 		comboEspecialidades();
 				
 	}
+	
+//////////////////////////////////////////////////////////////////////////////////
+////////////////////////////MODULOS/////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+	
+	private void botonesSecretaria(int tarea, JLabel label, Icon blanco, Icon celeste, Icon gris, RSDateChooser calendarioRS) {
+		label.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent evt) {
+				if(tarea == 1) {registrarPacienteActionPerformed(evt);}
+				else if(tarea == 2) {actualizarPacienteActionPerformed(evt);}
+				else if(tarea == 3) {buscarPacienteActionPerformed(evt);}
+				else if(tarea == 4) {eliminarPacienteActionPerformed(evt);}
+				else if(tarea == 5) {limpiarPacienteActionPerformed(evt);}
+				else if(tarea == 6) {String formatoFecha = "dd/MM/yyyy";
+				SimpleDateFormat formateador = new SimpleDateFormat(formatoFecha);
+				txtFecha.setText(formateador.format(calendarioRS.getDatoFecha()));}
+			}
+			@Override
+			public void mouseEntered(MouseEvent arg0) {
+				label.setIcon(blanco);
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				label.setIcon(celeste);
+			}
+			@Override
+			public void mousePressed(MouseEvent arg0) {
+				label.setIcon(gris);
+			}
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				label.setIcon(blanco);
+			}
+		});
+	}
+	
 	private void guardarFechasOcupadas(Object fechas[]) {
 		int i=0;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
-		MySQLConexion conn = new MySQLConexion();
 		Connection con = MySQLConexion.getConexion();
 		
 		
@@ -832,10 +578,10 @@ public class Secre extends javax.swing.JFrame {
 		}
 	}
 	
+	@SuppressWarnings("unchecked")
 	private void filtrarMedico(int idMedicos[]) {
 		PreparedStatement ps = null;
 		ResultSet rs = null;
-		MySQLConexion conn = new MySQLConexion();
 		Connection con = MySQLConexion.getConexion();
 		int nEspecialidad=-1;
 		
@@ -869,35 +615,51 @@ public class Secre extends javax.swing.JFrame {
 			System.err.println(ex.toString());
 		}
 	}
+	@SuppressWarnings("unchecked")
 	private void comboEspecialidades() {
 		PreparedStatement ps = null;
 		ResultSet rs = null;
-		MySQLConexion conn = new MySQLConexion();
 		Connection con = MySQLConexion.getConexion();
-		
 		try {
 			
 			String sql = "SELECT * FROM especialidades_medicas";
 			ps = con.prepareStatement(sql);
 			rs = ps.executeQuery();
-			
 			comboEsp.addItem("Seleccione especialidad");
 			
 			while(rs.next()) {
 				comboEsp.addItem(rs.getString("especialidad"));
 			}
-			
 			rs.close();
-			
 		}catch(SQLException ex) {
 			
 			System.err.println(ex.toString());
 		}
 	}
 	
+	public void MouseActionBarra(JLabel label,Icon Entered, Icon Exited, Icon Clicked, int boton) {
+		label.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				label.setIcon(Entered);
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				label.setIcon(Exited);
+			}
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if(boton == 1) {
+					setState(JFrame.ICONIFIED);
+				}else {
+					System.exit(0);
+				}
+			}
+		});
+	}
+	
 	private void registrarPacienteActionPerformed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_registrarProveedorActionPerformed
         PacientesVO pac = new PacientesVO();
-        //RSDateChooser chooser = new RSDateChooser();
         
         if(txtNombre.getText().isEmpty() || txtApellidos.getText().isEmpty() || txtFecha.getText().isEmpty()
         		|| txtRut.getText().isEmpty() || txtTelefono.getText().isEmpty() || txtDireccion.getText().isEmpty())	
@@ -914,12 +676,7 @@ public class Secre extends javax.swing.JFrame {
         	     pac.setTelefono(txtTelefono.getText());
         	     String resp = PacientesDAO.registrarPacientes(pac);
         	     txtStatus.setText(resp);
-        	     txtNombre.setText("");
-        	     txtApellidos.setText("");
-        	     txtFecha.setText("");
-        	     txtRut.setText("");
-        	     txtTelefono.setText("");
-        	     txtDireccion.setText("");
+        	     DejarBlanco();
         	     cargarPacientes(0);
         	
         }
@@ -927,7 +684,7 @@ public class Secre extends javax.swing.JFrame {
 
 	private void actualizarPacienteActionPerformed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_actualizarProveedorActionPerformed
         PacientesVO pac = new PacientesVO();
-       // pac.setIdPaciente(Integer.parseInt(txtID.getText()));
+        pac.setIdPaciente(Integer.parseInt(txtID.getText()));
         pac.setNombre(txtNombre.getText());
         pac.setApellidos(txtApellidos.getText());
         pac.setFecha_nacimiento(txtFecha.getText());
@@ -936,13 +693,7 @@ public class Secre extends javax.swing.JFrame {
         pac.setTelefono(txtTelefono.getText());
         String resp = PacientesDAO.ActualizarPacientes(pac);
         txtStatus.setText(resp);
-        txtNombre.setText("");
-        txtApellidos.setText("");
-        txtFecha.setText("");
-        txtRut.setText("");
-        txtDireccion.setText("");
-        txtTelefono.setText("");
-       // txtID.setText("");
+        DejarBlanco();
         cargarPacientes(0);
     }//GEN-LAST:event_actualizarProveedorActionPerformed
 	
@@ -953,7 +704,7 @@ public class Secre extends javax.swing.JFrame {
 			}else {
 			
 			PacientesVO pac = PacientesDAO.buscarPacientes(txtRut.getText());
-	      //  txtID.setText(pac.getIdPaciente()+"");
+	        txtID.setText(pac.getIdPaciente()+"");
 	        txtNombre.setText(pac.getNombre());
 	        txtApellidos.setText(pac.getApellidos());
 	        txtFecha.setText(pac.getFecha_nacimiento());
@@ -962,9 +713,9 @@ public class Secre extends javax.swing.JFrame {
 	        txtTelefono.setText(pac.getTelefono());
 	        txtStatus.setText(pac.getResultado());
 			}
-	    }//GEN-LAST:event_buscarProveedorActionPerformed
+	    }
 	
-	private void eliminarPacienteActionPerformed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_eliminarProveedorActionPerformed
+	private void eliminarPacienteActionPerformed(java.awt.event.MouseEvent evt) {
 		if(txtNombre.getText().isEmpty() || txtApellidos.getText().isEmpty() || txtFecha.getText().isEmpty()
         		|| txtRut.getText().isEmpty() || txtTelefono.getText().isEmpty() || txtDireccion.getText().isEmpty()) 
         {
@@ -972,26 +723,16 @@ public class Secre extends javax.swing.JFrame {
         }
         else {
         String resp = PacientesDAO.eliminarPacientes(txtRut.getText());
+        DejarBlanco();
         txtStatus.setText(resp);
-        txtNombre.setText("");
-        txtApellidos.setText("");
-        txtFecha.setText("");
-        txtRut.setText("");
-        txtDireccion.setText("");
-        txtTelefono.setText("");
         cargarPacientes(0);
         }
-    }//GEN-LAST:event_eliminarProveedorActionPerformed
+    }
 
-	private void limpiarPacienteActionPerformed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_limpiarProveedorActionPerformed
-    	txtNombre.setText("");
-        txtApellidos.setText("");
-        txtFecha.setText("");
-        txtRut.setText("");
-        txtDireccion.setText("");
-        txtTelefono.setText("");
+	private void limpiarPacienteActionPerformed(java.awt.event.MouseEvent evt) {
+    	DejarBlanco();
         txtStatus.setText("");
-    }//GEN-LAST:event_limpiarProveedorActionPerformed
+    }
 	
 	public void cargarPacientes(int busca){
         int index = 1;
@@ -1005,39 +746,28 @@ public class Secre extends javax.swing.JFrame {
         }
     }
 	
-	class eventoCerrar implements MouseListener{
+	public class eventoCerrar implements MouseListener{
 
         @Override
-        public void mouseClicked(MouseEvent arg0) {
-            // TODO Auto-generated method stub
-        	
-            dispose();
-        }
-
+        public void mouseClicked(MouseEvent arg0) {dispose();}
 		@Override
-		public void mousePressed(MouseEvent e) {
-			// TODO Auto-generated method stub
-			
-		}
-
+		public void mouseEntered(MouseEvent arg0) {}
 		@Override
-		public void mouseReleased(MouseEvent e) {
-			// TODO Auto-generated method stub
-			
-		}
-
+		public void mouseExited(MouseEvent arg0) {}
 		@Override
-		public void mouseEntered(MouseEvent e) {
-			// TODO Auto-generated method stub
-			
-		}
-
+		public void mousePressed(MouseEvent arg0) {}
 		@Override
-		public void mouseExited(MouseEvent e) {
-			// TODO Auto-generated method stub
-			
-		}
+		public void mouseReleased(MouseEvent arg0) {}
     }
+	
+	public void DejarBlanco() {
+		txtNombre.setText("");
+        txtApellidos.setText("");
+        txtFecha.setText("");
+        txtRut.setText("");
+        txtDireccion.setText("");
+        txtTelefono.setText("");
+	}
 	
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -1053,13 +783,18 @@ public class Secre extends javax.swing.JFrame {
 		});
 	}
 	
+	TextArea txtDiagnostico = new TextArea();
 	@SuppressWarnings("rawtypes")
-	JComboBox comboDia = new JComboBox();
-	private JComboBox comboHora = new JComboBox();
+	JComboBox comboDia = new ComboBox(198, 61, 97, 20);
+	@SuppressWarnings("rawtypes")
+	private JComboBox comboHora = new ComboBox(198, 171, 204, 20);
+	@SuppressWarnings("unused")
 	private int i=0;
 	private int idMedicos[]=null;
+	@SuppressWarnings("rawtypes")
 	private javax.swing.JComboBox list_pacientes;
 	private JPanel contentPane;
+	private JTextField txtID;
 	private JTextField txtNombre;
 	private JTextField txtApellidos;
 	public static JTextField txtFecha;
@@ -1071,9 +806,33 @@ public class Secre extends javax.swing.JFrame {
 	RSPanelGradiente panelHorarios = new RSPanelGradiente();
 	JPanel pestañaHorarios = new JPanel();
 	RSComboMetro comboEspecial = new RSComboMetro();
+	ImageIcon MinEntered = new ImageIcon(Registrarse.class.getResource("/Image/minimizar_blanco_32px.png"));
+	ImageIcon MinExited = new ImageIcon(Registrarse.class.getResource("/Image/minimizar_azul_oscuro_32px.png"));
+	ImageIcon CerrEntered = new ImageIcon(Registrarse.class.getResource("/Image/icons8_close_window_32px_1.png"));
+	ImageIcon CerrExited = new ImageIcon(Registrarse.class.getResource("/Image/icons8_close_window_32px.png"));
+	ImageIcon registrarBlanco = new ImageIcon(Secre.class.getResource("/Image/icons8_add_user_male_64px_4.png"));
+	ImageIcon registrarCeleste = new ImageIcon(Secre.class.getResource("/Image/icons8_add_user_male_64px_1.png"));
+	ImageIcon registrarGris = new ImageIcon(Secre.class.getResource("/Image/icons8_add_user_male_64px.png"));
+	ImageIcon actualizarBlanco = new ImageIcon(Secre.class.getResource("/Image/icons8_update_user_64px_2.png"));
+	ImageIcon actualizarCeleste = new ImageIcon(Secre.class.getResource("/Image/icons8_update_user_64px_1.png"));
+	ImageIcon actualizarGris = new ImageIcon(Secre.class.getResource("/Image/icons8_update_user_64px.png"));
+	ImageIcon buscarBlanco = new ImageIcon(Secre.class.getResource("/Image/icons8_search_more_64px_3.png"));
+	ImageIcon buscarCeleste = new ImageIcon(Secre.class.getResource("/Image/icons8_search_more_64px_4.png"));
+	ImageIcon buscarGris = new ImageIcon(Secre.class.getResource("/Image/icons8_search_more_64px_1.png"));
+	ImageIcon eliminarBlanco = new ImageIcon(Secre.class.getResource("/Image/icons8_denied_64px_1.png"));
+	ImageIcon eliminarCeleste = new ImageIcon(Secre.class.getResource("/Image/icons8_denied_64px.png"));
+	ImageIcon eliminarGris = new ImageIcon(Secre.class.getResource("/Image/icons8_denied_64px_3.png"));
+	ImageIcon limpiarBlanco = new ImageIcon(Secre.class.getResource("/Image/icons8_trash_64px_1.png"));
+	ImageIcon limpiarCeleste = new ImageIcon(Secre.class.getResource("/Image/icons8_trash_64px.png"));
+	ImageIcon limpiarGris = new ImageIcon(Secre.class.getResource("/Image/icons8_trash_64px_2.png"));
+	ImageIcon addGris = new ImageIcon(Secre.class.getResource("/Image/icons8_add_32px_1.png"));
+	ImageIcon addBlanco = new ImageIcon(Secre.class.getResource("/Image/icons8_add_32px_2.png"));
+	ImageIcon addCeleste = new ImageIcon(Secre.class.getResource("/Image/icons8_add_32px.png"));
 	int xx,xy;
-	JComboBox comboEsp = new JComboBox();
-	JComboBox comboMedico = new JComboBox();
+	@SuppressWarnings("rawtypes")
+	JComboBox comboEsp = new ComboBox(10, 202, 303, 32);
+	@SuppressWarnings("rawtypes")
+	JComboBox comboMedico = new ComboBox(10, 234, 303, 32);
 	private JTextField txtDia;
 	private JTextField txtMes;
 	private JTextField textRut;

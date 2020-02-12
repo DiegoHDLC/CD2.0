@@ -7,7 +7,7 @@ import java.sql.ResultSet;
 import classVO.Usuario;
 import utils.MySQLConexion;
 
-public class connect_codigoMaestro{
+public class ConnectCodigoMaestro{
 	
 	public static String getCodigoMaestro() {
 	Connection con = null;
@@ -19,12 +19,12 @@ public class connect_codigoMaestro{
 	
 		con = MySQLConexion.getConexion();
 	
-		String sql = "select*from codigo_maestro";
+		String sql = "SELECT * FROM codigo_maestro";
 		
 		pst = con.prepareStatement(sql);
 		rs = pst.executeQuery();
 		rs.next();
-		System.out.println("\n"+rs.getString(1));
+		System.out.println("\nCodigo maestro: "+rs.getString(1));
 		codigo = rs.getString(1);
 		con.close();
 		return codigo;
@@ -32,7 +32,7 @@ public class connect_codigoMaestro{
 		
 		} 
 		catch (Exception e) {
-			System.out.println("Error en obtener codigo maestro");
+			System.out.println("Error en obtener usuario");
 			return null;
 		}
 	}

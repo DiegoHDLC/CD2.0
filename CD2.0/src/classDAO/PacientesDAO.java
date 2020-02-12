@@ -89,7 +89,6 @@ public class PacientesDAO {
         @SuppressWarnings("static-access")
 		Connection cn = cc.getConexion();
 		PreparedStatement pst = null;
-		//String sql = "SELECT * FROM pacientes WHERE id_paciente = ?";
 		String sql = "SELECT * FROM pacientes WHERE rut = ?";
 		try {
 			pst = cn.prepareStatement(sql);

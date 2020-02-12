@@ -522,15 +522,18 @@ public class Secre extends javax.swing.JFrame {
 		label.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent evt) {
-				if(tarea == 1) {registrarPacienteActionPerformed(evt);}
-				else if(tarea == 2) {actualizarPacienteActionPerformed(evt);}
-				else if(tarea == 3) {buscarPacienteActionPerformed(evt);}
-				else if(tarea == 4) {eliminarPacienteActionPerformed(evt);}
-				else if(tarea == 5) {limpiarPacienteActionPerformed(evt);}
-				else if(tarea == 6) {String formatoFecha = "dd/MM/yyyy";
+				switch(tarea) {
+				case 1: registrarPacienteActionPerformed(evt);break;
+				case 2: actualizarPacienteActionPerformed(evt);break;
+				case 3: buscarPacienteActionPerformed(evt);break;
+				case 4: eliminarPacienteActionPerformed(evt);break;
+				case 5: limpiarPacienteActionPerformed(evt);break;
+				case 6: String formatoFecha = "dd/MM/yyyy";
 				SimpleDateFormat formateador = new SimpleDateFormat(formatoFecha);
-				txtFecha.setText(formateador.format(calendarioRS.getDatoFecha()));}
+				txtFecha.setText(formateador.format(calendarioRS.getDatoFecha()));break;
+				}
 			}
+			
 			@Override
 			public void mouseEntered(MouseEvent arg0) {
 				label.setIcon(blanco);
@@ -684,7 +687,7 @@ public class Secre extends javax.swing.JFrame {
 
 	private void actualizarPacienteActionPerformed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_actualizarProveedorActionPerformed
         PacientesVO pac = new PacientesVO();
-        pac.setIdPaciente(Integer.parseInt(txtID.getText()));
+        pac.setIdPaciente(PacientesDAO.getId(txtRut.getText()));
         pac.setNombre(txtNombre.getText());
         pac.setApellidos(txtApellidos.getText());
         pac.setFecha_nacimiento(txtFecha.getText());
@@ -704,7 +707,7 @@ public class Secre extends javax.swing.JFrame {
 			}else {
 			
 			PacientesVO pac = PacientesDAO.buscarPacientes(txtRut.getText());
-	        txtID.setText(pac.getIdPaciente()+"");
+	    
 	        txtNombre.setText(pac.getNombre());
 	        txtApellidos.setText(pac.getApellidos());
 	        txtFecha.setText(pac.getFecha_nacimiento());

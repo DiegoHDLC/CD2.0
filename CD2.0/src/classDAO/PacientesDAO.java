@@ -109,7 +109,6 @@ public class PacientesDAO {
 
 			}
 			else {
-				//pac.setResultado(""+pac.getRut());
 				pac.setResultado("Paciente no encontrado");
 			}
 			
@@ -153,6 +152,35 @@ public class PacientesDAO {
 				}
 		}
 		return result;
+	}
+	
+	public static int getId(String rut) {
+		int id=-1;
+		
+		MySQLConexion cc = new MySQLConexion();
+        @SuppressWarnings("static-access")
+		Connection cn = cc.getConexion();
+		PreparedStatement pst = null;
+		String sql = "SELECT * FROM pacientes WHERE rut = ?";
+		try {
+			pst = cn.prepareStatement(sql);
+			pst.setString(1, rut);
+			ResultSet rs = pst.executeQuery();
+			
+			if(rs.next()) {
+					return rs.getInt(1);	
+			}
+			else {
+				
+				return id;
+				
+			}
+			
+		}catch(SQLException e) {
+			System.out.println(e.toString());
+			return id;
+		}
+		
 	}
 	
 	public static ArrayList<PacientesVO> getListPacientes(){

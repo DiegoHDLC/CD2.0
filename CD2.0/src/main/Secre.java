@@ -44,6 +44,7 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.Icon;
 
 import rojerusan.RSComboMetro;
+import mantenimientos.Dias;
 import mantenimientos.FechasOcupadas_database;
 
 import javax.swing.JComboBox;
@@ -192,6 +193,202 @@ public class Secre extends javax.swing.JFrame {
 		tituloPaciente.setFont(new Font("Sitka Small", Font.BOLD, 15));
 		panelFRM.setVisible(true);
 		
+			
+			
+//////////////////////////////////////////////////////////////////////////////////		
+////////////////////////////HORARIOS/////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////			
+			panelHorarios.setVisible(false);
+			
+			panelHorarios.setBounds(0, 32, 497, 508);
+			contentPane.add(panelHorarios);
+			panelHorarios.setColorSecundario(new Color(33, 44, 61));
+			panelHorarios.setColorPrimario(new Color(66, 169, 174));
+			comboMedico.setBounds(10, 234, 303, 32);
+			
+			comboMedico.addItemListener(new ItemListener() {
+				public void itemStateChanged(ItemEvent e) {
+					if(e.getStateChange() == ItemEvent.SELECTED) {	
+					}
+				}
+			});
+			panelHorarios.setLayout(null);
+			
+			JLabel lblNewLabel = new Label(10,67,14,"Ingrese el dia");
+			lblNewLabel.setBounds(10, 67, 300, 22);
+			panelHorarios.add(lblNewLabel);
+			
+			JLabel lblRegistrarUnaHora = new Label(10,11,14,"Registrar una Hora para un Paciente");
+			lblRegistrarUnaHora.setBounds(10, 11, 300, 22);
+			panelHorarios.add(lblRegistrarUnaHora);
+			
+			JLabel lblIngreseElMes = new Label(10,100,14,"Ingrese el mes");
+			lblIngreseElMes.setBounds(10, 100, 300, 22);
+			panelHorarios.add(lblIngreseElMes);
+			
+			JLabel lblSeleccioneUnaHora = new Label(10,177,14,"Seleccione una hora");
+			lblSeleccioneUnaHora.setBounds(10, 177, 300, 22);
+			panelHorarios.add(lblSeleccioneUnaHora);
+			
+			JLabel lblIngreseElRut = new Label(10,136,14,"Ingrese el rut de paciente");
+			lblIngreseElRut.setBounds(10, 136, 300, 22);
+			panelHorarios.add(lblIngreseElRut);
+			
+			txtDia = new CTextoSecretaria(297, 61, 105, 20);
+			txtDia.setBounds(297, 61, 105, 20);
+			txtDia.setText("13");
+			panelHorarios.add(txtDia);
+			
+			txtMes = new CTextoSecretaria(198, 94, 204, 20);
+			txtMes.setBounds(198, 94, 204, 20);
+			txtMes.setText("12");
+			panelHorarios.add(txtMes);
+			
+			textRut = new CTextoSecretaria(198, 130, 204, 20);
+			textRut.setBounds(198, 130, 204, 20);
+			textRut.setText("00.000.000-0");
+			panelHorarios.add(textRut);
+			comboHora.setBounds(198, 171, 204, 20);
+			
+			comboHora.addItem("8:00-9:30");
+			comboHora.addItem("9:45-11:15");
+			comboHora.addItem("11:30-13:00");
+			comboHora.addItem("14:30-16:00");
+			comboHora.addItem("16:15-17:45");
+			comboHora.addItem("18:00-19:30");
+			comboHora.addItem("19:45-21:15");
+			panelHorarios.add(comboHora);
+			
+			JButton btnRegistrarPaciente = new Boton(10, 465, 473, 32,"Registrar Cita");
+			btnRegistrarPaciente.setBounds(10, 465, 228, 32);
+			btnRegistrarPaciente.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					if(comboEsp.getSelectedIndex()!=0) {
+						if(txtDia.getText().isEmpty()==false || txtMes.getText().isEmpty()==false || textRut.getText().isEmpty()==false ) {
+							FechasOcupadas_database fecha = 
+									new FechasOcupadas_database(comboHora.getSelectedIndex()+1,
+											Integer.parseInt(txtDia.getText().trim()),
+											Integer.parseInt(txtMes.getText().trim()));
+									if(fecha.buscarFecha()==false) {
+										FechasOcupadas_database nuevo = new FechasOcupadas_database(comboHora.getSelectedIndex()+1,
+												Integer.parseInt(txtDia.getText().trim()),
+												Integer.parseInt(txtMes.getText().trim()),
+												textRut.getText(),comboDia.getSelectedIndex()+1,idMedicos[comboMedico.getSelectedIndex()],txtDiagnostico.getText());
+										nuevo.insertarDatos();
+										JOptionPane.showMessageDialog(contentPane, "Cita registrada","OK",JOptionPane.INFORMATION_MESSAGE);
+									}else {JOptionPane.showMessageDialog(contentPane, "Ese dia, mes y hora no esta disponible para una cita","error",JOptionPane.ERROR_MESSAGE);}
+						}else {JOptionPane.showMessageDialog(contentPane, "rellene los campos","Error",JOptionPane.ERROR_MESSAGE);}
+						
+					}else {JOptionPane.showMessageDialog(contentPane, "seleccione una especialidad, y luego un doctor","Error",JOptionPane.ERROR_MESSAGE);}
+				}
+			});
+			panelHorarios.add(btnRegistrarPaciente);
+			comboDia.setBounds(198, 61, 97, 20);
+			
+			comboDia.setModel(new DefaultComboBoxModel(new String[] {"Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sabado"}));
+			panelHorarios.add(comboDia);
+			txtDiagnostico.setBounds(189, 326, 84, 55);
+			txtDiagnostico.setVisible(false);
+			panelHorarios.add(txtDiagnostico);
+			panelHorarios.add(comboMedico);
+			comboEsp.setBounds(10, 202, 303, 32);
+			
+			comboEsp.addActionListener(new ActionListener() {
+
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					comboMedico.removeAllItems();
+					if(!comboEsp.getItemAt(0).toString().equals(comboEsp.getSelectedItem())){
+						// vamos a guardar los id de los medicos para poder tener 
+						// acceso a ellos, ya que en el combo box se mostrara el nombre y apellido juntos
+						idMedicos = new int[100];
+						filtrarMedico(idMedicos);
+					}	
+				}	
+			});
+			panelHorarios.add(comboEsp);
+			
+			JButton btnMostrarHorarioDel = new Boton(323, 266, 161, 61,"Horario de Medico");
+			btnMostrarHorarioDel.setBounds(323, 266, 161, 61);
+			btnMostrarHorarioDel.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					if(idMedicos!=null) {
+						
+						HorarioMedico horario = new HorarioMedico(idMedicos[comboMedico.getSelectedIndex()]);
+						horario.setVisible(true);
+					}
+				}
+			});
+			panelHorarios.add(btnMostrarHorarioDel);
+			
+			JList listFechas = new JList();
+			listFechas.setBounds(1, 1, 298, 98);
+			listFechas.setForeground(new Color(255, 255, 255));
+			listFechas.setBorder(null);
+			listFechas.setBackground(new Color(19, 30, 49));
+			panelHorarios.add(listFechas);
+			
+			listFechas.setLayoutOrientation(JList.VERTICAL);
+			JScrollPane scrollbar = new JScrollPane(listFechas);
+			scrollbar.setBounds(10, 300, 300, 100);
+			scrollbar.setBackground(new Color(0, 255, 255));
+			panelHorarios.add(scrollbar);
+			
+			JButton btnMostrarFechas = new Boton(10, 266, 303, 32,"Mostrar Fechas Ocupadas");
+			btnMostrarFechas.setBounds(10, 266, 303, 32);
+			btnMostrarFechas.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					
+					if(idMedicos!=null) {
+						Object[] fechas = new Object[500];
+						guardarFechasOcupadas(fechas);
+						listFechas.setListData(fechas);
+						
+					}else {JOptionPane.showMessageDialog(contentPane, "Seleccione una especialidad","Error",JOptionPane.ERROR_MESSAGE);}
+				}
+			});
+			btnMostrarFechas.setFont(new Font("Sitka Small", Font.ITALIC, 14));
+			panelHorarios.add(btnMostrarFechas);
+			
+			JButton btnBuscarFechasOcupadas = new Boton(323, 202, 160, 61,"Verificar Fecha");
+			btnBuscarFechasOcupadas.setBounds(323, 202, 160, 61);
+			btnBuscarFechasOcupadas.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					if(comboEsp.getSelectedIndex()!=0) {
+						if(txtDia.getText().isEmpty()==false || txtMes.getText().isEmpty()==false || textRut.getText().isEmpty()==false ) {
+							FechasOcupadas_database fecha = 
+									new FechasOcupadas_database(comboHora.getSelectedIndex()+1,
+											Integer.parseInt(txtDia.getText().trim()),
+											Integer.parseInt(txtMes.getText().trim()));
+									if(fecha.buscarFecha()==false) {
+										JOptionPane.showMessageDialog(contentPane, "Ese dia, mes y hora esta disponible para una cita","OK",JOptionPane.INFORMATION_MESSAGE);
+									}else {JOptionPane.showMessageDialog(contentPane, "Ese dia, mes y hora no esta disponible para una cita","error",JOptionPane.ERROR_MESSAGE);}
+							
+						}else {JOptionPane.showMessageDialog(contentPane, "Rellene todos los campos","Error",JOptionPane.ERROR_MESSAGE);}
+					}else {JOptionPane.showMessageDialog(contentPane, "Seleccione una especialidad para poder verificar su fecha","Error",JOptionPane.ERROR_MESSAGE);}
+				}
+			});
+			panelHorarios.add(btnBuscarFechasOcupadas);
+			
+			Boton btnEliminarCita = new Boton(10, 465, 473, 32, "Eliminar Cita");
+			btnEliminarCita.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					
+					if(comboEsp.getSelectedIndex()!=0) {
+						if(txtDia.getText().isEmpty()==false || txtMes.getText().isEmpty()==false  ) {
+							
+							FechasOcupadas_database.eliminarCita(idMedicos[comboMedico.getSelectedIndex()], txtDia.getText(), txtMes.getText(), comboHora.getSelectedIndex()+1);
+								
+							
+						}else {JOptionPane.showMessageDialog(contentPane, "Rellene los campos del dia y mes, no se olvide de seleccionar una hora","Error",JOptionPane.ERROR_MESSAGE);}
+					}else {JOptionPane.showMessageDialog(contentPane, "Seleccione una especialidad y posteriormente un medico para eliminar una cita","Error",JOptionPane.ERROR_MESSAGE);}
+					
+		
+				}
+			});
+			btnEliminarCita.setBounds(248, 465, 228, 32);
+			panelHorarios.add(btnEliminarCita);
+		
 		panelFRM.setBounds(0, 32, 497, 508);
 		contentPane.add(panelFRM);
 		panelFRM.setColorSecundario(new Color(33, 44, 61));
@@ -308,13 +505,6 @@ public class Secre extends javax.swing.JFrame {
 				lvlAdd.setIcon(new ImageIcon(Secre.class.getResource("/Image/icons8_add_32px.png")));
 				lvlAdd.setBounds(271, 109, 32, 38);
 				panelFRM.add(lvlAdd);
-	
-		
-		
-//////////////////////////////////////////////////////////////////////////////////		
-////////////////////////////HORARIOS/////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////			
-		panelHorarios.setVisible(false);
 		pestañaHorarios.setBounds(103, 0, 103, 32);
 		pestañaHorarios.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
 		pestañaHorarios.addMouseListener(new MouseAdapter() {
@@ -352,163 +542,6 @@ public class Secre extends javax.swing.JFrame {
 		label.setForeground(new Color(33, 44, 61));
 		label.setFont(new Font("Sitka Small", Font.BOLD, 15));
 		pestañaHorarios.add(label);
-		
-		panelHorarios.setBounds(0, 32, 497, 508);
-		contentPane.add(panelHorarios);
-		panelHorarios.setColorSecundario(new Color(33, 44, 61));
-		panelHorarios.setColorPrimario(new Color(66, 169, 174));
-		
-		comboMedico.addItemListener(new ItemListener() {
-			public void itemStateChanged(ItemEvent e) {
-				if(e.getStateChange() == ItemEvent.SELECTED) {	
-				}
-			}
-		});
-		
-		JLabel lblNewLabel = new Label(10,67,14,"Ingrese el dia");
-		panelHorarios.add(lblNewLabel);
-		
-		JLabel lblRegistrarUnaHora = new Label(10,11,14,"Registrar una Hora para un Paciente");
-		panelHorarios.add(lblRegistrarUnaHora);
-		
-		JLabel lblIngreseElMes = new Label(10,100,14,"Ingrese el mes");
-		panelHorarios.add(lblIngreseElMes);
-		
-		JLabel lblSeleccioneUnaHora = new Label(10,177,14,"Seleccione una hora");
-		panelHorarios.add(lblSeleccioneUnaHora);
-		
-		JLabel lblIngreseElRut = new Label(10,136,14,"Ingrese el rut de paciente");
-		panelHorarios.add(lblIngreseElRut);
-		
-		txtDia = new CTextoSecretaria(297, 61, 105, 20);
-		txtDia.setText("13");
-		panelHorarios.add(txtDia);
-		
-		txtMes = new CTextoSecretaria(198, 94, 204, 20);
-		txtMes.setText("12");
-		panelHorarios.add(txtMes);
-		
-		textRut = new CTextoSecretaria(198, 130, 204, 20);
-		textRut.setText("00.000.000-0");
-		panelHorarios.add(textRut);
-		
-		comboHora.addItem("8:00-9:30");
-		comboHora.addItem("9:45-11:15");
-		comboHora.addItem("11:30-13:00");
-		comboHora.addItem("14:30-16:00");
-		comboHora.addItem("16:15-17:45");
-		comboHora.addItem("18:00-19:30");
-		comboHora.addItem("19:45-21:15");
-		panelHorarios.add(comboHora);
-		
-		JButton btnRegistrarPaciente = new Boton(10, 465, 473, 32,"Registrar Cita");
-		btnRegistrarPaciente.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if(comboEsp.getSelectedIndex()!=0) {
-					if(txtDia.getText().isEmpty()==false || txtMes.getText().isEmpty()==false || textRut.getText().isEmpty()==false ) {
-						FechasOcupadas_database fecha = 
-								new FechasOcupadas_database(comboHora.getSelectedIndex()+1,
-										Integer.parseInt(txtDia.getText().trim()),
-										Integer.parseInt(txtMes.getText().trim()));
-								if(fecha.buscarFecha()==false) {
-									FechasOcupadas_database nuevo = new FechasOcupadas_database(comboHora.getSelectedIndex()+1,
-											Integer.parseInt(txtDia.getText().trim()),
-											Integer.parseInt(txtMes.getText().trim()),
-											textRut.getText(),comboDia.getSelectedIndex()+1,idMedicos[comboMedico.getSelectedIndex()],txtDiagnostico.getText());
-									nuevo.insertarDatos();
-									JOptionPane.showMessageDialog(contentPane, "Cita registrada","OK",JOptionPane.INFORMATION_MESSAGE);
-								}else {JOptionPane.showMessageDialog(contentPane, "Ese dia, mes y hora no esta disponible para una cita","error",JOptionPane.ERROR_MESSAGE);}
-					}else {JOptionPane.showMessageDialog(contentPane, "rellene los campos","Error",JOptionPane.ERROR_MESSAGE);}
-					
-				}else {JOptionPane.showMessageDialog(contentPane, "seleccione una especialidad, y luego un doctor","Error",JOptionPane.ERROR_MESSAGE);}
-			}
-		});
-		panelHorarios.add(btnRegistrarPaciente);
-		
-		comboDia.setModel(new DefaultComboBoxModel(new String[] {"Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sabado"}));
-		panelHorarios.add(comboDia);
-		txtDiagnostico.setVisible(false);
-		
-		txtDiagnostico.setText("Ingrese un diagnostico...");
-		txtDiagnostico.setBounds(10, 298, 303, 102);
-		panelHorarios.add(txtDiagnostico);
-		
-		panelHorarios.setLayout(null);
-		panelHorarios.add(comboMedico);
-		
-		comboEsp.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				comboMedico.removeAllItems();
-				if(!comboEsp.getItemAt(0).toString().equals(comboEsp.getSelectedItem())){
-					// vamos a guardar los id de los medicos para poder tener 
-					// acceso a ellos, ya que en el combo box se mostrara el nombre y apellido juntos
-					idMedicos = new int[100];
-					filtrarMedico(idMedicos);
-				}	
-			}	
-		});
-		panelHorarios.add(comboEsp);
-		
-		JButton btnMostrarHorarioDel = new Boton(323, 266, 161, 61,"Horario de Medico");
-		btnMostrarHorarioDel.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if(idMedicos!=null) {
-					
-					HorarioMedico horario = new HorarioMedico(idMedicos[comboMedico.getSelectedIndex()]);
-					horario.setVisible(true);
-				}
-			}
-		});
-		panelHorarios.add(btnMostrarHorarioDel);
-		
-		JList listFechas = new JList();
-		listFechas.setForeground(new Color(255, 255, 255));
-		listFechas.setBorder(null);
-		listFechas.setBackground(new Color(19, 30, 49));
-		listFechas.setBounds(1, 1, 259, 98);
-		panelHorarios.add(listFechas);
-		
-		listFechas.setLayoutOrientation(JList.VERTICAL);
-		JScrollPane scrollbar = new JScrollPane(listFechas);
-		scrollbar.setBackground(new Color(0, 255, 255));
-		scrollbar.setBounds(10, 300, 300, 100);
-		panelHorarios.add(scrollbar);
-		
-		JButton btnMostrarFechas = new Boton(10, 266, 303, 32,"Mostrar Fechas Ocupadas");
-		btnMostrarFechas.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				
-				if(idMedicos!=null) {
-					Object[] fechas = new Object[500];
-					guardarFechasOcupadas(fechas);
-					listFechas.setListData(fechas);
-					
-				}else {JOptionPane.showMessageDialog(contentPane, "Seleccione una especialidad","Error",JOptionPane.ERROR_MESSAGE);}
-			}
-		});
-		btnMostrarFechas.setFont(new Font("Sitka Small", Font.ITALIC, 14));
-		panelHorarios.add(btnMostrarFechas);
-		
-		JButton btnBuscarFechasOcupadas = new Boton(323, 202, 160, 61,"Verificar Fecha");
-		btnBuscarFechasOcupadas.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if(comboEsp.getSelectedIndex()!=0) {
-					if(txtDia.getText().isEmpty()==false || txtMes.getText().isEmpty()==false || textRut.getText().isEmpty()==false ) {
-						FechasOcupadas_database fecha = 
-								new FechasOcupadas_database(comboHora.getSelectedIndex()+1,
-										Integer.parseInt(txtDia.getText().trim()),
-										Integer.parseInt(txtMes.getText().trim()));
-								if(fecha.buscarFecha()==false) {
-									JOptionPane.showMessageDialog(contentPane, "Ese dia, mes y hora esta disponible para una cita","OK",JOptionPane.INFORMATION_MESSAGE);
-								}else {JOptionPane.showMessageDialog(contentPane, "Ese dia, mes y hora no esta disponible para una cita","error",JOptionPane.ERROR_MESSAGE);}
-						
-					}else {JOptionPane.showMessageDialog(contentPane, "Rellene todos los campos","Error",JOptionPane.ERROR_MESSAGE);}
-				}else {JOptionPane.showMessageDialog(contentPane, "Seleccione una especialidad para poder verificar su fecha","Error",JOptionPane.ERROR_MESSAGE);}
-			}
-		});
-		panelHorarios.add(btnBuscarFechasOcupadas);
 		
 		comboEspecialidades();
 				
@@ -558,7 +591,7 @@ public class Secre extends javax.swing.JFrame {
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		Connection con = MySQLConexion.getConexion();
-		
+		String hora;
 		
 		try {
 			//busco en la tabla especialidad el numerito correspondiente a mi especialidad en formato string
@@ -567,9 +600,9 @@ public class Secre extends javax.swing.JFrame {
 			rs = ps.executeQuery();
 			
 			while(rs.next()) {
+				hora=Dias.numeroAFecha(rs.getInt(5));
 				
-				
-				fechas[i]="Fecha: "+rs.getInt(6)+"/"+rs.getInt(4)+"    Rut: "+rs.getString(7);
+				fechas[i]="Fecha: "+rs.getInt(6)+"/"+rs.getInt(4)+"    Rut: "+rs.getString(7)  +"      Hora: "+hora;
 				i++;
 			}
 			ps.close();

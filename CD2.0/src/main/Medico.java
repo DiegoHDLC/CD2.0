@@ -216,7 +216,8 @@ public class Medico extends javax.swing.JFrame {
 		panelFRM.setLayout(null);
 		
 		JButton btnEditarHorario = new Boton(23,0,145,25,"Editar Horario");
-		btnEditarHorario.setLocation(15, 0);
+		btnEditarHorario.setSize(119, 25);
+		btnEditarHorario.setLocation(0, 0);
 		
 		btnEditarHorario.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -229,18 +230,21 @@ public class Medico extends javax.swing.JFrame {
 		
 		
 		JButton btnBuscarPaciente = new Boton(162, 0, 145, 25,"Buscar Paciente");
-		btnBuscarPaciente.setLocation(175, 0);
+		btnBuscarPaciente.setSize(126, 25);
+		btnBuscarPaciente.setLocation(117, 0);
 		btnBuscarPaciente.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				BuscaRutMedico buscar = new BuscaRutMedico(new eventoCerrar(),idMedicos);
 				buscar.setVisible(true);
+				dispose();
 			}
 		});
 		
 		panelFRM.add(btnBuscarPaciente);
 		
 		JButton btnMostrarHorario = new Boton(334,0,145,25,"Mostrar Horario");
-		btnMostrarHorario.setLocation(335, 0);
+		btnMostrarHorario.setSize(137, 25);
+		btnMostrarHorario.setLocation(242, 0);
 		btnMostrarHorario.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				System.out.println(idMedicos);
@@ -272,7 +276,7 @@ public class Medico extends javax.swing.JFrame {
 		txtDiagnostico.setBackground(new Color(19, 30, 49));
 		
 		txtDiagnostico.setText("Presione buscar Paciente...");
-		txtDiagnostico.setBounds(23, 251, 233, 182);
+		txtDiagnostico.setBounds(23, 284, 233, 149);
 		panelFRM.add(txtDiagnostico);
 		
 		Label lblApellido = new Label(23,96,14,"Apellido");
@@ -293,7 +297,7 @@ public class Medico extends javax.swing.JFrame {
 		JLabel lblTelefono = new Label(260,164,14,"Telefono");
 		panelFRM.add(lblTelefono);
 		
-		JLabel lblDiagnosticoDelPaciente = new Label(23,232,14,"Diagnostico del Paciente");
+		JLabel lblDiagnosticoDelPaciente = new Label(20,262,14,"Diagnostico del Paciente");
 		panelFRM.add(lblDiagnosticoDelPaciente);
 		
 		txtDia = new CajaTexto(260,284,216, 28);
@@ -354,7 +358,7 @@ public class Medico extends javax.swing.JFrame {
 						txtMes.getText(),
 						txtHora.getText())==true) {
 					int bloque=Dias.fechaANumero(txtHora.getText());
-					FechasOcupadas_database.setDiagnostico(idMedicos, txtDia.getText(), txtMes.getText(), bloque, txtDiagnostico.getText());
+					FechasOcupadas_database.eliminarCita(idMedicos, txtDia.getText(), txtMes.getText(), bloque);
 					JOptionPane.showMessageDialog(getContentPane(), "Cita eliminada","OK",JOptionPane.INFORMATION_MESSAGE);
 				}else {
 					JOptionPane.showMessageDialog(getContentPane(), "Primero busque un paciente","Error",JOptionPane.ERROR_MESSAGE);
@@ -362,6 +366,16 @@ public class Medico extends javax.swing.JFrame {
 			}
 		});
 		panelFRM.add(btnSolicitud);		
+		
+		Boton btnCitas = new Boton(162, 0, 145, 25, "Mostrar Citas");
+		btnCitas.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				MostrarCitas citas= new MostrarCitas(idMedicos);
+				citas.setVisible(true);
+			}
+		});
+		btnCitas.setBounds(378, 0, 119, 25);
+		panelFRM.add(btnCitas);
 	}
 	
 	public boolean verificarDatos(String nombre,String apellido,String nacimiento,String rut,String direccion,String telefono,String diagnostico,String dia,String mes,String hora) {

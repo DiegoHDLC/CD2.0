@@ -17,7 +17,6 @@ public class tbUsuarios_database {
 	public static String getRut(String usuario,String clave) {
 		PreparedStatement ps = null;
 		ResultSet rs = null;
-		MySQLConexion conn = new MySQLConexion();
 		Connection con = MySQLConexion.getConexion();
 		String rut;
 		try {
@@ -56,8 +55,8 @@ public class tbUsuarios_database {
 			rs = ps.executeQuery();
 				
 			while(rs.next()) {
-				con.close();
-				rs.close();
+				//con.close();
+				//rs.close();
 				return true;			
 			}
 			con.close();

@@ -46,4 +46,20 @@ public class Dias {
 		
 		return numero;
 	}
+	public static String numeroADia(int dia) {
+		if(dia==1) {
+			return "lunes";
+		}else if(dia==2) {
+			return "martes";
+		}else if(dia==3) {
+			return "miercoles";
+		}else if(dia==4) {
+			return "jueves";
+		}else if(dia==5) {
+			return "viernes";
+		}else if(dia==6) {
+			return "sabado";
+		}
+		return null;
+	}
 }

@@ -15,7 +15,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
-import javax.swing.JLabel;
+import javax.swing.JLabel; 
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -60,8 +60,10 @@ public class BuscaRutMedico extends JDialog {
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public BuscaRutMedico(eventoCerrar eventoCerrar,int id_medico) {
 		setUndecorated(true);
+		
 		getContentPane().setBackground(new Color(33, 44, 61));
 		setBounds(100, 100, 450, 300);
+		setLocationRelativeTo(null);
 		contentPanel.setLayout(new FlowLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		
@@ -83,8 +85,9 @@ public class BuscaRutMedico extends JDialog {
 						Medico med = new Medico(id_medico);
 						
 						med.rellenarPaciente(Datos,diagnostico,comboDiaFecha.getSelectedItem().toString(),comboMesFecha.getSelectedItem().toString(),comboHora.getSelectedItem().toString());
-						dispose();
 						med.setVisible(true);
+						dispose();
+						
 					}else {
 						JOptionPane.showMessageDialog(getContentPane(), "Este paciente no tiene una cita","Error",JOptionPane.ERROR_MESSAGE);
 					}
@@ -141,9 +144,11 @@ public class BuscaRutMedico extends JDialog {
 		getContentPane().add(lblBuscarDatosY);
 		
 		
-		JButton button = new Boton(19,235,196,36,"Cerrar");
+		JButton button = new Boton(19,235,196,36,"Regresar");
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				Medico med = new Medico(id_medico);
+				med.setVisible(true);
 				dispose();
 			}
 		});

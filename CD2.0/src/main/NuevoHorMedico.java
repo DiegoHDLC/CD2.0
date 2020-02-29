@@ -47,6 +47,7 @@ public class NuevoHorMedico extends JDialog {
 	public NuevoHorMedico(int id_medico) {
 		setUndecorated(true);
 		setBounds(100, 100, 691, 223);
+		setLocationRelativeTo(null);
 		getContentPane().setLayout(null);
 		contentPane.setBounds(0, 0, 705, 269);
 		contentPane.setBackground(new Color(33, 44, 61));

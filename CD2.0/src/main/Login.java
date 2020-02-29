@@ -26,6 +26,7 @@ import utils.Boton;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
+import java.util.concurrent.TimeUnit;
 
 import javax.swing.border.BevelBorder;
 
@@ -87,7 +88,6 @@ public class Login extends JFrame {
 		String clave = String.copyValueOf(txtContraseña.getPassword());
 	
 		GestionUsuario gestionUsuario = new GestionUsuario();
-		//JOptionPane.showMessageDialog(contentPane, "xDDdd","Error",JOptionPane.ERROR_MESSAGE);
 		Usuario usuario2 = new Usuario();
 		
 		usuario2.setUsuario(usuario);
@@ -154,6 +154,7 @@ public class Login extends JFrame {
 		txtUsuario.setBackground(new Color(19, 30, 49));
 		txtUsuario.setBounds(101, 158, 213, 38);
 		panel_der.add(txtUsuario);
+		
 		txtUsuario.setColumns(10);
 		
 		txtContraseña = new JPasswordField();
@@ -164,6 +165,7 @@ public class Login extends JFrame {
 		txtContraseña.setBackground(new Color(19, 30, 49));
 		txtContraseña.setBounds(101, 272, 213, 38);
 		panel_der.add(txtContraseña);
+		
 			
 		JLabel lblContrasea = new JLabel("CONTRASE\u00D1A");
 		lblContrasea.setForeground(new Color(255, 255, 255));
@@ -184,10 +186,11 @@ public class Login extends JFrame {
 		label_1.setIcon(new ImageIcon(Login.class.getResource("/Image/icons8_lock_40px_1.png")));
 		label_1.setBounds(44, 273, 46, 37);
 		panel_der.add(label_1);
-		
+		System.out.println(this.getFocusOwner());
 		JButton btnIngresar = new Boton(201, 368, 113, 38,"INGRESAR");
 		btnIngresar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				
 				ingresar();
 			}
 		});
@@ -276,4 +279,5 @@ public class Login extends JFrame {
 		lblNewLabel.setBounds(0, 0, 450, 450);
 		panel_izq.add(lblNewLabel);
 	}
+
 }	

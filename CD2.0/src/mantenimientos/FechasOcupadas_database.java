@@ -17,20 +17,50 @@ public class FechasOcupadas_database {
 	private int dia_fecha;
 	private String rut;
 	private String diagnostico;
-	public static void eliminarCita(int id_medico,String dia_fecha,String mes_fecha,int bloque,String diagnostico) {
+	public static void guardarCitas(Object fechas[],int idMedico) {
+		int i=0;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		Connection con = MySQLConexion.getConexion();
+		String hora;
+		String dia;
+		
+		
+		try {
+			//busco en la tabla especialidad el numerito correspondiente a mi especialidad en formato string
+			String sql = "SELECT * FROM fechas_ocupadas WHERE id_medico="+idMedico;
+			ps = con.prepareStatement(sql);
+			rs = ps.executeQuery();
+			
+			while(rs.next()) {
+				hora=Dias.numeroAFecha(rs.getInt(5));
+				dia=Dias.numeroADia(rs.getInt(3));
+				
+				fechas[i]="Fecha: "+dia+" "+rs.getInt(6)+"/"+rs.getInt(4)+"    Rut: "+rs.getString(7)+"    Hora: "+hora;
+				i++;
+			}
+			ps.close();
+			rs.close();
+			
+		}catch(SQLException ex) {
+			
+			System.err.println(ex.toString());
+		}
+	}
+	public static void eliminarCita(int id_medico,String dia_fecha,String mes_fecha,int bloque) {
 
 		MySQLConexion conn = new MySQLConexion();
 		Connection con = MySQLConexion.getConexion();
 		
-		
+		System.out.println("id medico="+id_medico+" dia_fecha="+dia_fecha+" mes_fecha="+mes_fecha+" bloque="+bloque);
 		try {
 			String query = "delete from fechas_ocupadas where bloque = ? and dia_fecha= ? and mes_fecha= ? and id_medico= ?";
 		      PreparedStatement preparedStmt = ((Connection) con).prepareStatement(query);
-		      preparedStmt.setString   (1,diagnostico);
-		      preparedStmt.setInt(2, bloque);
-		      preparedStmt.setString(3, dia_fecha);
-		      preparedStmt.setString(4, mes_fecha);
-		      preparedStmt.setInt(5, id_medico);
+		     
+		      preparedStmt.setInt(1, bloque);
+		      preparedStmt.setString(2, dia_fecha);
+		      preparedStmt.setString(3, mes_fecha);
+		      preparedStmt.setInt(4, id_medico);
 		      // execute the java preparedstatement
 		      preparedStmt.executeUpdate();
 		      

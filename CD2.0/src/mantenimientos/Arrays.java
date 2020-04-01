@@ -2,7 +2,26 @@ package mantenimientos;
 
 public class Arrays {
 	private int N;
-	
+	public static String intToStringWM(int arreglo[]) {
+		int i=0;
+		String arregloString="1";
+		i++;
+		while(i<arreglo.length-1) {
+			arregloString=arregloString+","+arreglo[i];
+			i++;
+		}
+		return arregloString;
+	}
+	public static String replace(String str, int index, char replace){     
+	    if(str==null){
+	        return str;
+	    }else if(index<0 || index>=str.length()){
+	        return str;
+	    }
+	    char[] chars = str.toCharArray();
+	    chars[index] = replace;
+	    return String.valueOf(chars);       
+	}
 	public Arrays(int N) {
 		this.N=N;
 	}

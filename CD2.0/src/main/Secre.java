@@ -8,7 +8,11 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import classDAO.PacientesDAO;
+import classDAO.CitasDAO;
+import classDAO.EspecialidadesDAO;
+import classVO.EspecialidadesVO;
 import classVO.PacientesVO;
+import classVO.CitasVO;
 import rspanelgradiente.RSPanelGradiente;
 import utils.CTextoSecretaria;
 import utils.Label;
@@ -45,8 +49,6 @@ import javax.swing.Icon;
 
 import rojerusan.RSComboMetro;
 import mantenimientos.Dias;
-import mantenimientos.FechasOcupadas_database;
-
 import javax.swing.JComboBox;
 import java.awt.event.ItemListener;
 import java.awt.event.ItemEvent;
@@ -265,18 +267,19 @@ public class Secre extends javax.swing.JFrame {
 				public void actionPerformed(ActionEvent e) {
 					if(comboEsp.getSelectedIndex()!=0) {
 						if(txtDia.getText().isEmpty()==false || txtMes.getText().isEmpty()==false || textRut.getText().isEmpty()==false ) {
-							FechasOcupadas_database fecha = 
-									new FechasOcupadas_database(comboHora.getSelectedIndex()+1,
-											Integer.parseInt(txtDia.getText().trim()),
-											Integer.parseInt(txtMes.getText().trim()));
-									if(fecha.buscarFecha()==false) {
-										FechasOcupadas_database nuevo = new FechasOcupadas_database(comboHora.getSelectedIndex()+1,
-												Integer.parseInt(txtDia.getText().trim()),
-												Integer.parseInt(txtMes.getText().trim()),
-												textRut.getText(),comboDia.getSelectedIndex()+1,idMedicos[comboMedico.getSelectedIndex()],txtDiagnostico.getText());
-										nuevo.insertarDatos();
-										JOptionPane.showMessageDialog(contentPane, "Cita registrada","OK",JOptionPane.INFORMATION_MESSAGE);
-									}else {JOptionPane.showMessageDialog(contentPane, "Ese dia, mes y hora no esta disponible para una cita","error",JOptionPane.ERROR_MESSAGE);}
+							
+							CitasVO cita = new CitasVO(comboHora.getSelectedIndex()+1,
+									Integer.parseInt(txtDia.getText().trim()),
+									Integer.parseInt(txtMes.getText().trim()),
+									textRut.getText(),
+									comboDia.getSelectedIndex()+1,
+									idMedicos[comboMedico.getSelectedIndex()],
+									txtDiagnostico.getText());
+								if(CitasDAO.buscarFecha(cita)==false) {
+									CitasDAO.insertarDatos(cita);
+									JOptionPane.showMessageDialog(contentPane, "Cita registrada","OK",JOptionPane.INFORMATION_MESSAGE);
+								
+							}else {JOptionPane.showMessageDialog(contentPane, "Ese rut ya esta en uso","error",JOptionPane.ERROR_MESSAGE);}
 						}else {JOptionPane.showMessageDialog(contentPane, "rellene los campos","Error",JOptionPane.ERROR_MESSAGE);}
 						
 					}else {JOptionPane.showMessageDialog(contentPane, "seleccione una especialidad, y luego un doctor","Error",JOptionPane.ERROR_MESSAGE);}
@@ -302,7 +305,14 @@ public class Secre extends javax.swing.JFrame {
 						// vamos a guardar los id de los medicos para poder tener 
 						// acceso a ellos, ya que en el combo box se mostrara el nombre y apellido juntos
 						idMedicos = new int[100];
-						filtrarMedico(idMedicos);
+						String[] medicos = CitasDAO.filtrarMedico(idMedicos,comboEsp.getSelectedItem().toString());
+						if(medicos!=null) {
+							int i=0;
+							while(i<medicos.length) {
+								comboMedico.addItem(medicos[i]);
+								i++;
+							}
+						}
 					}	
 				}	
 			});
@@ -341,7 +351,7 @@ public class Secre extends javax.swing.JFrame {
 					
 					if(idMedicos!=null) {
 						Object[] fechas = new Object[500];
-						guardarFechasOcupadas(fechas);
+						CitasDAO.guardarFechasOcupadas(fechas,idMedicos,comboMedico.getSelectedIndex());
 						listFechas.setListData(fechas);
 						
 					}else {JOptionPane.showMessageDialog(contentPane, "Seleccione una especialidad","Error",JOptionPane.ERROR_MESSAGE);}
@@ -356,11 +366,11 @@ public class Secre extends javax.swing.JFrame {
 				public void actionPerformed(ActionEvent e) {
 					if(comboEsp.getSelectedIndex()!=0) {
 						if(txtDia.getText().isEmpty()==false || txtMes.getText().isEmpty()==false || textRut.getText().isEmpty()==false ) {
-							FechasOcupadas_database fecha = 
-									new FechasOcupadas_database(comboHora.getSelectedIndex()+1,
+							CitasVO cita = 
+									new CitasVO(comboHora.getSelectedIndex()+1,
 											Integer.parseInt(txtDia.getText().trim()),
 											Integer.parseInt(txtMes.getText().trim()));
-									if(fecha.buscarFecha()==false) {
+									if(CitasDAO.buscarFecha(cita)==false) {
 										JOptionPane.showMessageDialog(contentPane, "Ese dia, mes y hora esta disponible para una cita","OK",JOptionPane.INFORMATION_MESSAGE);
 									}else {JOptionPane.showMessageDialog(contentPane, "Ese dia, mes y hora no esta disponible para una cita","error",JOptionPane.ERROR_MESSAGE);}
 							
@@ -377,7 +387,7 @@ public class Secre extends javax.swing.JFrame {
 					if(comboEsp.getSelectedIndex()!=0) {
 						if(txtDia.getText().isEmpty()==false || txtMes.getText().isEmpty()==false  ) {
 							
-							FechasOcupadas_database.eliminarCita(idMedicos[comboMedico.getSelectedIndex()], txtDia.getText(), txtMes.getText(), comboHora.getSelectedIndex()+1);
+							CitasDAO.eliminarCita(idMedicos[comboMedico.getSelectedIndex()], txtDia.getText(), txtMes.getText(), comboHora.getSelectedIndex()+1);
 								
 							
 						}else {JOptionPane.showMessageDialog(contentPane, "Rellene los campos del dia y mes, no se olvide de seleccionar una hora","Error",JOptionPane.ERROR_MESSAGE);}
@@ -543,7 +553,14 @@ public class Secre extends javax.swing.JFrame {
 		label.setFont(new Font("Sitka Small", Font.BOLD, 15));
 		pestañaHorarios.add(label);
 		
-		comboEspecialidades();
+		String[] especialidades = EspecialidadesDAO.comboEspecialidades();
+		if(especialidades!=null) {
+			int i=0;
+			while(i<especialidades.length) {
+				comboEsp.addItem(especialidades[i]);
+				i++;
+			}
+		}
 				
 	}
 	
@@ -556,11 +573,36 @@ public class Secre extends javax.swing.JFrame {
 			@Override
 			public void mouseClicked(MouseEvent evt) {
 				switch(tarea) {
-				case 1: registrarPacienteActionPerformed(evt);break;
-				case 2: actualizarPacienteActionPerformed(evt);break;
-				case 3: buscarPacienteActionPerformed(evt);break;
-				case 4: eliminarPacienteActionPerformed(evt);break;
-				case 5: limpiarPacienteActionPerformed(evt);break;
+				case 1: txtStatus.setText(PacientesDAO.registrarPacienteActionPerformed(txtNombre.getText(),txtApellidos.getText(),txtFecha.getText(),txtRut.getText(),txtTelefono.getText(),txtDireccion.getText()));
+						if(!txtStatus.getText().equals("Complete todos los datos para registrar al paciente")) {
+							DejarBlanco();
+							cargarPacientes(0);
+						}
+						break;
+				case 2: txtStatus.setText(PacientesDAO.actualizarPacienteActionPerformed(txtNombre.getText(),txtApellidos.getText(),txtFecha.getText(),txtRut.getText(),txtTelefono.getText(),txtDireccion.getText()));
+						if(!txtStatus.getText().equals("Complete todos los datos para registrar al paciente")) {
+							DejarBlanco();
+							cargarPacientes(0);
+						}
+						break;
+				case 3: PacientesVO pac=(PacientesDAO.buscarPacienteActionPerformed(txtNombre.getText(),txtApellidos.getText(),txtFecha.getText(),txtRut.getText(),txtTelefono.getText(),txtDireccion.getText()));
+						if(pac!=null) {
+							txtNombre.setText(pac.getNombre());
+					        txtApellidos.setText(pac.getApellidos());
+					        txtFecha.setText(pac.getFecha_nacimiento());
+					        txtRut.setText(pac.getRut());
+					        txtDireccion.setText(pac.getDireccion());
+					        txtTelefono.setText(pac.getTelefono());
+					        txtStatus.setText(pac.getResultado());
+						}else {txtStatus.setText("Porfavor, digite el RUT del paciente");}
+						break;
+				case 4: txtStatus.setText(PacientesDAO.eliminarPacienteActionPerformed(txtNombre.getText(),txtApellidos.getText(),txtFecha.getText(),txtRut.getText(),txtTelefono.getText(),txtDireccion.getText()));
+						if(!txtStatus.getText().equals("Complete todos los datos para eliminar al paciente")) {
+							DejarBlanco();
+							cargarPacientes(0);
+						}
+						break;
+				case 5: DejarBlanco();txtStatus.setText("");break;
 				case 6: String formatoFecha = "dd/MM/yyyy";
 				SimpleDateFormat formateador = new SimpleDateFormat(formatoFecha);
 				txtFecha.setText(formateador.format(calendarioRS.getDatoFecha()));break;
@@ -586,92 +628,9 @@ public class Secre extends javax.swing.JFrame {
 		});
 	}
 	
-	private void guardarFechasOcupadas(Object fechas[]) {
-		int i=0;
-		PreparedStatement ps = null;
-		ResultSet rs = null;
-		Connection con = MySQLConexion.getConexion();
-		String hora;
-		
-		try {
-			//busco en la tabla especialidad el numerito correspondiente a mi especialidad en formato string
-			String sql = "SELECT * FROM fechas_ocupadas WHERE id_medico="+idMedicos[comboMedico.getSelectedIndex()];
-			ps = con.prepareStatement(sql);
-			rs = ps.executeQuery();
-			
-			while(rs.next()) {
-				hora=Dias.numeroAFecha(rs.getInt(5));
-				
-				fechas[i]="Fecha: "+rs.getInt(6)+"/"+rs.getInt(4)+"    Rut: "+rs.getString(7)  +"      Hora: "+hora;
-				i++;
-			}
-			ps.close();
-			rs.close();
-			
-		}catch(SQLException ex) {
-			
-			System.err.println(ex.toString());
-		}
-	}
 	
 	@SuppressWarnings("unchecked")
-	private void filtrarMedico(int idMedicos[]) {
-		PreparedStatement ps = null;
-		ResultSet rs = null;
-		Connection con = MySQLConexion.getConexion();
-		int nEspecialidad=-1;
-		
-		try {
-			//busco en la tabla especialidad el numerito correspondiente a mi especialidad en formato string
-			
-			String sql = "SELECT * FROM especialidades_medicas WHERE especialidad="+"'"+comboEsp.getSelectedItem().toString()+"'";
-			ps = con.prepareStatement(sql);
-			rs = ps.executeQuery();
-			
-			while(rs.next()) {
-				nEspecialidad=rs.getInt(1);
-				
-			}
-			//luego en la tabla medico busco todos los medicos que tengan el numerito de la especialidad
-			sql = "SELECT * FROM medicos WHERE id_especialidad="+nEspecialidad;
-			ps = con.prepareStatement(sql);
-			rs = ps.executeQuery();
-			int i=0;
-			
-			while(rs.next()) {// y los añado al combo box
-				
-				idMedicos[i]=rs.getInt(1);
-				comboMedico.addItem(rs.getString(2)+" "+rs.getString(3));
-				i++;
-			}
-			rs.close();
-			
-		}catch(SQLException ex) {
-			
-			System.err.println(ex.toString());
-		}
-	}
-	@SuppressWarnings("unchecked")
-	private void comboEspecialidades() {
-		PreparedStatement ps = null;
-		ResultSet rs = null;
-		Connection con = MySQLConexion.getConexion();
-		try {
-			
-			String sql = "SELECT * FROM especialidades_medicas";
-			ps = con.prepareStatement(sql);
-			rs = ps.executeQuery();
-			comboEsp.addItem("Seleccione especialidad");
-			
-			while(rs.next()) {
-				comboEsp.addItem(rs.getString("especialidad"));
-			}
-			rs.close();
-		}catch(SQLException ex) {
-			
-			System.err.println(ex.toString());
-		}
-	}
+	
 	
 	public void MouseActionBarra(JLabel label,Icon Entered, Icon Exited, Icon Clicked, int boton) {
 		label.addMouseListener(new MouseAdapter() {
@@ -694,81 +653,7 @@ public class Secre extends javax.swing.JFrame {
 		});
 	}
 	
-	private void registrarPacienteActionPerformed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_registrarProveedorActionPerformed
-        PacientesVO pac = new PacientesVO();
-        
-        if(txtNombre.getText().isEmpty() || txtApellidos.getText().isEmpty() || txtFecha.getText().isEmpty()
-        		|| txtRut.getText().isEmpty() || txtTelefono.getText().isEmpty() || txtDireccion.getText().isEmpty())	
-        {
-        txtStatus.setText("Complete todos los datos para registrar al paciente");
-        }
-        else {
-        	
-        		 pac.setNombre(txtNombre.getText());
-        	     pac.setApellidos(txtApellidos.getText());
-        	     pac.setFecha_nacimiento(txtFecha.getText());
-        	     pac.setRut(txtRut.getText());
-        	     pac.setDireccion(txtDireccion.getText());
-        	     pac.setTelefono(txtTelefono.getText());
-        	     String resp = PacientesDAO.registrarPacientes(pac);
-        	     txtStatus.setText(resp);
-        	     DejarBlanco();
-        	     cargarPacientes(0);
-        	
-        }
-    }//GEN-LAST:event_registrarProveedorActionPerformed
-
-	private void actualizarPacienteActionPerformed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_actualizarProveedorActionPerformed
-        PacientesVO pac = new PacientesVO();
-        pac.setIdPaciente(PacientesDAO.getId(txtRut.getText()));
-        pac.setNombre(txtNombre.getText());
-        pac.setApellidos(txtApellidos.getText());
-        pac.setFecha_nacimiento(txtFecha.getText());
-        pac.setRut(txtRut.getText());
-        pac.setDireccion(txtDireccion.getText());
-        pac.setTelefono(txtTelefono.getText());
-        String resp = PacientesDAO.ActualizarPacientes(pac);
-        txtStatus.setText(resp);
-        DejarBlanco();
-        cargarPacientes(0);
-    }//GEN-LAST:event_actualizarProveedorActionPerformed
 	
-	private void buscarPacienteActionPerformed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_buscarProveedorActionPerformed
-			
-			if(txtRut.getText().isEmpty()) {
-				txtStatus.setText("Porfavor, digite el RUT del paciente");
-			}else {
-			
-			PacientesVO pac = PacientesDAO.buscarPacientes(txtRut.getText());
-	    
-	        txtNombre.setText(pac.getNombre());
-	        txtApellidos.setText(pac.getApellidos());
-	        txtFecha.setText(pac.getFecha_nacimiento());
-	        txtRut.setText(pac.getRut());
-	        txtDireccion.setText(pac.getDireccion());
-	        txtTelefono.setText(pac.getTelefono());
-	        txtStatus.setText(pac.getResultado());
-			}
-	    }
-	
-	private void eliminarPacienteActionPerformed(java.awt.event.MouseEvent evt) {
-		if(txtNombre.getText().isEmpty() || txtApellidos.getText().isEmpty() || txtFecha.getText().isEmpty()
-        		|| txtRut.getText().isEmpty() || txtTelefono.getText().isEmpty() || txtDireccion.getText().isEmpty()) 
-        {
-        txtStatus.setText("Complete todos los datos para eliminar al paciente");
-        }
-        else {
-        String resp = PacientesDAO.eliminarPacientes(txtRut.getText());
-        DejarBlanco();
-        txtStatus.setText(resp);
-        cargarPacientes(0);
-        }
-    }
-
-	private void limpiarPacienteActionPerformed(java.awt.event.MouseEvent evt) {
-    	DejarBlanco();
-        txtStatus.setText("");
-    }
 	
 	public void cargarPacientes(int busca){
         int index = 1;

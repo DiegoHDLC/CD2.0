@@ -1,22 +1,127 @@
-package mantenimientos;
+package classDAO;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import javax.swing.JOptionPane;
-
+import classVO.CitasVO;
+import mantenimientos.Dias;
 import utils.MySQLConexion;
 
-public class FechasOcupadas_database {
-	private int id_medico;
-	private int dia;
-	private int mes_fecha;
-	private int bloque;
-	private int dia_fecha;
-	private String rut;
-	private String diagnostico;
+public class CitasDAO {
+	
+	
+	public static void guardarFechasOcupadas(Object fechas[],int idMedicos[],int index) {
+		int i=0;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		Connection con = MySQLConexion.getConexion();
+		
+		
+		try {
+			//busco en la tabla especialidad el numerito correspondiente a mi especialidad en formato string
+			String sql = "SELECT * FROM fechas_ocupadas WHERE id_medico="+idMedicos[index];
+			ps = con.prepareStatement(sql);
+			rs = ps.executeQuery();
+			
+			while(rs.next()) {
+				
+				
+				fechas[i]="Fecha: "+rs.getInt(6)+"/"+rs.getInt(4)+"    Rut: "+rs.getString(7)+"   "+Dias.numeroAFecha(rs.getInt(5));
+				i++;
+			}
+			ps.close();
+			rs.close();
+			
+		}catch(SQLException ex) {
+			System.out.println("error en Secre.guardarFechasOcupadas");
+			System.err.println(ex.toString());
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	public static String[] filtrarMedico(int idMedicos[],String comboEsp) {
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		Connection con = MySQLConexion.getConexion();
+		int nEspecialidad=-1;
+		
+		try {
+			//busco en la tabla especialidad el numerito correspondiente a mi especialidad en formato string
+			
+			String sql = "SELECT * FROM especialidades_medicas WHERE especialidad="+"'"+comboEsp+"'";
+			ps = con.prepareStatement(sql);
+			rs = ps.executeQuery();
+			
+			while(rs.next()) {
+				nEspecialidad=rs.getInt(1);
+				
+			}
+			
+			
+			
+			//conteo
+			
+			sql = "SELECT * FROM medicos WHERE id_especialidad="+nEspecialidad;
+			ps = con.prepareStatement(sql);
+			rs = ps.executeQuery();
+			int i=0;
+			while(rs.next()) {// y los añado al combo box
+				i++;
+			}
+			
+			
+			//luego en la tabla medico busco todos los medicos que tengan el numerito de la especialidad
+			sql = "SELECT * FROM medicos WHERE id_especialidad="+nEspecialidad;
+			ps = con.prepareStatement(sql);
+			rs = ps.executeQuery();
+			String[] comboMedico= new String[i];
+			i=0;
+			while(rs.next()) {// y los añado al combo box
+				
+				idMedicos[i]=rs.getInt(1);
+				comboMedico[i]=rs.getString(2)+" "+rs.getString(3);
+				i++;
+			}
+			rs.close();
+			return comboMedico;
+			
+		}catch(SQLException ex) {
+			System.out.println("error e fechasOcupadasDatabase.filtrarMedico");
+			System.err.println(ex.toString());
+			return null;
+		}
+		
+	}
+	
+	public static int repeticionesMedico(int id) {
+		int contador=0;
+		
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		Connection con = MySQLConexion.getConexion();
+	
+		try {
+			//busco en la tabla especialidad el numerito correspondiente a mi especialidad en formato string
+			String sql = "SELECT * FROM fechas_ocupadas WHERE id_medico="+id;
+			ps = con.prepareStatement(sql);
+			rs = ps.executeQuery();
+			
+			while(rs.next()) {
+				contador++;
+			}
+			ps.close();
+			rs.close();
+			con.close();
+		}catch(SQLException ex) {
+			
+			System.err.println(ex.toString());
+		}
+		
+		
+		return contador;
+	}
 	public static void guardarCitas(Object fechas[],int idMedico) {
 		int i=0;
 		PreparedStatement ps = null;
@@ -41,9 +146,20 @@ public class FechasOcupadas_database {
 			}
 			ps.close();
 			rs.close();
+			con.close();
 			
 		}catch(SQLException ex) {
 			
+			System.err.println(ex.toString());
+		}
+	}
+	public static void eliminarTestCita(Connection con) {
+		try {
+			String query = "delete from fechas_ocupadas where diagnostico = 'prueba diagnostico'";
+		      PreparedStatement preparedStmt = ((Connection) con).prepareStatement(query);
+		      preparedStmt.executeUpdate();
+		      preparedStmt.close();		
+		}catch(SQLException ex) {
 			System.err.println(ex.toString());
 		}
 	}
@@ -69,7 +185,7 @@ public class FechasOcupadas_database {
 			
 			
 		      preparedStmt.close();
-			
+		      con.close();
 			
 		
 			
@@ -102,7 +218,7 @@ public class FechasOcupadas_database {
 			
 			
 		      preparedStmt.close();
-			
+		      con.close();
 			
 		
 			
@@ -139,6 +255,7 @@ public class FechasOcupadas_database {
 			}
 			ps.close();
 			rs.close();
+			con.close();
 			return diagnostico;
 		
 			
@@ -149,38 +266,47 @@ public class FechasOcupadas_database {
 		}
 		
 	}
-	public FechasOcupadas_database(int bloque,int dia_fecha,int mes_fecha) {
-		this.bloque=bloque;
-		this.dia_fecha=dia_fecha;
-		this.mes_fecha=mes_fecha;
+	public static void insertarDatos2(Connection cn,CitasVO cita) {
+		 
+		try {
+			
+			PreparedStatement pst = null;
+			String sql = "INSERT INTO fechas_ocupadas values (null,?,?,?,?,?,?,?)";
+			pst = cn.prepareStatement(sql);
+			pst.setInt(1,cita.getId_medico());
+			pst.setInt(2,cita.getDia());
+			pst.setInt(3,cita.getMes_fecha());
+			pst.setInt(4,cita.getBloque());
+			pst.setInt(5,cita.getDia_fecha());
+			pst.setString(6,cita.getRut());
+			pst.setString(7, cita.getDiagnostico());
+			pst.execute();
+			
+			pst.close();
+			
+		}catch(SQLException e) {
+			System.err.println(e.toString());
+			System.out.println("Error en fechasOcupadas_database.insertarDatos ");
+		}
 	}
-	public FechasOcupadas_database(int bloque,int dia_fecha,int mes_fecha,String rut,int dia,int id_medico,String diagnostico) {
-		this.bloque=bloque;
-		this.dia_fecha=dia_fecha;
-		this.mes_fecha=mes_fecha;
-		this.dia=dia;
-		this.rut=rut;
-		this.id_medico=id_medico;
-		this.diagnostico=diagnostico;
-	}
-	public void insertarDatos() {
+	public static void insertarDatos(CitasVO cita) {
 		String result = null, last = null;
 		MySQLConexion cc = new MySQLConexion();
         @SuppressWarnings("static-access")
 		Connection cn = cc.getConexion();
         
 		try {
-			System.out.println(id_medico);
+			
 			PreparedStatement pst = null;
 			String sql = "INSERT INTO fechas_ocupadas values (null,?,?,?,?,?,?,?)";
 			pst = cn.prepareStatement(sql);
-			pst.setInt(1,id_medico);
-			pst.setInt(2,dia);
-			pst.setInt(3,mes_fecha);
-			pst.setInt(4,bloque);
-			pst.setInt(5,dia_fecha);
-			pst.setString(6,rut);
-			pst.setString(7, diagnostico);
+			pst.setInt(1,cita.getId_medico());
+			pst.setInt(2,cita.getDia());
+			pst.setInt(3,cita.getMes_fecha());
+			pst.setInt(4,cita.getBloque());
+			pst.setInt(5,cita.getDia_fecha());
+			pst.setString(6,cita.getRut());
+			pst.setString(7, cita.getDiagnostico());
 			pst.execute();
 			cn.close();
 			pst.close();
@@ -190,7 +316,7 @@ public class FechasOcupadas_database {
 			System.out.println("Error en fechasOcupadas_database.insertarDatos ");
 		}
 	}
-	public boolean buscarFecha() {
+	public static boolean buscarFecha(CitasVO cita) {
 		int i=0;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
@@ -200,7 +326,7 @@ public class FechasOcupadas_database {
 		
 		try {
 			int flag=0;
-			String sql = "SELECT * FROM fechas_ocupadas WHERE bloque="+bloque+" AND dia_fecha="+dia_fecha+" AND mes_fecha="+mes_fecha;
+			String sql = "SELECT * FROM fechas_ocupadas WHERE bloque="+cita.getBloque()+" AND dia_fecha="+cita.getDia_fecha()+" AND mes_fecha="+cita.getMes_fecha();
 			ps = con.prepareStatement(sql);
 			rs = ps.executeQuery();
 			
@@ -223,14 +349,6 @@ public class FechasOcupadas_database {
 			System.err.println(ex.toString());
 		}
 		return false;
-	}
-	
-	
-	public static void main(String[] args) {
-		FechasOcupadas_database fecha = new FechasOcupadas_database(4,31,2);
-		if(fecha.buscarFecha()==false) {
-			System.out.println("Ese dia, mes y hora esta disponible para una cita");
-		}else {System.out.println("Ya hay cita en ese dia, mes y hora");}
 	}
 
 }

@@ -13,6 +13,221 @@ import main.Secre;
 import utils.MySQLConexion;
 
 public class PacientesDAO {
+	
+	public static String registrarPacienteActionPerformed(String txtNombre,String txtApellidos,String txtFecha,String txtRut,String txtTelefono,String txtDireccion) {//GEN-FIRST:event_registrarProveedorActionPerformed
+        PacientesVO pac = new PacientesVO();
+        
+        
+        if(txtNombre.isEmpty() || txtApellidos.isEmpty() || txtFecha.isEmpty()
+        		|| txtRut.isEmpty() || txtTelefono.isEmpty() || txtDireccion.isEmpty())	
+        	
+        {	
+        	return "Complete todos los datos para registrar al paciente";
+        }
+        else {
+        	if(!PacientesDAO.repiteRut(txtRut)) {
+        		 pac.setNombre(txtNombre);
+        	     pac.setApellidos(txtApellidos);
+        	     pac.setFecha_nacimiento(txtFecha);
+        	     pac.setRut(txtRut);
+        	     pac.setDireccion(txtDireccion);
+        	     pac.setTelefono(txtTelefono);
+        	     String resp = PacientesDAO.registrarPacientes(pac);
+        	     return resp;
+        	}else {return "El rut ya esta ocupado";}
+        }
+    }//GEN-LAST:event_registrarProveedorActionPerformed
+
+	public static String actualizarPacienteActionPerformed(String txtNombre,String txtApellidos,String txtFecha,String txtRut,String txtTelefono,String txtDireccion) {//GEN-FIRST:event_actualizarProveedorActionPerformed
+        PacientesVO pac = new PacientesVO();
+        pac.setIdPaciente(PacientesDAO.getId(txtRut));
+        pac.setNombre(txtNombre);
+        pac.setApellidos(txtApellidos);
+        pac.setFecha_nacimiento(txtFecha);
+        pac.setRut(txtRut);
+        pac.setDireccion(txtDireccion);
+        pac.setTelefono(txtTelefono);
+        String resp = PacientesDAO.ActualizarPacientes(pac);
+        return resp;
+    }//GEN-LAST:event_actualizarProveedorActionPerformed
+	
+	public static PacientesVO buscarPacienteActionPerformed(String txtNombre,String txtApellidos,String txtFecha,String txtRut,String txtTelefono,String txtDireccion) {//GEN-FIRST:event_buscarProveedorActionPerformed
+			
+			if(txtRut.isEmpty()) {
+				return null;
+			}else {
+			
+			PacientesVO pac = PacientesDAO.buscarPacientes(txtRut);
+	    
+	        return pac;
+			}
+	    }
+	
+	public static String eliminarPacienteActionPerformed(String txtNombre,String txtApellidos,String txtFecha,String txtRut,String txtTelefono,String txtDireccion) {
+		if(txtNombre.isEmpty() || txtApellidos.isEmpty() || txtFecha.isEmpty()
+        		|| txtRut.isEmpty() || txtTelefono.isEmpty() || txtDireccion.isEmpty()) 
+        {
+        	return "Complete todos los datos para eliminar al paciente";
+        }
+        else {
+        String resp = PacientesDAO.eliminarPacientes(txtRut);
+        return resp;
+        }
+    }
+	
+	
+	
+	public static boolean repiteRut(String rut) {
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		MySQLConexion conn = new MySQLConexion();
+		Connection con = MySQLConexion.getConexion();
+		
+		try {
+			
+			String sql = "SELECT * FROM pacientes where rut='"+rut+"'";
+			ps = con.prepareStatement(sql);
+			rs = ps.executeQuery();
+			
+			while(rs.next()) {
+				return true;
+			}
+		
+			con.close();
+			rs.close();
+			return false;
+			
+			
+		}catch(SQLException ex) {
+			System.out.println("\nerror en PacientesDatabase");
+			System.err.println(ex.toString());
+			
+		}
+		
+		return false;
+	}
+	public static int obtenerPacientes() {
+		int pacientes=1;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		MySQLConexion conn = new MySQLConexion();
+		Connection con = MySQLConexion.getConexion();
+		
+		try {
+			
+			String sql = "SELECT * FROM pacientes";
+			ps = con.prepareStatement(sql);
+			rs = ps.executeQuery();
+			
+			while(rs.next()) {
+				pacientes++;
+			}
+		
+			con.close();
+			rs.close();
+			return pacientes;
+			
+			
+		}catch(SQLException ex) {
+			System.out.println("\nerror en PacientesDatabase.wolfram");
+			System.err.println(ex.toString());
+			return pacientes;
+		}
+		
+	}
+	public static boolean obtenerDatosConRut(String datos[]) {
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		MySQLConexion conn = new MySQLConexion();
+		Connection con = MySQLConexion.getConexion();
+		
+		try {
+			System.out.println("rut a buscar: "+datos[3]);
+			String sql = "SELECT * FROM pacientes WHERE rut="+"'"+datos[3]+"'";
+			ps = con.prepareStatement(sql);
+			rs = ps.executeQuery();
+			int flag=0;
+			while(rs.next()) {
+				flag=1;
+				datos[0]=rs.getString(2);
+				datos[1]=rs.getString(3);
+				datos[2]=rs.getString(4);
+				datos[3]=rs.getString(5);
+				datos[4]=rs.getString(6);
+				datos[5]=rs.getString(7);
+				
+	
+				
+				
+			}
+		
+			con.close();
+			rs.close();
+			if(flag==1) {
+				return true;
+			}
+			else {
+				return false;
+			}
+			
+			
+		}catch(SQLException ex) {
+			System.out.println("\nerror en pacientes database.obtenerDatosConRut");
+			System.err.println(ex.toString());
+			return false;
+		}
+	}
+	public static String registrarPacientes2(PacientesVO pac,Connection cn) {
+		String result = null, last = null;
+		
+        PreparedStatement pst = null;
+		String sql = "INSERT INTO pacientes values (null,?,?,?,?,?,?)";
+		try {
+			pst = cn.prepareStatement(sql);
+			pst.setString(1,pac.getNombre());
+			pst.setString(2,pac.getApellidos());
+			pst.setString(3,pac.getFecha_nacimiento());
+			pst.setString(4,pac.getRut());
+			pst.setString(5,pac.getDireccion());
+			pst.setString(6,pac.getTelefono());
+			pst.execute();
+			pst = cn.prepareStatement("SELECT MAX(id_paciente) AS id FROM pacientes");
+			ResultSet rs = pst.executeQuery();
+			if(rs.next()) {
+				last = rs.getString(1);
+			}
+			result = "Paciente registrado con exito, ID:"+last;
+		}catch(SQLException e) {
+			result = "Error en la consulta: "+e.getMessage();
+		}
+		return result;
+	}
+	public static void eliminarPacientesTelefono(String telefono) {
+		
+		MySQLConexion cc = new MySQLConexion();
+        @SuppressWarnings("static-access")
+		Connection cn = cc.getConexion();
+        PreparedStatement pst = null;
+        String sql = "DELETE FROM pacientes where telefono='telefono' ";
+		try {
+			pst = cn.prepareStatement(sql);
+			pst.executeUpdate();
+			
+			
+		}catch(SQLException e) {
+			System.out.println(e.getMessage());
+		}finally {
+			try {
+				if(cn != null) {
+					cn.close();
+					pst.close();
+				}
+				}catch(Exception e) {
+					System.out.println(e.getMessage());
+				}
+		}
+		
+	}
 	@SuppressWarnings("resource")
 	public static String registrarPacientes(PacientesVO pac) {
 		String result = null, last = null;

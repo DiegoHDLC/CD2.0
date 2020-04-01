@@ -52,40 +52,5 @@ public class MedicosVO {
 		this.especialidad = especialidad;
 	}
 	
-	public Vector<MedicosVO> mostrarMedicos(Integer idEspecialidad){
-		PreparedStatement ps = null;
-		ResultSet rs = null;
-		MySQLConexion conn = new MySQLConexion();
-		Connection con = (Connection) MySQLConexion.getConexion();
-		
-		Vector<MedicosVO> datos = new Vector<MedicosVO>();
-		MedicosVO dat = null;
-		
-		try {
-			String sql = "SELECT * FROM medicos WHERE id_especialidad="+idEspecialidad;
-			ps = con.clientPrepareStatement(sql);
-			rs = ps.executeQuery();
-			
-			dat = new MedicosVO();
-			dat.setIdMedico(0);
-			dat.setNombre("Selecciona medico");
-			datos.add(dat);
-			
-			while(rs.next()) {
-				dat = new MedicosVO();
-				dat.setIdMedico(rs.getInt("id_medico"));
-				dat.setNombre(rs.getString("nombre"));
-				dat.setApellidos(rs.getString("apellido"));
-				dat.setRut(rs.getString("rut"));
-				dat.setEspecialidad(rs.getString("especialidad"));
-			}
-			rs.close();
-			
-		}catch(SQLException ex) {
-			System.err.println(ex.toString());
-		}
-		return datos;
-		
-	}
-
+	
 }

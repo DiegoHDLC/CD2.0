@@ -8,16 +8,11 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-import classDAO.PacientesDAO;
-import classVO.EspecialidadesVO;
-import classVO.MedicosVO;
-import classVO.PacientesVO;
+import classDAO.CitasDAO;
 import rspanelgradiente.RSPanelGradiente;
 import utils.Boton;
 import utils.CajaTexto;
 import utils.Label;
-import utils.MySQLConexion;
-
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
@@ -25,7 +20,6 @@ import javax.swing.JOptionPane;
 import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.text.SimpleDateFormat;
 import javax.swing.ImageIcon;
 import javax.swing.JTextField;
@@ -35,7 +29,6 @@ import javax.swing.border.BevelBorder;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import rojeru_san.componentes.RSDateChooser;
-import java.beans.PropertyChangeListener;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -48,10 +41,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.DefaultComboBoxModel;
 import rojerusan.RSComboMetro;
-import mantenimientos.BuscaRutMedico;
 import mantenimientos.Dias;
-import mantenimientos.FechasOcupadas_database;
-
 import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -222,7 +212,7 @@ public class Medico extends javax.swing.JFrame {
 		btnEditarHorario.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				System.out.println(idMedicos);
-				NuevoHorMedico horario = new NuevoHorMedico(idMedicos);
+				EditarHorarioMedico horario = new EditarHorarioMedico(idMedicos);
 				horario.setVisible(true);
 			}
 		});
@@ -236,7 +226,6 @@ public class Medico extends javax.swing.JFrame {
 			public void actionPerformed(ActionEvent e) {
 				BuscaRutMedico buscar = new BuscaRutMedico(new eventoCerrar(),idMedicos);
 				buscar.setVisible(true);
-				dispose();
 			}
 		});
 		
@@ -332,7 +321,7 @@ public class Medico extends javax.swing.JFrame {
 						txtMes.getText(),
 						txtHora.getText())==true) {
 					int bloque=Dias.fechaANumero(txtHora.getText());
-					FechasOcupadas_database.setDiagnostico(idMedicos, txtDia.getText(), txtMes.getText(), bloque, txtDiagnostico.getText());
+					CitasDAO.setDiagnostico(idMedicos, txtDia.getText(), txtMes.getText(), bloque, txtDiagnostico.getText());
 					JOptionPane.showMessageDialog(getContentPane(), "Diagnostico actualizado","OK",JOptionPane.INFORMATION_MESSAGE);
 				}else {
 					JOptionPane.showMessageDialog(getContentPane(), "Primero busque un paciente","Error",JOptionPane.ERROR_MESSAGE);
@@ -358,7 +347,7 @@ public class Medico extends javax.swing.JFrame {
 						txtMes.getText(),
 						txtHora.getText())==true) {
 					int bloque=Dias.fechaANumero(txtHora.getText());
-					FechasOcupadas_database.eliminarCita(idMedicos, txtDia.getText(), txtMes.getText(), bloque);
+					CitasDAO.eliminarCita(idMedicos, txtDia.getText(), txtMes.getText(), bloque);
 					JOptionPane.showMessageDialog(getContentPane(), "Cita eliminada","OK",JOptionPane.INFORMATION_MESSAGE);
 				}else {
 					JOptionPane.showMessageDialog(getContentPane(), "Primero busque un paciente","Error",JOptionPane.ERROR_MESSAGE);

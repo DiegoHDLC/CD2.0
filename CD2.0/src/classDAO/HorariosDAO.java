@@ -1,15 +1,61 @@
-package mantenimientos;
+package classDAO;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import mantenimientos.Dias;
 import utils.MySQLConexion;
 
-public class Horario_database {
-	public Horario_database() {
-		
+public class HorariosDAO {
+
+	public static void buscarCitaDisponible(int ocupadosXY[][],int id_medico,int max[]) {
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		Connection con = MySQLConexion.getConexion();
+		try {
+			//busco en la tabla especialidad el numerito correspondiente a mi especialidad en formato string
+			
+			String sql = "SELECT * FROM horarios WHERE id_medico="+id_medico;
+			ps = con.prepareStatement(sql);
+			rs = ps.executeQuery();
+			int i=0;
+			int j=0;
+			while(rs.next()) {// y se añade al arreglo el bloque en formato de hora y el dia
+				if(rs.getString(3).equals("8:00-9:30")) {
+					j=1;
+				}
+				else if(rs.getString(3).equals("9:45-11:15")) {
+					j=2;
+				}
+				else if(rs.getString(3).equals("11:30-13:00")) {
+					j=3;
+				}
+				else if(rs.getString(3).equals("14:30-16:00")) {
+					j=4;
+				}
+				else if(rs.getString(3).equals("16:15-17:45")) {
+					j=5;
+				}
+				else if(rs.getString(3).equals("18:00-19:30")) {
+					j=6;
+				}
+				else if(rs.getString(3).equals("19:45-21:15")) {
+					j=7;
+				}
+				ocupadosXY[0][i]=j;
+				ocupadosXY[1][i]=rs.getInt(2);
+				i++;
+			}
+			max[0]=i;
+			ps.close();
+			rs.close();
+			
+		}catch(SQLException ex) {
+			
+			System.err.println(ex.toString());
+		}
 	}
 	public static void nuevoHorario(boolean ocupados[][],int id_medico) {
 		Connection con = null;
@@ -132,9 +178,4 @@ public class Horario_database {
 		}
 		
 	}
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
-	}
-
 }

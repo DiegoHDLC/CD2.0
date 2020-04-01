@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import classDAO.HorariosDAO;
 import utils.MySQLConexion;
 
 
@@ -39,7 +40,7 @@ public class HorarioRandom {
 			
 			Arrays.numerosAHoras(bloques, horas, horariosCadaDia);
 			
-			Horario_database.insertarHorasRandom(horas,id_medico,i,horariosCadaDia);
+			HorariosDAO.insertarHorasRandom(horas,id_medico,i,horariosCadaDia);
 			
 			i++;
 		}
@@ -47,16 +48,4 @@ public class HorarioRandom {
 		
 	}
 	
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					HorarioRandom frame = new HorarioRandom(17);
-					frame.generarHorario();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 }

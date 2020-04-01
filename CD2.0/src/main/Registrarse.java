@@ -1,12 +1,11 @@
 package main;
 
 import java.awt.Color;
-import java.awt.EventQueue;
+
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
+
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -19,43 +18,33 @@ import javax.swing.JSeparator;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.EmptyBorder;
 
+import classDAO.MedicosDAO;
+import classDAO.CodigoMaestroDAO;
+import classDAO.EspecialidadesDAO;
+import classDAO.TbUsuariosDAO;
 import classVO.Usuario;
-import mantenimientos.GestionUsuario;
+
 import mantenimientos.HorarioRandom;
-import mantenimientos.Medico_database;
-import mantenimientos.ConnectCodigoMaestro;
-import mantenimientos.ConnectTbUsuarios;
-import rspanelgradiente.RSPanelGradiente;
 import utils.Boton;
-import utils.CTextoMedico;
+
 import utils.CajaTexto;
 import utils.Label;
-import utils.MySQLConexion;
+
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 
-import javax.swing.SwingConstants;
-import java.awt.SystemColor;
-import javax.swing.UIManager;
-import javax.swing.JTabbedPane;
+
+
 import javax.swing.JRadioButton;
-import java.awt.BorderLayout;
-import java.awt.GridLayout;
+
 import java.awt.MouseInfo;
 import java.awt.Point;
 
 import javax.swing.ButtonGroup;
-import javax.swing.ButtonModel;
-import javax.swing.GroupLayout;
-import javax.swing.GroupLayout.Alignment;
+
 import javax.swing.Icon;
-import javax.swing.LayoutStyle.ComponentPlacement;
-import rojerusan.RSPasswordTextPlaceHolder;
+
 import javax.swing.JTextField;
 import javax.swing.JComboBox;
 
@@ -258,7 +247,14 @@ public class Registrarse extends JFrame {
 		comboEsp.setBounds(458, 363, 323, 25);
 		comboEsp.setFont(new Font("Sitka Small", Font.BOLD, 12));
 		comboEsp.setVisible(false);;
-		comboEspecialidades();
+		String[] especialidades = EspecialidadesDAO.comboEspecialidades();
+		if(especialidades!=null) {
+			int i=0;
+			while(i<especialidades.length) {
+				comboEsp.addItem(especialidades[i]);
+				i++;
+			}
+		}
 		panel.add(comboEsp);
 		
 		txtRut = new CajaTexto(100, 370, 216, 34);
@@ -279,30 +275,7 @@ public class Registrarse extends JFrame {
 ////////////////////////////MODULOS//////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 	
-	private void registrarEnTablaMedico(Usuario usu) {
-		Connection con = null;
-		PreparedStatement pst = null;
-		try {
-			
-			con = MySQLConexion.getConexion();
-				String sql = "INSERT INTO medicos values (null,?, ?, ?, ?)";
-				pst = con.prepareStatement(sql);
-				pst.setString(1, usu.getNombre());
-				pst.setString(2, usu.getApellidos());
-				pst.setString(3, usu.getRut());
-				pst.setInt(4, usu.getEspecialidad());
-				pst.executeUpdate();
-			
-			pst.close();
-			con.close();	
-			
-			} 
-			catch (Exception e) {
-				System.out.println("Error en 'Registrarse.registrarEnTablaMedico'");
-				System.err.println(e.toString());
-			}
-		
-	}
+	
 	
 	private void MouseActionRadio(JRadioButton rd1,JRadioButton rd2, Icon rdPrinRoja, Icon rdPrinBlan, Icon rdPrinCeles, Icon SecCeleste, int radio) {
 		rd1.addMouseListener(new MouseAdapter() {
@@ -372,96 +345,43 @@ public class Registrarse extends JFrame {
 		
 			if( !usuario.isEmpty() || !clave.isEmpty() || !codigo.isEmpty() || !nombre.isEmpty() || !apellido.isEmpty() || !ciudad.isEmpty() || !rut.isEmpty()) {
 				
-				if( codigo.equals(ConnectCodigoMaestro.getCodigoMaestro())) {
-					if(repiteUsuario(usuario)==0) {
-						if(rdMedico.isSelected() == true && rdSecretaria.isSelected() == true) {JOptionPane.showMessageDialog(contentPane, "Escoja solo 1 profesion","Error",JOptionPane.ERROR_MESSAGE);}
-						else if(rdMedico.isSelected() == false && rdSecretaria.isSelected() == false) {JOptionPane.showMessageDialog(contentPane, "Escoja una profesion","Error",JOptionPane.ERROR_MESSAGE);}
-						else if(rdMedico.isSelected() == true) {
-							if(!(comboEsp.getItemAt(0).toString()).equals(comboEsp.getSelectedItem().toString())) {
-								
-								Usuario usu = new Usuario(usuario,clave,nombre,apellido,ciudad,"1",comboEsp.getSelectedIndex(),rut);
-								
-								registrarEnTablaMedico(usu);
-								System.out.println("registrado en tabla medico");
-								Medico_database med = new Medico_database();
-								HorarioRandom hr = new HorarioRandom(med.getUltimoId_medico());
-								System.out.println("registrado en horario medico");
-								hr.generarHorario();
-								ConnectTbUsuarios.insertUsuario(usu);
-								
+				if( codigo.equals(CodigoMaestroDAO.getCodigoMaestro())) {
+					
+					if(TbUsuariosDAO.repiteUsuario(usuario)==0) {
+						if(!TbUsuariosDAO.repiteRut(rut)) {
+							if(rdMedico.isSelected() == true && rdSecretaria.isSelected() == true) {JOptionPane.showMessageDialog(contentPane, "Escoja solo 1 profesion","Error",JOptionPane.ERROR_MESSAGE);}
+							else if(rdMedico.isSelected() == false && rdSecretaria.isSelected() == false) {JOptionPane.showMessageDialog(contentPane, "Escoja una profesion","Error",JOptionPane.ERROR_MESSAGE);}
+							else if(rdMedico.isSelected() == true) {
+								if(!(comboEsp.getItemAt(0).toString()).equals(comboEsp.getSelectedItem().toString())) {
+									
+									Usuario usu = new Usuario(usuario,clave,nombre,apellido,ciudad,"1",comboEsp.getSelectedIndex(),rut);
+									
+									MedicosDAO.registrarEnTablaMedico(usu);
+									System.out.println("registrado en tabla medico");
+									MedicosDAO med = new MedicosDAO();
+									HorarioRandom hr = new HorarioRandom(med.getUltimoId_medico());
+									System.out.println("registrado en horario medico");
+									hr.generarHorario();
+									TbUsuariosDAO.insertUsuario(usu);
+									
+									JOptionPane.showMessageDialog(contentPane, "Registrado exitosamente","OK",JOptionPane.INFORMATION_MESSAGE);
+								}else {JOptionPane.showMessageDialog(contentPane, "Escoja una especialidad","Error",JOptionPane.ERROR_MESSAGE);};
+							}
+							else if(rdSecretaria.isSelected() == true) {
+								System.out.println("secre");
+								Usuario usu1 = new Usuario(usuario,clave,nombre,apellido,ciudad,"0",rut);
+								TbUsuariosDAO.insertUsuario(usu1);
 								JOptionPane.showMessageDialog(contentPane, "Registrado exitosamente","OK",JOptionPane.INFORMATION_MESSAGE);
-							}else {JOptionPane.showMessageDialog(contentPane, "Escoja una especialidad","Error",JOptionPane.ERROR_MESSAGE);};
-						}
-						else if(rdSecretaria.isSelected() == true) {
-							System.out.println("secre");
-							Usuario usu1 = new Usuario(usuario,clave,nombre,apellido,ciudad,"0",rut);
-							ConnectTbUsuarios.insertUsuario(usu1);
-							JOptionPane.showMessageDialog(contentPane, "Registrado exitosamente","OK",JOptionPane.INFORMATION_MESSAGE);
-						}
+							}
+						}else {JOptionPane.showMessageDialog(contentPane, "Ese rut ya esta registrado, ese está repetido","Error",JOptionPane.ERROR_MESSAGE);};
 					}else {JOptionPane.showMessageDialog(contentPane, "Escoja otro nombre de usuario, ese está repetido","Error",JOptionPane.ERROR_MESSAGE);}
 				}
 				else{JOptionPane.showMessageDialog(contentPane, "Codigo maestro erroneo","Error",JOptionPane.ERROR_MESSAGE);}
 			}else {JOptionPane.showMessageDialog(contentPane, "Datos invalidos","Error",JOptionPane.ERROR_MESSAGE);}
 	}
 	
-	@SuppressWarnings({ "unchecked" })
-	private void comboEspecialidades() {
-		PreparedStatement ps = null;
-		ResultSet rs = null;
-		Connection con = MySQLConexion.getConexion();
-		
-		try {
-			String sql = "SELECT * FROM especialidades_medicas";
-			ps = con.prepareStatement(sql);
-			rs = ps.executeQuery();
-			
-			comboEsp.addItem("Seleccione especialidad");
-			
-			while(rs.next()) {
-				comboEsp.addItem(rs.getString("especialidad"));
-			}
-			rs.close();
-		}catch(SQLException ex) {
-			
-			System.err.println(ex.toString());
-		}
-	}
-	private int repiteUsuario(String usuario1) {
-		PreparedStatement ps = null;
-		ResultSet rs = null;
-		Connection con = MySQLConexion.getConexion();
-
-		try {
-			
-			String sql = "SELECT * FROM tb_usuario WHERE usuario="+usuario1;
-			ps = con.prepareStatement(sql);
-			rs = ps.executeQuery();
-			System.out.println("\nMostrando datos:\n");		
-			while(rs.next()) {
-				System.out.println("base "+rs.getString(1)+" usuario1  "+usuario1);				
-			}
-			rs = ps.executeQuery();
-			while(rs.next()) {
-				if(rs.getString(1).equals(usuario1)) {
-					System.out.println("\nhay repetido\n");
-					rs.close();
-					con.close();
-					return 1;
-				}
-				
-			}
-			System.out.println("no hay repetido");
-			con.close();
-			rs.close();
-			
-			return 0;
-			
-		}catch(SQLException ex) {
-			
-			System.err.println(ex.toString());
-			return 0;
-		}
-	}
+	
+	
 	@SuppressWarnings("rawtypes")
 	JComboBox comboEsp = new JComboBox();
 	private int x;

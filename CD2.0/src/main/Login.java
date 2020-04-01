@@ -16,10 +16,9 @@ import javax.swing.JSeparator;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
+import classDAO.MedicosDAO;
+import classDAO.TbUsuariosDAO;
 import classVO.Usuario;
-import mantenimientos.GestionUsuario;
-import mantenimientos.Medico_database;
-import mantenimientos.tbUsuarios_database;
 import rspanelgradiente.RSPanelGradiente;
 import utils.Boton;
 
@@ -29,6 +28,8 @@ import java.awt.event.MouseMotionAdapter;
 import java.util.concurrent.TimeUnit;
 
 import javax.swing.border.BevelBorder;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 @SuppressWarnings("serial")
 public class Login extends JFrame {
@@ -86,35 +87,43 @@ public class Login extends JFrame {
 	protected void ingresar() {
 		String usuario = txtUsuario.getText();
 		String clave = String.copyValueOf(txtContraseña.getPassword());
-	
-		GestionUsuario gestionUsuario = new GestionUsuario();
-		Usuario usuario2 = new Usuario();
-		
-		usuario2.setUsuario(usuario);
-		usuario2.setClave(clave);
-		
-		Usuario usu = gestionUsuario.obtenerUsuario(usuario2);
-		
-		if(usu!=null) {
-			
-			if(tbUsuarios_database.esMedico(usuario, clave)==true) {
-				
-				String rut= tbUsuarios_database.getRut(usuario, clave);
-			
-				Medico med = new Medico(Medico_database.getId_medico(rut));
-				med.setVisible(true);
-				this.dispose();
-			}else {
-	
-				this.dispose();
-				Secre FrmSecretaria = new Secre();
-				FrmSecretaria.setVisible(true);
-			}
-			
-			
-		}else {
-			JOptionPane.showMessageDialog(contentPane, "Datos invalidos","Error",JOptionPane.ERROR_MESSAGE);
+		if(usuario.equals("admin") && clave.equals("admin")) {
+			this.dispose();
+			Administrador admin = new Administrador();
+			admin.setVisible(true);
 		}
+		else {
+			TbUsuariosDAO gestionUsuario = new TbUsuariosDAO();
+			
+			Usuario usuario2 = new Usuario();
+			
+			usuario2.setUsuario(usuario);
+			usuario2.setClave(clave);
+			
+			Usuario usu = gestionUsuario.obtenerUsuario(usuario2);
+			
+			if(usu!=null) {
+				
+				if(TbUsuariosDAO.esMedico(usuario, clave)==true) {
+					
+					String rut= TbUsuariosDAO.getRut(usuario, clave);
+				
+					Medico med = new Medico(MedicosDAO.getId_medico(rut));
+					med.setVisible(true);
+					this.dispose();
+				}else {
+		
+					this.dispose();
+					Secre FrmSecretaria = new Secre();
+					FrmSecretaria.setVisible(true);
+				}
+				
+				
+			}else {
+				JOptionPane.showMessageDialog(contentPane, "Datos invalidos","Error",JOptionPane.ERROR_MESSAGE);
+			}
+		}
+		
 	}
 	
 	protected void salir() {
@@ -158,6 +167,15 @@ public class Login extends JFrame {
 		txtUsuario.setColumns(10);
 		
 		txtContraseña = new JPasswordField();
+		txtContraseña.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent arg0) {
+				if(arg0.getKeyCode()==KeyEvent.VK_ENTER) {
+					ingresar();
+				}
+			
+			}
+		});
 		txtContraseña.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		txtContraseña.setCaretColor(new Color(255, 255, 255));
 		txtContraseña.setForeground(Color.WHITE);
@@ -188,6 +206,14 @@ public class Login extends JFrame {
 		panel_der.add(label_1);
 		System.out.println(this.getFocusOwner());
 		JButton btnIngresar = new Boton(201, 368, 113, 38,"INGRESAR");
+		btnIngresar.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent arg0) {
+				if(arg0.getKeyCode()==KeyEvent.VK_ENTER) {
+					ingresar();
+				}
+			}
+		});
 		btnIngresar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				
@@ -238,6 +264,26 @@ public class Login extends JFrame {
 			}
 		});
 		lblMinimizar.setIcon(new ImageIcon(Login.class.getResource("/Image/minimizar_celeste_32px.png")));
+		
+		JLabel acercaDe = new JLabel("Informaci\u00F3n del programa...");
+		acercaDe.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				AcercaDe acercaDe= new AcercaDe();
+				acercaDe.setVisible(true);
+			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				acercaDe.setForeground(Color.WHITE);
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				acercaDe.setForeground(Color.CYAN);
+			}
+		});
+		acercaDe.setForeground(Color.CYAN);
+		acercaDe.setBounds(44, 417, 221, 14);
+		panel_der.add(acercaDe);
 		lblregistrar.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseEntered(MouseEvent e) {

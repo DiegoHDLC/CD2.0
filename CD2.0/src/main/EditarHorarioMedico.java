@@ -1,31 +1,28 @@
 package main;
 
-import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.EventQueue;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JTable;
 import javax.swing.border.EmptyBorder;
 
 import classDAO.HorariosDAO;
 import utils.Boton;
 import utils.MySQLConexion;
 
-import javax.swing.JTextField;
-import javax.swing.JTable;
-import javax.swing.JButton;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import java.awt.Color;
-
-public class HorarioMedico extends JFrame {
+public class EditarHorarioMedico extends JFrame{
 
 	private JPanel contentPane;
-	private JTable table;
+	private JTable tablaHorario;
 
 	/**
 	 * Launch the application.
@@ -46,7 +43,7 @@ public class HorarioMedico extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public HorarioMedico(int id_medico) {
+	public EditarHorarioMedico(int id_medico) {
 		setUndecorated(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 680, 209);
@@ -84,12 +81,12 @@ public class HorarioMedico extends JFrame {
 			i++;
 		}
 				
-		table = new JTable(data,columnNames);
-		table.setGridColor(new Color(128, 128, 128));
-		table.setForeground(new Color(255, 255, 255));
-		table.setBackground(new Color(33, 44, 61));
-		table.setBounds(0, 11, 679, 128);
-		contentPane.add(table);
+		tablaHorario = new JTable(data,columnNames);
+		tablaHorario.setGridColor(new Color(128, 128, 128));
+		tablaHorario.setForeground(new Color(255, 255, 255));
+		tablaHorario.setBackground(new Color(33, 44, 61));
+		tablaHorario.setBounds(0, 11, 679, 128);
+		contentPane.add(tablaHorario);
 		
 		JButton btnNewButton = new Boton(244, 153, 148, 50,"Aceptar");
 		btnNewButton.addActionListener(new ActionListener() {

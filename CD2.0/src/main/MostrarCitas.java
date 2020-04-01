@@ -19,8 +19,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.border.EmptyBorder;
 
-import mantenimientos.FechasOcupadas_database;
-import mantenimientos.Horario_database;
+import classDAO.CitasDAO;
 import utils.Boton;
 import utils.Label;
 import java.awt.Panel;
@@ -90,7 +89,7 @@ public class MostrarCitas extends JDialog {
 		contentPane.add(scrollbar);
 		
 		Object[] fechas = new Object[500];
-		FechasOcupadas_database.guardarCitas(fechas,id_medico);
+		CitasDAO.guardarCitas(fechas,id_medico);
 		listFechas.setListData(fechas);
 		
 		

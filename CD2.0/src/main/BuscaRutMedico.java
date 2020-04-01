@@ -1,4 +1,4 @@
-package mantenimientos;
+package main;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -15,14 +15,15 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
-import javax.swing.JLabel; 
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 
-import main.Medico;
+import classDAO.PacientesDAO;
+import classDAO.CitasDAO;
 import main.Medico.eventoCerrar;
 import utils.Boton;
 import utils.CTextoMedico;
@@ -60,10 +61,8 @@ public class BuscaRutMedico extends JDialog {
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public BuscaRutMedico(eventoCerrar eventoCerrar,int id_medico) {
 		setUndecorated(true);
-		
 		getContentPane().setBackground(new Color(33, 44, 61));
 		setBounds(100, 100, 450, 300);
-		setLocationRelativeTo(null);
 		contentPanel.setLayout(new FlowLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		
@@ -74,12 +73,12 @@ public class BuscaRutMedico extends JDialog {
 				String[] Datos= new String[6];
 				String diagnostico=null;
 				Datos[3]=txtRut.getText();
-				if(Pacientes_database.obtenerDatosConRut(Datos)==true) {
+				if(PacientesDAO.obtenerDatosConRut(Datos)==true) {
 					int diaFecha=Integer.parseInt(((String) comboDiaFecha.getSelectedItem()).trim());
 					int mesFecha=Integer.parseInt(((String) comboMesFecha.getSelectedItem()).trim());
 					int bloque=comboHora.getSelectedIndex()+1;
 					
-					diagnostico=FechasOcupadas_database.getDiagnostico(id_medico,diaFecha,mesFecha,bloque);
+					diagnostico=CitasDAO.getDiagnostico(id_medico,diaFecha,mesFecha,bloque);
 					
 					if(diagnostico!=null) {
 						Medico med = new Medico(id_medico);

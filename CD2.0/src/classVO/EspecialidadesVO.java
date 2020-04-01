@@ -1,8 +1,9 @@
 package classVO;
 
-public class EspecialidadesVO {
+public class EspecialidadesVO extends MedicosVO {
 	private int id;
 	private String especialidad;
+	
 	public int getId() {
 		return id;
 	}
